@@ -42,6 +42,11 @@ local.properties
 .loadpath
 
 
+.DS_Store
+.idea
+
+
+
 
 # External tool builders
 
@@ -53,4 +58,4 @@ local.properties
 
 *.launch
 
-/bin/
+
