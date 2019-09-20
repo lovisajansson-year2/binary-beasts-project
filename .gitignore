@@ -41,6 +41,9 @@ local.properties
 
 .loadpath
 
+.DS_Store
+.idea
+
 
 
 # External tool builders
