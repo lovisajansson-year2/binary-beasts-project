@@ -1,13 +1,13 @@
 package models;
 
 public class Grade {
-	private int finalGrade;
+	private String finalGrade;
 
-	public int getFinalGrade() {
+	public String getFinalGrade() {
 		return finalGrade;
 	}
 
-	public void setFinalGrade(int finalGrade) {
+	public void setFinalGrade(String finalGrade) {
 		this.finalGrade = finalGrade;
 	}
 

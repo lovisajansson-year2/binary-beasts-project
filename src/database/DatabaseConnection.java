@@ -16,18 +16,15 @@ public class DatabaseConnection {
 	private static final String password = "pass";
 		 
 	public static void dbConnect() throws SQLException, ClassNotFoundException {
-		    	String message = null; 
 		        try {
 		            Class.forName(JDBC_DRIVER);
 		        } catch (ClassNotFoundException e) {
-		           	message = "No JBDC driver found.";
-		           	System.out.println(message);
+		           	System.out.println("No JBDC driver found.");
 		            e.printStackTrace();
 		            throw e;
 		        }
 		 
-		        message = "JDBC Driver Registered!";
-	           	System.out.println(message);
+	           	System.out.println("JDBC Driver Registered!");
 		 
 		        try {
 		            conn = DriverManager.getConnection(connStr, userName, password);
@@ -38,36 +35,36 @@ public class DatabaseConnection {
 		        }
 		    }
 		 
-		 public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
-		        Statement stmt = null;
-		        ResultSet resultSet = null;
-		        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
-		        try {
-		            dbConnect();
-		            System.out.println("Select statement: " + queryStmt + "\n");
+	public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
+		Statement stmt = null;
+		ResultSet resultSet = null;
+		//CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		  try {
+		    dbConnect();
+		    System.out.println("Select statement: " + queryStmt + "\n");
 		 
-		            stmt = conn.createStatement();
+		    stmt = conn.createStatement();
 		 
-		            resultSet = stmt.executeQuery(queryStmt);
+		    resultSet = stmt.executeQuery(queryStmt);
 		
-		            crs.populate(resultSet);
-		        } catch (SQLException e) {
-		            System.out.println("Problem occurred at executeQuery operation : " + e);
-		            throw e;
-		        } 
-		        return crs;
-		    }
+		    //crs.populate(resultSet);
+		 } catch (SQLException e) {
+		    System.out.println("Problem occurred at executeQuery operation : " + e);
+		    throw e;
+		 } 
+		    return resultSet;
+		 }
 		 
 	 public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
-		        Statement stmt = null;
-		        try {
-		            dbConnect();
-		            stmt = conn.createStatement();
-		            stmt.executeUpdate(sqlStmt);
-		        } catch (SQLException e) {
-		            System.out.println("Problem occurred at executeUpdate operation : " + e);
-		            throw e;
-		        }
+		 Statement stmt = null;
+		 try {
+		    dbConnect();
+		    stmt = conn.createStatement();
+		    stmt.executeUpdate(sqlStmt);
+		  } catch (SQLException e) {
+			 System.out.println("Problem occurred at executeUpdate operation : " + e);
+			 throw e;
+		  }
 	}
 
 }
