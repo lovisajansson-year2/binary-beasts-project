@@ -38,17 +38,7 @@ public class DatabaseConnection {
 		        }
 		    }
 		 
-		    public static void dbDisconnect() throws SQLException {
-		        try {
-		            if (conn != null && !conn.isClosed()) {
-		                conn.close();
-		            }
-		        } catch (Exception e){
-		           throw e;
-		        }
-		    }
-		 
-		    public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
+		 public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
 		        Statement stmt = null;
 		        ResultSet resultSet = null;
 		        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
@@ -71,12 +61,11 @@ public class DatabaseConnection {
 		            if (stmt != null) {
 		                stmt.close();
 		            }
-		            dbDisconnect();
 		        }
 		        return crs;
 		    }
 		 
-		    public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
+	 public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
 		        Statement stmt = null;
 		        try {
 		            dbConnect();
@@ -89,8 +78,7 @@ public class DatabaseConnection {
 		            if (stmt != null) {
 		                stmt.close();
 		            }
-		            dbDisconnect();
 		        }
-		    }
-		}
+	}
+}
 
