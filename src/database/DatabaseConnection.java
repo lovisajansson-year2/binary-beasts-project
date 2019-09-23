@@ -54,14 +54,7 @@ public class DatabaseConnection {
 		        } catch (SQLException e) {
 		            System.out.println("Problem occurred at executeQuery operation : " + e);
 		            throw e;
-		        } finally {
-		            if (resultSet != null) {
-		                resultSet.close();
-		            }
-		            if (stmt != null) {
-		                stmt.close();
-		            }
-		        }
+		        } 
 		        return crs;
 		    }
 		 
@@ -74,10 +67,6 @@ public class DatabaseConnection {
 		        } catch (SQLException e) {
 		            System.out.println("Problem occurred at executeUpdate operation : " + e);
 		            throw e;
-		        } finally {
-		            if (stmt != null) {
-		                stmt.close();
-		            }
 		        }
 	}
 
