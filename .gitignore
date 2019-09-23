@@ -41,8 +41,10 @@ local.properties
 
 .loadpath
 
+
 .DS_Store
 .idea
+
 
 
 
@@ -56,4 +58,4 @@ local.properties
 
 *.launch
 
-/bin/
+
