@@ -9,11 +9,11 @@ public class DatabaseConnection {
 
 	private static Connection conn = null;
 		 
-	private static final String connStr = "jdbc:sqlserver://localhost:1433;database=UNIVERSITY;";
+	private static final String connStr = "jdbc:sqlserver://localhost:1433;database=assignment1;";
 
-	private static final String userName = "SDorka";
+	private static final String userName = "user";
 	
-	private static final String password = "INFdev1";
+	private static final String password = "pass";
 		 
 	public static void dbConnect() throws SQLException, ClassNotFoundException {
 		    	String message = null; 
