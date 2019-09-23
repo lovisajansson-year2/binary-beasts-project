@@ -37,22 +37,22 @@ public class DatabaseConnection {
 		 
 	public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
 		Statement stmt = null;
-		ResultSet resultSet = null;
-		//CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		ResultSet rs = null;
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		  try {
 		    dbConnect();
 		    System.out.println("Select statement: " + queryStmt + "\n");
 		 
 		    stmt = conn.createStatement();
 		 
-		    resultSet = stmt.executeQuery(queryStmt);
-		
-		    //crs.populate(resultSet);
+		    rs = stmt.executeQuery(queryStmt);
+		    
+		    crs.populate(rs);
 		 } catch (SQLException e) {
 		    System.out.println("Problem occurred at executeQuery operation : " + e);
 		    throw e;
 		 } 
-		    return resultSet;
+		    return crs;
 		 }
 		 
 	 public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
