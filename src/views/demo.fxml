@@ -22,14 +22,14 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="222.0" promptText="Select Course or Register New" />
+                        <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="242.0" promptText="Select Course or Register New" />
                         <TextField layoutX="103.0" layoutY="128.0" />
                         <TextField layoutX="103.0" layoutY="173.0" />
                         <Button layoutX="28.0" layoutY="219.0" mnemonicParsing="false" text="Register" />
                         <Button layoutX="193.0" layoutY="219.0" mnemonicParsing="false" text="Remove" />
                         <Button layoutX="112.0" layoutY="219.0" mnemonicParsing="false" text="Update" />
                         <Label layoutX="29.0" layoutY="177.0" text="Credits" />
-                        <Label layoutX="29.0" layoutY="132.0" text="Course Code" />
+                        <Label layoutX="29.0" layoutY="132.0" text="Name" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register/Update Course">
                            <font>
                               <Font name="System Bold" size="14.0" />
@@ -46,7 +46,7 @@
                         <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="222.0" promptText="Select Student or Register New" />
                         <TextField fx:id="tf1" layoutX="103.0" layoutY="128.0" />
                         <TextField fx:id="tf2" layoutX="103.0" layoutY="173.0" />
-                        <Button fx:id="btnAdd" layoutX="92.0" layoutY="184.0" mnemonicParsing="false" onAction="#addStudent" text="Register" />
+                        <Button fx:id="btnAdd" layoutX="29.0" layoutY="219.0" mnemonicParsing="false" onAction="#addStudent" text="Register" />
                         <Button layoutX="193.0" layoutY="219.0" mnemonicParsing="false" text="Remove" />
                         <Button layoutX="112.0" layoutY="219.0" mnemonicParsing="false" text="Update" />
                         <Label layoutX="29.0" layoutY="132.0" text="First name" />
