@@ -19,7 +19,7 @@ public class StudentDAO {
     public static void addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
 
         String stmt =
-                "insert into Student VALUES('"+fName+"', '"+lName+"', '"+generateID()+"');";
+                "insert into Student VALUES('"+generateID()+"', '"+lName+"', '"+fName+"');";
 
         try {
             DatabaseConnection.dbExecuteUpdate(stmt);
