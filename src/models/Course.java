@@ -4,6 +4,13 @@ public class Course {
 	private String courseCode;
 	private String courseName;
 	private int credits;
+	private Grade grade;
+
+	public Course(String courseCode, String courseName, int credits) {
+		this.courseCode = courseCode;
+		this.courseName = courseName;
+		this.credits = credits;
+	}
 	
 	public String getCourseCode() {
 		return courseCode;
@@ -24,4 +31,11 @@ public class Course {
 		this.credits = credits;
 	}
 
+	public Grade getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Grade grade) {
+		this.grade = grade;
+	}
 }

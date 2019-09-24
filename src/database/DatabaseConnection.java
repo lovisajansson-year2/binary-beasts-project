@@ -1,7 +1,12 @@
 package database;
 
-import java.sql.*;
-import javax.sql.rowset.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 
 public class DatabaseConnection {
 	
@@ -9,14 +14,14 @@ public class DatabaseConnection {
 
 	private static Connection conn = null;
 		 
-	private static final String connStr = "jdbc:sqlserver://localhost:1433;database=assignment1;";
+	private static final String connStr = "jdbc:sqlserver://127.0.0.1:1433;database=Assignment1;";
 
 	private static final String userName = "user";
 	
 	private static final String password = "pass";
-		 
+
 	public static void dbConnect() throws SQLException, ClassNotFoundException {
-		    	String message = null; 
+		    	String message = null;
 		        try {
 		            Class.forName(JDBC_DRIVER);
 		        } catch (ClassNotFoundException e) {
@@ -25,12 +30,13 @@ public class DatabaseConnection {
 		            e.printStackTrace();
 		            throw e;
 		        }
-		 
+
 		        message = "JDBC Driver Registered!";
 	           	System.out.println(message);
-		 
+
 		        try {
 		            conn = DriverManager.getConnection(connStr, userName, password);
+		            System.out.println("Connection succeeded!");
 		        } catch (SQLException e) {
 		            System.out.println("Connection Failed! Check output console" + e);
 		            e.printStackTrace();
@@ -44,7 +50,7 @@ public class DatabaseConnection {
 		        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		        try {
 		            dbConnect();
-		            System.out.println("Select statement: " + queryStmt + "\n");
+		            System.out.println("Statement: " + queryStmt + "\n");
 		 
 		            stmt = conn.createStatement();
 		 
