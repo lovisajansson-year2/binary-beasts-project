@@ -52,11 +52,11 @@
                         <Label layoutX="29.0" layoutY="132.0" text="First name" />
                         <Label layoutX="29.0" layoutY="177.0" text="Last name" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register/Update Student">
-                        <Label fx:id="lbl1" layoutX="96.0" layoutY="153.0" text="Message:" />
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
+                        <Label fx:id="lbl1" layoutX="28.0" layoutY="330.0" text="Message:" />
                      </children>
                   </AnchorPane>
             </content>
