@@ -27,7 +27,7 @@ public class CourseDAO {
 			throw e;
 		}
 	}
-	public static ResultSet findCourse(String courseCode) throws SQLException, ClassNotFoundException{
+	public static CachedRowSet findCourse(String courseCode) throws SQLException, ClassNotFoundException{
 		String stmt = "select * from Course where courseCode ='"+courseCode+"'"; 
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
@@ -39,5 +39,27 @@ public class CourseDAO {
 		}
 		return crs;
 	}
+	public static void deleteCourse(String courseCode) throws SQLException, ClassNotFoundException {
+		String stmt = "delete from Course where courseCode='"+courseCode+"'"; 
+		try {
+			DatabaseConnection.dbExecuteQuery(stmt);
+		} catch (SQLException e) {
+			System.out.println("Error while deleting Course");
+			throw e;
+		}
+	}
+	public static CachedRowSet findAllCourses() throws SQLException, ClassNotFoundException{
+		String stmt = "select * from Course";
+		ResultSet rs = null;
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		try {
+			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			crs.populate(rs);
+		} catch (SQLException e) {
+			System.out.println("error while finding student");
+		}
+		return crs;
+	}
+
 	
 }
