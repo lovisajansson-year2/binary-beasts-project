@@ -22,41 +22,40 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="242.0" promptText="Select Course or Register New" />
-                        <TextField layoutX="103.0" layoutY="128.0" />
-                        <TextField layoutX="103.0" layoutY="173.0" />
-                        <Button layoutX="28.0" layoutY="219.0" mnemonicParsing="false" text="Register" />
-                        <Button layoutX="193.0" layoutY="219.0" mnemonicParsing="false" text="Remove" />
-                        <Button layoutX="112.0" layoutY="219.0" mnemonicParsing="false" text="Update" />
+                        <ComboBox fx:id="cbCourses" layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="242.0" promptText="Select Course or Register New" />
+                        <TextField fx:id="tfCredits" layoutX="103.0" layoutY="173.0" />
+                        <Button layoutX="28.0" layoutY="219.0" mnemonicParsing="false" onAction="#addCourse" text="Register" />
+                        <Button layoutX="193.0" layoutY="219.0" mnemonicParsing="false" onAction="#removeCourse" text="Remove" />
+                        <Button layoutX="112.0" layoutY="219.0" mnemonicParsing="false" onAction="#updateCourse" text="Update" />
                         <Label layoutX="29.0" layoutY="177.0" text="Credits" />
-                        <Label layoutX="29.0" layoutY="132.0" text="Name" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register/Update Course">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
+                         <Label fx:id="lblCourses" layoutX="28.0" layoutY="330.0" text="Message:" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
-          <Tab text="Student">
+          <Tab text="Students">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="222.0" promptText="Select Student or Register New" />
-                        <TextField fx:id="tf1" layoutX="103.0" layoutY="128.0" />
-                        <TextField fx:id="tf2" layoutX="103.0" layoutY="173.0" />
-                        <Button fx:id="btnAdd" layoutX="29.0" layoutY="219.0" mnemonicParsing="false" onAction="#addStudent" text="Register" />
-                        <Button layoutX="193.0" layoutY="219.0" mnemonicParsing="false" text="Remove" />
-                        <Button layoutX="112.0" layoutY="219.0" mnemonicParsing="false" text="Update" />
+                        <ComboBox fx:id="cbStudent" layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="222.0" promptText="Select Student or Register New" />
+                        <TextField fx:id="tfFirstName" layoutX="103.0" layoutY="128.0" />
+                        <TextField fx:id="tfLastName" layoutX="103.0" layoutY="173.0" />
+                        <Button fx:id="btnStudentAdd" layoutX="29.0" layoutY="219.0" mnemonicParsing="false" onAction="#addStudent" text="Register" />
+                        <Button fx:id="btnStudentRemove" layoutX="193.0" layoutY="219.0" mnemonicParsing="false" onAction="#removeStudent" text="Remove" />
+                        <Button fx:id="btnStudentUpdate" layoutX="112.0" layoutY="219.0" mnemonicParsing="false" onAction="#updateStudent" text="Update" />
                         <Label layoutX="29.0" layoutY="132.0" text="First name" />
                         <Label layoutX="29.0" layoutY="177.0" text="Last name" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register/Update Student">
-                        <Label fx:id="lbl1" layoutX="96.0" layoutY="153.0" text="Message:" />
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
+                        <Label fx:id="lblStudents" layoutX="28.0" layoutY="330.0" text="Message:" />
                      </children>
                   </AnchorPane>
             </content>
@@ -65,18 +64,19 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="159.0" promptText="Select Student" />
-                        <ComboBox layoutX="28.0" layoutY="128.0" prefHeight="27.0" prefWidth="161.0" promptText="Select Course" />
-                        <ComboBox layoutX="28.0" layoutY="278.0" prefHeight="25.0" prefWidth="182.0" promptText="Select Grade" />
-                        <Button layoutX="28.0" layoutY="173.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Register Student on Course" />
-                        <Button layoutX="28.0" layoutY="216.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="182.0" text="Remove Student from Course" />
-                        <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="241.0" text="Set Grade for Selected Student &amp; Course" />
+                        <ComboBox fx:id="cbRegStudents" layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="159.0" promptText="Select Student" />
+                        <ComboBox fx:id="cbRegCourses" layoutX="28.0" layoutY="128.0" prefHeight="27.0" prefWidth="161.0" promptText="Select Course" />
+                        <ComboBox fx:id="cbGrade" layoutX="28.0" layoutY="278.0" prefHeight="25.0" prefWidth="182.0" promptText="Select Grade" />
+                        <Button layoutX="28.0" layoutY="173.0" mnemonicParsing="false" onAction="#addRegistration" prefHeight="25.0" prefWidth="181.0" text="Register Student on Course" />
+                        <Button layoutX="28.0" layoutY="216.0" mnemonicParsing="false" onAction="#removeRegistration" prefHeight="27.0" prefWidth="182.0" text="Remove Student from Course" />
+                        <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" onAction="#setGrade" prefHeight="27.0" prefWidth="241.0" text="Set Grade for Selected Student &amp; Course" />
                         <ListView layoutX="289.0" layoutY="84.0" prefHeight="200.0" prefWidth="200.0" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register Student on Course/Register Grade">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
+                         <Label fx:id="lblRegistration" layoutX="28.0" layoutY="330.0" text="Message:" />
                         <Line endX="100.0" layoutX="119.0" layoutY="261.0" opacity="0.61" startX="-100.0" />
                      </children>
                   </AnchorPane>

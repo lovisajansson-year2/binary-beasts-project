@@ -1,8 +1,8 @@
 package models;
 
-public class Grade {
-	private String finalGrade;
 
+public class HasStudied {
+	private int finalGrade;
 	private Student student;
 	private Course course;
 

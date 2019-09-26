@@ -2,12 +2,12 @@ package models;
 
 public class Student {
 
-	private String studentID;
+	private int studentID;
 	private String firstName;
 	private String lastName;
-	private Grade grade;
+	private HasStudied grade;
 
-	public Student(String studentID, String firstName, String lastName) {
+	public Student() {
 		this.studentID = studentID;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -25,16 +25,19 @@ public class Student {
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	public String getStudentID() {
+	public int getStudentID() {
 		return studentID;
 	}
-	public void setStudentID(String studentID) {
+	public void setStudentID(int studentID) {
 		this.studentID = studentID;
 	}
-	public Grade getGrade() {
+	public HasStudied getGrade() {
 		return grade;
 	}
-	public void setGrade(Grade grade) {
+	public void setGrade(HasStudied grade) {
 		this.grade = grade;
 	}
+
+	
+
 }
