@@ -7,7 +7,7 @@ import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 
 import database.DatabaseConnection;
-import javafx.collections.FXCollections;
+import javafx.collections.*;
 import javafx.collections.ObservableList;
 import models.Course;
 import models.Student;
@@ -65,7 +65,22 @@ public class StudiesDAO {
         }
         return cList;
 	}
-//	addStudies studentid coursecode
+	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
+		String stmt = "select courseCode from Studies where studentID ="+studentID+"";
+		ResultSet rs = null;
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		try {
+			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			crs.populate(rs);
+			ObservableList<Course> cList = getCourseList(crs);
+			return cList;
+		} catch (SQLException e) {
+			System.out.println("error while finding student");
+			throw e;
+		}
+	}
+		
+	//	addStudies studentid coursecode
 //	removeStudies studentID courseCode
 //	findAllStudentsOnCourse coursecode
 //	findAllStudiesForStudent studentid
