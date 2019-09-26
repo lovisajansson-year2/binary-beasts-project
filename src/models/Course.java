@@ -7,6 +7,9 @@ public class Course {
 	private Grade grade;
 
 	public Course() {
+	}
+
+	public Course(String courseCode, String courseName, int credits) {
 		this.courseCode = courseCode;
 		this.courseName = courseName;
 		this.credits = credits;

@@ -1,4 +1,100 @@
 package dal;
+import database.DatabaseConnection;
+import javafx.collections.*;
+import models.*;
+import dal.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 
 public class CourseDAO {
+	private static int count = 100; //fixa
+	
+	public static String generateID() {
+		String cID = "C" + count++;
+		return cID;
+	}
+	public static void addCourse(Integer credits) throws SQLException, ClassNotFoundException {
+		String stmt = "insert into Course values('"+generateID()+"','"+credits+"')";
+	
+		try {
+			DatabaseConnection.dbExecuteUpdate(stmt);
+		} catch (SQLException e) {
+			System.out.println("Error while inserting Course");
+			throw e;
+		}
+	}
+	public static void updateCourse(String courseCode, int credits) throws SQLException, ClassNotFoundException {
+		String stmt = "update Course set credits = "+credits+" where courseCode = '"+courseCode+"'";
+	
+		try {
+			DatabaseConnection.dbExecuteUpdate(stmt);
+		} catch (SQLException e) {
+			System.out.println("Error while inserting Course");
+			throw e;
+		}
+	}
+	
+	public static Course findCourse(String courseCode) throws SQLException, ClassNotFoundException{
+		String stmt = "select * from Course where courseCode ='"+courseCode+"'"; 
+		ResultSet rs = null;
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		try {
+			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			crs.populate(rs);
+			Course c = getCourseFromResultSet(crs);
+			return c;
+		} catch (SQLException e) {
+			System.out.println("error while finding student");
+			throw e;
+		}
+	}
+	public static void deleteCourse(String courseCode) throws SQLException, ClassNotFoundException {
+		String stmt = "delete from Course where courseCode='"+courseCode+"'"; 
+		try {
+			DatabaseConnection.dbExecuteQuery(stmt);
+		} catch (SQLException e) {
+			System.out.println("Error while deleting Course");
+			throw e;
+		}
+	}
+	public static ObservableList<Course> findAllCourses() throws SQLException, ClassNotFoundException{
+		String stmt = "select * from Course";
+		ResultSet rs = null;
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		try {
+			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			crs.populate(rs);
+			ObservableList<Course> cList = getCourseList(crs);
+			return cList;
+		} catch (SQLException e) {
+			System.out.println("error while finding student");
+			throw e;
+		}
+	}
+	private static Course getCourseFromResultSet(CachedRowSet crs) throws SQLException {
+		Course c = null;
+		if(crs.next()) {
+			c= new Course();
+			c.setCourseCode(crs.getString(1));
+			c.setCredits(crs.getInt(2));
+		}
+	return c;
+	}
+	private static ObservableList<Course> getCourseList(CachedRowSet crs) throws SQLException, ClassNotFoundException{
+        ObservableList<Course> cList = FXCollections.observableArrayList();
+        while (crs.next()) {
+        	Course c = new Course();
+        	c.setCourseCode(crs.getString(1));
+        	c.setCredits(crs.getInt(2));
+        	cList.add(c);
+        }
+        return cList;
+	}
+
+	
 }
