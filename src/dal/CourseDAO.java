@@ -28,27 +28,6 @@ public class CourseDAO {
 	        return id;
 
 	    }
-	    
-	public static int generateID() throws SQLException, ClassNotFoundException {
-		int id = 0;
-
-		String stmt = "select max(courseCode) from course";
-
-		try {
-			ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
-			if(rs.next()) {
-				id = rs.getInt(1);
-				id++;
-			}
-
-		} catch(SQLException e) {
-			System.out.println("Error generating id");
-			throw e;
-		}
-
-		return id;
-
-	}
 
 	public static void addCourse(int credits) throws SQLException, ClassNotFoundException {
 		String stmt = "insert into Course values("+generateID()+","+credits+")";

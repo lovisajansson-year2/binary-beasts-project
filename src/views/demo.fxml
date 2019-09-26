@@ -64,12 +64,12 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="159.0" promptText="Select Student" />
-                        <ComboBox layoutX="28.0" layoutY="128.0" prefHeight="27.0" prefWidth="161.0" promptText="Select Course" />
-                        <ComboBox layoutX="28.0" layoutY="278.0" prefHeight="25.0" prefWidth="182.0" promptText="Select Grade" />
-                        <Button layoutX="28.0" layoutY="173.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="181.0" text="Register Student on Course" />
-                        <Button layoutX="28.0" layoutY="216.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="182.0" text="Remove Student from Course" />
-                        <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="241.0" text="Set Grade for Selected Student &amp; Course" />
+                        <ComboBox fx:id="cbRegStudents" layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="159.0" promptText="Select Student" />
+                        <ComboBox fx:id="cbRegCourses" layoutX="28.0" layoutY="128.0" prefHeight="27.0" prefWidth="161.0" promptText="Select Course" />
+                        <ComboBox fx:id="cbGrade" layoutX="28.0" layoutY="278.0" prefHeight="25.0" prefWidth="182.0" promptText="Select Grade" />
+                        <Button layoutX="28.0" layoutY="173.0" mnemonicParsing="false" onAction="#addRegistration" prefHeight="25.0" prefWidth="181.0" text="Register Student on Course" />
+                        <Button layoutX="28.0" layoutY="216.0" mnemonicParsing="false" onAction="#removeRegistration" prefHeight="27.0" prefWidth="182.0" text="Remove Student from Course" />
+                        <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" onAction="#setGrade" prefHeight="27.0" prefWidth="241.0" text="Set Grade for Selected Student &amp; Course" />
                         <ListView layoutX="289.0" layoutY="84.0" prefHeight="200.0" prefWidth="200.0" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register Student on Course/Register Grade">
                            <font>

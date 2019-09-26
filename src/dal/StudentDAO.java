@@ -31,7 +31,7 @@ public class StudentDAO {
 
     }
 
-    public static Student findStudent(String studentID) throws SQLException, ClassNotFoundException {
+    public static Student findStudent(int studentID) throws SQLException, ClassNotFoundException {
 
         String stmt = "select * from student where studentID = '" +studentID+"'";
 
@@ -106,7 +106,7 @@ public class StudentDAO {
         }
     }
 
-    public static void updateStudent(String studentID, String fName, String lName) throws SQLException, ClassNotFoundException {
+    public static void updateStudent(int studentID, String fName, String lName) throws SQLException, ClassNotFoundException {
 
         String stmt = "update student set firstName = '" +fName+ "', lastName = '" +lName+ "' where studentID = '" +studentID+"'";
 
@@ -118,7 +118,7 @@ public class StudentDAO {
         }
     }
 
-    public static void removeStudent(String studentID) throws SQLException, ClassNotFoundException {
+    public static void removeStudent(int studentID) throws SQLException, ClassNotFoundException {
 
         String stmt = "delete from student where studentID = '"+studentID+"'";
 

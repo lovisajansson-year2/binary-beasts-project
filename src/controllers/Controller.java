@@ -1,10 +1,12 @@
 package controllers;
 
-import dal.StudentDAO;
-import dal.CourseDAO;
+import dal.*;
+
 import database.DatabaseConnection;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import models.Course;
@@ -69,6 +71,11 @@ public class Controller {
     private void initialize() throws SQLException, ClassNotFoundException {
         cbStudent.setItems(StudentDAO.findAllStudent());
         cbCourses.setItems(CourseDAO.findAllCourses());
+        cbRegStudents.setItems(StudentDAO.findAllStudent());
+        cbRegCourses.setItems(CourseDAO.findAllCourses());
+
+        ObservableList<String> grades = FXCollections.observableArrayList("F","E","D","C","B","A");
+        cbGrade.setItems(grades);
     }
 
 
@@ -194,7 +201,7 @@ public class Controller {
     private void setGrade(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
 
         try {
-            HasStudiedDAO.addHasStudied(cbRegStudents.getSelectionModel().getSelectedItem().getStudentID(), cbRegCourses.getSelectionModel().getSelectedItem().getCourseCode(), cbGrade.getSelectionModel().getSelectedItem().toString());
+            HasStudiedDAO.addHasStudied(cbRegStudents.getSelectionModel().getSelectedItem().getStudentID(), cbRegCourses.getSelectionModel().getSelectedItem().getCourseCode(), cbGrade.getSelectionModel().getSelectedItem());
             lblRegistration.setText("Message: Removed registration.");
             System.out.println("Registration removed");
         } catch(SQLException e) {

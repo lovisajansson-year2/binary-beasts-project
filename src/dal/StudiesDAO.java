@@ -16,7 +16,7 @@ public class StudiesDAO {
 
 	public static void addStudies(int studentID, int courseCode) throws SQLException, ClassNotFoundException{
 		  String stmt =
-	                "insert into Studies values("+studentID+""+courseCode+"";
+	                "insert into Studies values("+studentID+", "+courseCode+")";
 	        try {
 	            DatabaseConnection.dbExecuteUpdate(stmt);
 	        } catch (SQLException e) {
@@ -65,8 +65,4 @@ public class StudiesDAO {
         }
         return cList;
 	}
-//	addStudies studentid coursecode
-//	removeStudies studentID courseCode
-//	findAllStudentsOnCourse coursecode
-//	findAllStudiesForStudent studentid
 }
