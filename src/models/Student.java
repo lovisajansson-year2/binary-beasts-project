@@ -7,7 +7,7 @@ public class Student {
 	private String lastName;
 	private Grade grade;
 
-	public Student(String studentID, String firstName, String lastName) {
+	public Student() {
 		this.studentID = studentID;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -37,4 +37,10 @@ public class Student {
 	public void setGrade(Grade grade) {
 		this.grade = grade;
 	}
+
+	@Override
+	public String toString() {
+		return this.getStudentID();
+	}
+
 }
