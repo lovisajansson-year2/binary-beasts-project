@@ -29,7 +29,6 @@ public class CourseDAO {
 
 	    }
 
-	
 	public static void addCourse(int credits) throws SQLException, ClassNotFoundException {
 		String stmt = "insert into Course values("+generateID()+","+credits+")";
 	
@@ -65,10 +64,11 @@ public class CourseDAO {
 			throw e;
 		}
 	}
-	public static void deleteCourse(int courseCode) throws SQLException, ClassNotFoundException {
+
+	public static void removeCourse(int courseCode) throws SQLException, ClassNotFoundException {
 		String stmt = "delete from Course where courseCode="+courseCode+""; 
 		try {
-			DatabaseConnection.dbExecuteQuery(stmt);
+			DatabaseConnection.dbExecuteUpdate(stmt);
 		} catch (SQLException e) {
 			System.out.println("Error while deleting Course");
 			throw e;
