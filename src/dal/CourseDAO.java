@@ -14,10 +14,27 @@ import javax.sql.rowset.RowSetProvider;
 public class CourseDAO {
 	private static int count = 100; //fixa
 	
-	public static String generateID() {
-		String cID = "C" + count++;
-		return cID;
+	public static int generateID() throws SQLException, ClassNotFoundException {
+		int id = 0;
+
+		String stmt = "select max(courseCode) from course";
+
+		try {
+			ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+			if(rs.next()) {
+				id = rs.getInt(1);
+				id++;
+			}
+
+		} catch(SQLException e) {
+			System.out.println("Error generating id");
+			throw e;
+		}
+
+		return id;
+
 	}
+
 	public static void addCourse(Integer credits) throws SQLException, ClassNotFoundException {
 		String stmt = "insert into Course values('"+generateID()+"','"+credits+"')";
 	
@@ -53,10 +70,10 @@ public class CourseDAO {
 			throw e;
 		}
 	}
-	public static void deleteCourse(String courseCode) throws SQLException, ClassNotFoundException {
+	public static void removeCourse(String courseCode) throws SQLException, ClassNotFoundException {
 		String stmt = "delete from Course where courseCode='"+courseCode+"'"; 
 		try {
-			DatabaseConnection.dbExecuteQuery(stmt);
+			DatabaseConnection.dbExecuteUpdate(stmt);
 		} catch (SQLException e) {
 			System.out.println("Error while deleting Course");
 			throw e;

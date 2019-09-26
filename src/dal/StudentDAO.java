@@ -11,10 +11,10 @@ import java.sql.SQLException;
 
 public class StudentDAO {
 
-    public static String generateID() throws SQLException, ClassNotFoundException {
+    public static int generateID() throws SQLException, ClassNotFoundException {
         int id = 0;
 
-        String stmt = "select max(cast(substring(studentID,2, len(studentID)) as int)) from student";
+        String stmt = "select max(studentID) from student";
 
         try {
             ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
@@ -27,8 +27,7 @@ public class StudentDAO {
             System.out.println("Error generating id");
             throw e;
         }
-        String sID = "S" + id;
-        return sID;
+        return id;
 
     }
 
