@@ -5,7 +5,7 @@ public class Student {
 	private String studentID;
 	private String firstName;
 	private String lastName;
-	private Grade grade;
+	private HasStudied grade;
 
 	public Student() {
 		this.studentID = studentID;
@@ -31,10 +31,10 @@ public class Student {
 	public void setStudentID(String studentID) {
 		this.studentID = studentID;
 	}
-	public Grade getGrade() {
+	public HasStudied getGrade() {
 		return grade;
 	}
-	public void setGrade(Grade grade) {
+	public void setGrade(HasStudied grade) {
 		this.grade = grade;
 	}
 
