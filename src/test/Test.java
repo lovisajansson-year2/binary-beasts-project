@@ -1,4 +1,10 @@
 package test;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import database.DatabaseConnection;
+
 public class Test {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {

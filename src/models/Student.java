@@ -2,7 +2,7 @@ package models;
 
 public class Student {
 
-	private String studentID;
+	private int studentID;
 	private String firstName;
 	private String lastName;
 	private HasStudied grade;
@@ -25,10 +25,10 @@ public class Student {
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	public String getStudentID() {
+	public int getStudentID() {
 		return studentID;
 	}
-	public void setStudentID(String studentID) {
+	public void setStudentID(int studentID) {
 		this.studentID = studentID;
 	}
 	public HasStudied getGrade() {
@@ -38,9 +38,6 @@ public class Student {
 		this.grade = grade;
 	}
 
-	@Override
-	public String toString() {
-		return this.getStudentID();
-	}
+	
 
 }

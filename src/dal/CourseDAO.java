@@ -92,7 +92,7 @@ public class CourseDAO {
 		Course c = null;
 		if(crs.next()) {
 			c= new Course();
-			c.setCourseCode(crs.getString(1));
+			c.setCourseCode(crs.getInt(1));
 			c.setCredits(crs.getInt(2));
 		}
 	return c;
@@ -101,7 +101,7 @@ public class CourseDAO {
         ObservableList<Course> cList = FXCollections.observableArrayList();
         while (crs.next()) {
         	Course c = new Course();
-        	c.setCourseCode(crs.getString(1));
+        	c.setCourseCode(crs.getInt(1));
         	c.setCredits(crs.getInt(2));
         	cList.add(c);
         }
