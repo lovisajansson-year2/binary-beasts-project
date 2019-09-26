@@ -12,11 +12,11 @@ import javafx.collections.ObservableList;
 import models.Course;
 import models.Student;
 
-public class HasStudiesDAO {
+public class HasStudiedDAO {
 
 	public static void addHasStudied (int studentID, int courseCode, String grade) throws SQLException,ClassNotFoundException{
 		String stmt =
-                "insert into HasStudied values("+studentID+""+courseCode+"'"+grade+"')";
+                "insert into HasStudied values("+studentID+","+courseCode+",'"+grade+"')";
         try {
             DatabaseConnection.dbExecuteUpdate(stmt);
         } catch (SQLException e) {

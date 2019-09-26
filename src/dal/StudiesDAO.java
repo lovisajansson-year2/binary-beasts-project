@@ -16,7 +16,7 @@ public class StudiesDAO {
 
 	public static void addStudies(int studentID, int courseCode) throws SQLException, ClassNotFoundException{
 		  String stmt =
-	                "insert into Studies values("+studentID+""+courseCode+"";
+	                "insert into Studies values("+studentID+", "+courseCode+")";
 	        try {
 	            DatabaseConnection.dbExecuteUpdate(stmt);
 	        } catch (SQLException e) {
@@ -65,6 +65,7 @@ public class StudiesDAO {
         }
         return cList;
 	}
+
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
 		String stmt = "select courseCode from Studies where studentID ="+studentID+"";
 		ResultSet rs = null;
@@ -79,9 +80,4 @@ public class StudiesDAO {
 			throw e;
 		}
 	}
-		
-	//	addStudies studentid coursecode
-//	removeStudies studentID courseCode
-//	findAllStudentsOnCourse coursecode
-//	findAllStudiesForStudent studentid
 }
