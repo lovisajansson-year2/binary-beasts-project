@@ -1,9 +1,8 @@
 package test;
 
-import database.DatabaseConnection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import database.DatabaseConnection;
 
 public class Test {
 

@@ -6,14 +6,29 @@ import dal.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 
 public class CourseDAO {
-	private static int count = 100; //fixa
-	
+	 public static int generateID() throws SQLException, ClassNotFoundException {
+	        int id = 0;
+	        String stmt = "select max(courseCode) from course";
+
+	        try {
+	            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+	            if(rs.next()) {
+	                id = rs.getInt(1);
+	                id++;
+	            }
+
+	        } catch(SQLException e) {
+	            System.out.println("Error generating id");
+	            throw e;
+	        }
+	        return id;
+
+	    }
+	    
 	public static int generateID() throws SQLException, ClassNotFoundException {
 		int id = 0;
 
@@ -35,8 +50,8 @@ public class CourseDAO {
 
 	}
 
-	public static void addCourse(Integer credits) throws SQLException, ClassNotFoundException {
-		String stmt = "insert into Course values('"+generateID()+"','"+credits+"')";
+	public static void addCourse(int credits) throws SQLException, ClassNotFoundException {
+		String stmt = "insert into Course values("+generateID()+","+credits+")";
 	
 		try {
 			DatabaseConnection.dbExecuteUpdate(stmt);
@@ -45,8 +60,8 @@ public class CourseDAO {
 			throw e;
 		}
 	}
-	public static void updateCourse(String courseCode, int credits) throws SQLException, ClassNotFoundException {
-		String stmt = "update Course set credits = "+credits+" where courseCode = '"+courseCode+"'";
+	public static void updateCourse(int courseCode, int credits) throws SQLException, ClassNotFoundException {
+		String stmt = "update Course set credits = "+credits+" where courseCode = "+courseCode+"";
 	
 		try {
 			DatabaseConnection.dbExecuteUpdate(stmt);
@@ -56,8 +71,8 @@ public class CourseDAO {
 		}
 	}
 	
-	public static Course findCourse(String courseCode) throws SQLException, ClassNotFoundException{
-		String stmt = "select * from Course where courseCode ='"+courseCode+"'"; 
+	public static Course findCourse(int courseCode) throws SQLException, ClassNotFoundException{
+		String stmt = "select * from Course where courseCode = "+courseCode+""; 
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
@@ -70,8 +85,9 @@ public class CourseDAO {
 			throw e;
 		}
 	}
-	public static void removeCourse(String courseCode) throws SQLException, ClassNotFoundException {
-		String stmt = "delete from Course where courseCode='"+courseCode+"'"; 
+
+	public static void removeCourse(int courseCode) throws SQLException, ClassNotFoundException {
+		String stmt = "delete from Course where courseCode="+courseCode+""; 
 		try {
 			DatabaseConnection.dbExecuteUpdate(stmt);
 		} catch (SQLException e) {
@@ -97,7 +113,7 @@ public class CourseDAO {
 		Course c = null;
 		if(crs.next()) {
 			c= new Course();
-			c.setCourseCode(crs.getString(1));
+			c.setCourseCode(crs.getInt(1));
 			c.setCredits(crs.getInt(2));
 		}
 	return c;
@@ -106,7 +122,7 @@ public class CourseDAO {
         ObservableList<Course> cList = FXCollections.observableArrayList();
         while (crs.next()) {
         	Course c = new Course();
-        	c.setCourseCode(crs.getString(1));
+        	c.setCourseCode(crs.getInt(1));
         	c.setCredits(crs.getInt(2));
         	cList.add(c);
         }

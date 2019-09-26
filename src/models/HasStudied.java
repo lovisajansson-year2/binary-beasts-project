@@ -1,6 +1,6 @@
 package models;
 
-public class Grade {
+public class HasStudied {
 	private int finalGrade;
 	private Student student;
 	private Course course;

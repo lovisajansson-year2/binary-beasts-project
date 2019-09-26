@@ -53,7 +53,7 @@ public class StudentDAO {
         Student tmp = null;
 
         if (rs.next()) {
-            tmp.setStudentID(rs.getString("studentID"));
+            tmp.setStudentID(rs.getInt("studentID"));
             tmp.setFirstName(rs.getString("firstName"));
             tmp.setLastName(rs.getString("lastName"));
         }
@@ -83,7 +83,7 @@ public class StudentDAO {
 
        while (rs.next()) {
            Student tmp = new Student();
-           tmp.setStudentID(rs.getString("studentID"));
+           tmp.setStudentID(rs.getInt("studentID"));
            tmp.setFirstName(rs.getString("firstName"));
            tmp.setLastName(rs.getString("lastName"));
            studentList.add(tmp);
