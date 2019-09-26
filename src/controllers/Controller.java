@@ -89,7 +89,7 @@ public class Controller {
         } catch (SQLException e) {
             lblStudents.setText("Message: Registration failed.");
             throw e;
-        }
+        } 
         cbStudent.setItems(StudentDAO.findAllStudent());
         cbStudent.getSelectionModel().selectLast();
 
@@ -116,8 +116,9 @@ public class Controller {
             lblStudents.setText("Message: Removed " + cbStudent.getSelectionModel().getSelectedItem().getStudentID());
             System.out.print("Student removed.");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Remove failed.");
-            throw e;
+            lblStudents.setText("Message: Cannot remove student that is studying or has studied");
+        } catch (NullPointerException e) {
+        	lblStudents.setText("must pick a student");
         }
         cbStudent.setItems(StudentDAO.findAllStudent());
         cbStudent.getSelectionModel().selectFirst();
@@ -130,14 +131,18 @@ public class Controller {
 
         try {
             CourseDAO.addCourse(Integer.parseInt(tfCredits.getText()));
-            lblStudents.setText("Message: Added!");
+            lblCourses.setText("Message: Added!");
             System.out.println("Course added.");
         } catch (SQLException e) {
-            lblStudents.setText("Message: Registration failed.");
-            throw e;
+            lblCourses.setText("Message: Registration failed.");
+        } catch (NumberFormatException e) {
+        	lblCourses.setText("course must have credits and they must be numbers");
+        } catch (NullPointerException e) {
+        	lblCourses.setText("must pick a course");
         }
         cbCourses.setItems(CourseDAO.findAllCourses());
         cbStudent.getSelectionModel().selectLast();
+        
 
     }
 
@@ -146,11 +151,14 @@ public class Controller {
 
         try {
             CourseDAO.updateCourse(cbCourses.getSelectionModel().getSelectedItem().getCourseCode(), Integer.parseInt(tfCredits.getText()));
-            lblStudents.setText("Message: Updated.");
+            lblCourses.setText("Message: Updated.");
             System.out.println("Course updated");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Update failed.");
-            throw e;
+            lblCourses.setText("Message: Update failed.");
+        } catch (NullPointerException e) {
+        	lblCourses.setText("must pick a course");
+        } catch (NumberFormatException e) {
+        	lblCourses.setText("credits must be numbers");
         }
     }
 
@@ -162,8 +170,9 @@ public class Controller {
             lblCourses.setText("Message: Removed " + cbCourses.getSelectionModel().getSelectedItem().getCourseCode());
             System.out.print("Course removed.");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Remove failed.");
-            throw e;
+            lblCourses.setText("Cannot delete course on which students are studying or has studied");
+        } catch(NullPointerException e) {
+        	lblCourses.setText("Message: You have to pick a course");
         }
         cbCourses.setItems(CourseDAO.findAllCourses());
         cbCourses.getSelectionModel().selectFirst();
