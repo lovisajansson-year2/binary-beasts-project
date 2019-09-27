@@ -92,6 +92,15 @@ public class StudentDAO {
 
     }
 
+    public static ObservableList<String> getListStudents() throws SQLException, ClassNotFoundException {
+        ObservableList<String> students = FXCollections.observableArrayList();
+        students.add("Register student");
+        for(Student s : findAllStudent()) {
+            students.add(Integer.toString(s.getStudentID()));
+        }
+        return students;
+    }
+
 
     public static void addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
 

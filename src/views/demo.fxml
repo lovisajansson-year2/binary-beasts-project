@@ -22,18 +22,18 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox fx:id="cbCourses" layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="242.0" promptText="Select Course or Register New" />
-                        <TextField fx:id="tfCredits" layoutX="103.0" layoutY="173.0" />
+                        <ComboBox fx:id="cbCourses" layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="242.0" />
+                        <TextField fx:id="tfCredits" layoutX="105.0" layoutY="123.0" />
                         <Button layoutX="28.0" layoutY="219.0" mnemonicParsing="false" onAction="#addCourse" text="Register" />
                         <Button layoutX="193.0" layoutY="219.0" mnemonicParsing="false" onAction="#removeCourse" text="Remove" />
                         <Button layoutX="112.0" layoutY="219.0" mnemonicParsing="false" onAction="#updateCourse" text="Update" />
-                        <Label layoutX="29.0" layoutY="177.0" text="Credits" />
+                        <Label layoutX="35.0" layoutY="128.0" text="Credits" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register/Update Course">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                         <Label fx:id="lblCourses" layoutX="28.0" layoutY="330.0" text="Message:" />
+                         <Label fx:id="lblMessage" layoutX="33.0" layoutY="345.0" text="Message:" />
                      </children>
                   </AnchorPane>
                </content>
@@ -42,7 +42,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox fx:id="cbStudent" layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="222.0" promptText="Select Student or Register New" />
+                        <ComboBox fx:id="cbStudent" layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="242.0" />
                         <TextField fx:id="tfFirstName" layoutX="103.0" layoutY="128.0" />
                         <TextField fx:id="tfLastName" layoutX="103.0" layoutY="173.0" />
                         <Button fx:id="btnStudentAdd" layoutX="29.0" layoutY="219.0" mnemonicParsing="false" onAction="#addStudent" text="Register" />
@@ -55,7 +55,7 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lblStudents" layoutX="28.0" layoutY="330.0" text="Message:" />
+                        <Label layoutX="32.0" layoutY="345.0" text="${lblMessage.text}" />
                      </children>
                   </AnchorPane>
             </content>
@@ -64,19 +64,19 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ComboBox fx:id="cbRegStudents" layoutX="28.0" layoutY="84.0" prefHeight="25.0" prefWidth="159.0" promptText="Select Student" />
-                        <ComboBox fx:id="cbRegCourses" layoutX="28.0" layoutY="128.0" prefHeight="27.0" prefWidth="161.0" promptText="Select Course" />
-                        <ComboBox fx:id="cbGrade" layoutX="28.0" layoutY="278.0" prefHeight="25.0" prefWidth="182.0" promptText="Select Grade" />
-                        <Button layoutX="28.0" layoutY="173.0" mnemonicParsing="false" onAction="#addRegistration" prefHeight="25.0" prefWidth="181.0" text="Register Student on Course" />
-                        <Button layoutX="28.0" layoutY="216.0" mnemonicParsing="false" onAction="#removeRegistration" prefHeight="27.0" prefWidth="182.0" text="Remove Student from Course" />
-                        <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" onAction="#setGrade" prefHeight="27.0" prefWidth="241.0" text="Set Grade for Selected Student &amp; Course" />
-                        <ListView layoutX="289.0" layoutY="84.0" prefHeight="200.0" prefWidth="200.0" />
+                        <ComboBox fx:id="cbRegStudents" layoutX="28.0" layoutY="84.0" prefHeight="27.0" prefWidth="184.0" />
+                        <ComboBox fx:id="cbRegCourses" layoutX="28.0" layoutY="128.0" prefHeight="27.0" prefWidth="183.0" />
+                        <ComboBox fx:id="cbGrade" layoutX="28.0" layoutY="278.0" prefHeight="25.0" prefWidth="182.0" />
+                        <Button layoutX="28.0" layoutY="173.0" mnemonicParsing="false" onAction="#addRegistration" prefHeight="25.0" prefWidth="181.0" text="Register" />
+                        <Button layoutX="28.0" layoutY="216.0" mnemonicParsing="false" onAction="#removeRegistration" prefHeight="27.0" prefWidth="182.0" text="Remove" />
+                        <Button layoutX="28.0" layoutY="320.0" mnemonicParsing="false" onAction="#setGrade" prefHeight="27.0" prefWidth="182.0" text="Set Grade" />
+                        <ListView layoutX="231.0" layoutY="85.0" prefHeight="262.0" prefWidth="200.0" />
                         <Label layoutX="29.0" layoutY="35.0" text="Register Student on Course/Register Grade">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                         <Label fx:id="lblRegistration" layoutX="28.0" layoutY="330.0" text="Message:" />
+                         <Label layoutX="29.0" layoutY="345.0" text="${lblMessage.text}" />
                         <Line endX="100.0" layoutX="119.0" layoutY="261.0" opacity="0.61" startX="-100.0" />
                      </children>
                   </AnchorPane>
@@ -86,10 +86,8 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="22.0" layoutY="76.0" prefHeight="276.0" prefWidth="553.0">
+                        <TableView fx:id="tableView" layoutX="22.0" layoutY="76.0" prefHeight="276.0" prefWidth="553.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="C1" />
-                            <TableColumn prefWidth="75.0" text="C2" />
                           </columns>
                         </TableView>
                         <ComboBox layoutX="224.0" layoutY="42.0" prefWidth="150.0" promptText="Select Course" />
