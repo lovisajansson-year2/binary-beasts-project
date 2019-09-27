@@ -15,12 +15,13 @@ public class DatabaseConnection {
 	private static Connection conn = null;
 		 
 	private static final String connStr = "jdbc:sqlserver://127.0.0.1:1433;database=Assignment1;";
+	private static final String connStr1 = "jdbc:sqlserver://127.0.0.1:1433;database=CRONUS;";
 
 	private static final String userName = "user";
 	
 	private static final String password = "pass";
 
-	public static void dbConnect() throws SQLException, ClassNotFoundException {
+	public static void dbConnect(int index) throws SQLException, ClassNotFoundException {
 		    	String message = null;
 		        try {
 		            Class.forName(JDBC_DRIVER);
@@ -35,7 +36,11 @@ public class DatabaseConnection {
 	           	System.out.println(message);
 
 		        try {
-		            conn = DriverManager.getConnection(connStr, userName, password);
+		        	if(index == 0) {
+						conn = DriverManager.getConnection(connStr, userName, password);
+					} else if(index == 1) {
+						conn = DriverManager.getConnection(connStr1, userName, password);
+					}
 		            System.out.println("Connection succeeded!");
 		        } catch (SQLException e) {
 		            System.out.println("Connection Failed! Check output console" + e);
@@ -44,12 +49,12 @@ public class DatabaseConnection {
 		        }
 		    }
 		 
-		 public static ResultSet dbExecuteQuery(String queryStmt) throws SQLException, ClassNotFoundException {
+		 public static ResultSet dbExecuteQuery(int index, String queryStmt) throws SQLException, ClassNotFoundException {
 		        Statement stmt = null;
 		        ResultSet resultSet = null;
 		        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		        try {
-		            dbConnect();
+		            dbConnect(index);
 		            System.out.println("Statement: " + queryStmt + "\n");
 		 
 		            stmt = conn.createStatement();
@@ -64,10 +69,10 @@ public class DatabaseConnection {
 		        return crs;
 		    }
 		 
-	 public static void dbExecuteUpdate(String sqlStmt) throws SQLException, ClassNotFoundException {
+	 public static void dbExecuteUpdate(int index, String sqlStmt) throws SQLException, ClassNotFoundException {
 		        Statement stmt = null;
 		        try {
-		            dbConnect();
+		            dbConnect(index);
 		            stmt = conn.createStatement();
 		            stmt.executeUpdate(sqlStmt);
 		        } catch (SQLException e) {

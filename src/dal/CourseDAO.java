@@ -15,7 +15,7 @@ public class CourseDAO {
 	        String stmt = "select max(courseCode) from course";
 
 	        try {
-	            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+	            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 	            if(rs.next()) {
 	                id = rs.getInt(1);
 	                id++;
@@ -33,7 +33,7 @@ public class CourseDAO {
 		String stmt = "insert into Course values("+generateID()+","+credits+")";
 	
 		try {
-			DatabaseConnection.dbExecuteUpdate(stmt);
+			DatabaseConnection.dbExecuteUpdate(0, stmt);
 		} catch (SQLException e) {
 			System.out.println("Error while inserting Course");
 			throw e;
@@ -43,7 +43,7 @@ public class CourseDAO {
 		String stmt = "update Course set credits = "+credits+" where courseCode = "+courseCode+"";
 	
 		try {
-			DatabaseConnection.dbExecuteUpdate(stmt);
+			DatabaseConnection.dbExecuteUpdate(0, stmt);
 		} catch (SQLException e) {
 			System.out.println("Error while inserting Course");
 			throw e;
@@ -55,7 +55,7 @@ public class CourseDAO {
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 			crs.populate(rs);
 			Course c = getCourseFromResultSet(crs);
 			return c;
@@ -68,7 +68,7 @@ public class CourseDAO {
 	public static void removeCourse(int courseCode) throws SQLException, ClassNotFoundException {
 		String stmt = "delete from Course where courseCode="+courseCode+""; 
 		try {
-			DatabaseConnection.dbExecuteUpdate(stmt);
+			DatabaseConnection.dbExecuteUpdate(0, stmt);
 		} catch (SQLException e) {
 			System.out.println("Error while deleting Course");
 			throw e;
@@ -79,7 +79,7 @@ public class CourseDAO {
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 			crs.populate(rs);
 			ObservableList<Course> cList = getCourseList(crs);
 			return cList;
@@ -89,7 +89,7 @@ public class CourseDAO {
 		}
 	}
 	private static Course getCourseFromResultSet(CachedRowSet crs) throws SQLException {
-		Course c = null;
+		Course c = new Course();
 		if(crs.next()) {
 			c= new Course();
 			c.setCourseCode(crs.getInt(1));

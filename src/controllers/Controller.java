@@ -65,8 +65,14 @@ public class Controller {
     @FXML
     private Button btnRegGrade;
 
+
+
     @FXML
     private TableView tableView;
+    @FXML
+    private ComboBox<String> cbQ;
+    @FXML
+    private Button btnA1;
 
 
 
@@ -89,15 +95,71 @@ public class Controller {
         ObservableList<String> grades = FXCollections.observableArrayList("Select grade","F","E","D","C","B","A");
         cbGrade.setItems(grades);
         cbGrade.getSelectionModel().selectFirst();
-        buildData();
+
+        ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
+        "1","2","3","4","5","6");
+
+        cbQ.setItems(questions);
+        cbQ.getSelectionModel().selectFirst();
+
+        listenerStudent();
     }
 
     @FXML
-    private void buildData() throws SQLException, ClassNotFoundException {
+    private void buildData(int index) throws SQLException, ClassNotFoundException {
         ObservableList data = FXCollections.observableArrayList();
-        String stmt = "select * from studies";
+        String stmt = "";
+         if(index == 0) {
+            stmt = "SELECT No_, [First Name], [Last Name], Address, City\n" +
+                    "FROM [CRONUS Sverige AB$Employee]\n";
+        } else if(index == 1) {
+             stmt = "SELECT [Employee No_], [From Date], [To Date], Description, Quantity\n" +
+                     "FROM [CRONUS Sverige AB$Employee Absence]\n";
+         } else if(index == 2) {
+             stmt = "SELECT timestamp, [Search Limit], [Temp_ Key Index], [Temp_ Table No_], [Temp_ Option Value]\n" +
+                     "FROM [CRONUS Sverige AB$Employee Portal Setup]\n";
+         } else if(index == 3) {
+             stmt = "SELECT [Employee No_], [Qualification Code], Description, Institution_Company, Cost\n" +
+                     "FROM [CRONUS Sverige AB$Employee Qualification]\n";
+         } else if(index == 4) {
+             stmt = "SELECT [Employee No_], [Relative Code], [First Name], [Last Name], [Birth Date]\n" +
+                     "FROM [CRONUS Sverige AB$Employee Relative]\n";
+         } else if(index == 5) {
+             stmt = "SELECT *\n" +
+                     "FROM [CRONUS Sverige AB$Employee Statistics Group]\n";
+         } else if(index == 6) {
+             stmt = "SELECT *\n" +
+                     "FROM [CRONUS Sverige AB$Employment Contract]\n";
+         } else if(index == 7) {
+             stmt = "SELECT name, type FROM sys.key_constraints;";
+         } else if(index == 8) {
+             stmt = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE\n" +
+                     "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
+         } else if(index == 9) {
+             stmt = "SELECT TABLE_NAME\n" +
+                     "FROM INFORMATION_SCHEMA.TABLES\n";
+         } else if(index == 10) {
+             stmt = "SELECT COLUMN_NAME\n" +
+                     "FROM INFORMATION_SCHEMA.COLUMNS\n" +
+                     "WHERE TABLE_NAME = 'CRONUS Sverige AB$Employee'\n";
+         } else if(index == 11) {
+             stmt = "";
+         } else if(index == 12) {
+             stmt = "SELECT TOP 1\n" +
+                     "    [TableName] = o.name, \n" +
+                     "    [RowCount] = i.rows\n" +
+                     "FROM \n" +
+                     "    sysobjects o, \n" +
+                     "    sysindexes i \n" +
+                     "WHERE \n" +
+                     "    o.xtype = 'U' \n" +
+                     "    AND \n" +
+                     "    i.id = OBJECT_ID(o.name)\n" +
+                     "ORDER BY i.rows DESC\n";
+         }
+
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(1, stmt);
 
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                 //We are using non property style for making dynamic table
@@ -129,6 +191,65 @@ public class Controller {
             throw e;
         }
 
+    }
+
+    @FXML
+    public void listenerStudent() throws SQLException, ClassNotFoundException {
+        cbStudent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                try
+                {
+                    if(cbStudent.getSelectionModel().getSelectedIndex() != 0) {
+                        tfFirstName.setText(StudentDAO.findStudent(Integer.parseInt(newValue)).getFirstName());
+                        tfLastName.setText(StudentDAO.findStudent(Integer.parseInt(newValue)).getLastName());
+                    } else {
+                        tfFirstName.setText("");
+                        tfLastName.setText("");
+                    }
+                } catch (SQLException e) {
+
+                } catch (ClassNotFoundException e) {
+
+                } catch (NullPointerException e) {
+
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void listenerCourse() throws SQLException, ClassNotFoundException {
+        cbStudent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                try
+                {
+                    if(cbCourses.getSelectionModel().getSelectedIndex() != 0) {
+                        tfCredits.setText(Integer.toString(CourseDAO.findCourse(Integer.parseInt(newValue)).getCredits()));
+
+                    } else {
+                        tfCredits.setText("");
+                    }
+                } catch (SQLException e) {
+
+                } catch (ClassNotFoundException e) {
+
+                } catch (NullPointerException e) {
+
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void getAnswer(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        int index = cbQ.getSelectionModel().getSelectedIndex();
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
+        buildData(index);
     }
 
     @FXML
@@ -226,10 +347,20 @@ public class Controller {
     @FXML
     private void addRegistration(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
 
+        int sID = Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem());
+        int credits = 0;
         try {
-            StudiesDAO.addStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-            lblMessage.setText("Message: Registrated.");
-            System.out.println("Registration updated");
+            for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
+              credits =+ c.getCredits();
+            }
+            if(credits <= 45) {
+                StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
+                lblMessage.setText("Message: Registrated.");
+                System.out.println("Registration updated");
+            } else {
+                lblMessage.setText("Message: Too many credits");
+            }
+
         } catch(SQLException e) {
             lblMessage.setText("Message: Registration failed.");
             throw e;

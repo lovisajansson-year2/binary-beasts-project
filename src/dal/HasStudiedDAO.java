@@ -18,7 +18,7 @@ public class HasStudiedDAO {
 		String stmt =
                 "insert into HasStudied values("+studentID+","+courseCode+",'"+grade+"')";
         try {
-            DatabaseConnection.dbExecuteUpdate(stmt);
+            DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
             System.out.println("Error while inserting studies");
             throw e;
@@ -27,7 +27,7 @@ public class HasStudiedDAO {
 	public static void removeHasStudied(int studentID, int courseCode) throws SQLException, ClassNotFoundException{
 		String stmt = "delete from HasStudied where studentID = "+studentID+" and courseCode="+courseCode+"";
         try {
-            DatabaseConnection.dbExecuteUpdate(stmt);
+            DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
             System.out.println("Error while deleting studies.");
             throw e;
@@ -38,7 +38,7 @@ public class HasStudiedDAO {
 		String stmt = "select grade from HasStudied where studentID = "+studentID+" and courseCode="+courseCode+"";
         String grade = null;
 		try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
             while (rs.next()) {
             	grade = rs.getString(1);
             }
@@ -71,7 +71,7 @@ public class HasStudiedDAO {
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 			crs.populate(rs);
 			ObservableList<Student> sList = getStudentList(crs);
 			return sList;
@@ -85,7 +85,7 @@ public class HasStudiedDAO {
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 			crs.populate(rs);
 			ObservableList<Course> cList = getCourseList(crs);
 			return cList;
@@ -94,10 +94,4 @@ public class HasStudiedDAO {
 			throw e;
 		}
 	}
-	
 }
-////addHasStudied sID cID grade
-//removeHasStudied sID cID
-//findGrade sID cID
-//findAllCompletedStudents cID
-//findAllCompletedCourses sID
