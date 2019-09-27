@@ -31,23 +31,28 @@ public class DatabaseConnection {
 		            e.printStackTrace();
 		            throw e;
 		        }
-
-		        message = "JDBC Driver Registered!";
-	           	System.out.println(message);
-
+		        
 		        try {
 		        	if(index == 0) {
 						conn = DriverManager.getConnection(connStr, userName, password);
 					} else if(index == 1) {
 						conn = DriverManager.getConnection(connStr1, userName, password);
 					}
-		            System.out.println("Connection succeeded!");
 		        } catch (SQLException e) {
 		            System.out.println("Connection Failed! Check output console" + e);
 		            e.printStackTrace();
 		            throw e;
 		        }
 		    }
+	public static void dbDisconnect() throws SQLException {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+        } catch (Exception e){
+           throw e;
+        }
+    }
 		 
 		 public static ResultSet dbExecuteQuery(int index, String queryStmt) throws SQLException, ClassNotFoundException {
 		        Statement stmt = null;
@@ -55,7 +60,6 @@ public class DatabaseConnection {
 		        CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		        try {
 		            dbConnect(index);
-		            System.out.println("Statement: " + queryStmt + "\n");
 		 
 		            stmt = conn.createStatement();
 		 
@@ -65,7 +69,16 @@ public class DatabaseConnection {
 		        } catch (SQLException e) {
 		            System.out.println("Problem occurred at executeQuery operation : " + e);
 		            throw e;
-		        } 
+		        } finally {
+		            if (resultSet != null) {
+		                resultSet.close();
+		            }
+		            if (stmt != null) {
+		             
+		                stmt.close();
+		            }
+		            dbDisconnect();
+		        }
 		        return crs;
 		    }
 		 
@@ -78,8 +91,13 @@ public class DatabaseConnection {
 		        } catch (SQLException e) {
 		            System.out.println("Problem occurred at executeUpdate operation : " + e);
 		            throw e;
-		        }
+		        }finally {
+		        	if (stmt != null) {
+		                stmt.close();
+		        	}
+		            dbDisconnect();
 	}
 
 }
+}	 
 
