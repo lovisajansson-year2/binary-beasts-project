@@ -3,19 +3,21 @@ package controllers;
 import dal.*;
 
 import database.DatabaseConnection;
+
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.util.Callback;
 import models.Course;
 import models.Student;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 
 import javafx.event.ActionEvent;
+
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Controller {
@@ -32,7 +34,7 @@ public class Controller {
     @FXML
     private Button btnCoursesRemove;
     @FXML
-    private Label lblCourses;
+    private Label lblMessage;
 
     //Student
     @FXML
@@ -47,8 +49,7 @@ public class Controller {
     private Button btnStudentUpdate;
     @FXML
     private Button btnStudentRemove;
-    @FXML
-    private Label lblStudents;
+
 
     //Registration
     @FXML
@@ -63,8 +64,10 @@ public class Controller {
     private Button btnRegRemove;
     @FXML
     private Button btnRegGrade;
+
     @FXML
-    private Label lblRegistration;
+    private TableView tableView;
+
 
 
     @FXML
@@ -86,18 +89,57 @@ public class Controller {
         ObservableList<String> grades = FXCollections.observableArrayList("Select grade","F","E","D","C","B","A");
         cbGrade.setItems(grades);
         cbGrade.getSelectionModel().selectFirst();
+        buildData();
     }
 
+    @FXML
+    private void buildData() throws SQLException, ClassNotFoundException {
+        ObservableList data = FXCollections.observableArrayList();
+        String stmt = "select * from studies";
+        try {
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+
+            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                //We are using non property style for making dynamic table
+                final int j = i;
+                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                        return new SimpleStringProperty(param.getValue().get(j).toString());
+                    }
+                });
+
+                tableView.getColumns().addAll(col);
+                System.out.println("Column [" + i + "] ");
+            }
+
+            while (rs.next()) {
+                //Iterate Row
+                ObservableList<String> row = FXCollections.observableArrayList();
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                    //Iterate Column
+                    row.add(rs.getString(i));
+                }
+                System.out.println("Row [1] added " + row);
+                data.add(row);
+
+            }
+            tableView.setItems(data);
+        } catch(SQLException e) {
+            throw e;
+        }
+
+    }
 
     @FXML
     private void addStudent(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
 
         try {
             StudentDAO.addStudent(tfFirstName.getText(), tfLastName.getText());
-            lblStudents.setText("Message: Added!");
+            lblMessage.setText("Message: Added!");
             System.out.println("Student added.");
         } catch (SQLException e) {
-            lblStudents.setText("Message: Registration failed.");
+            lblMessage.setText("Message: Registration failed.");
             throw e;
         }
         cbStudent.setItems(StudentDAO.getListStudents());
@@ -110,10 +152,10 @@ public class Controller {
 
         try {
             StudentDAO.updateStudent(Integer.parseInt(cbStudent.getSelectionModel().getSelectedItem()), tfFirstName.getText(), tfLastName.getText());
-            lblStudents.setText("Message: Updated.");
+            lblMessage.setText("Message: Updated.");
             System.out.println("Student updated");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Update failed.");
+            lblMessage.setText("Message: Update failed.");
             throw e;
         }
     }
@@ -123,10 +165,10 @@ public class Controller {
 
         try {
             StudentDAO.removeStudent(Integer.parseInt(cbStudent.getSelectionModel().getSelectedItem()));
-            lblStudents.setText("Message: Removed " + cbStudent.getSelectionModel().getSelectedItem());
+            lblMessage.setText("Message: Removed " + cbStudent.getSelectionModel().getSelectedItem());
             System.out.print("Student removed.");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Remove failed.");
+            lblMessage.setText("Message: Remove failed.");
             throw e;
         }
         cbStudent.setItems(StudentDAO.getListStudents());
@@ -140,10 +182,10 @@ public class Controller {
 
         try {
             CourseDAO.addCourse(Integer.parseInt(tfCredits.getText()));
-            lblStudents.setText("Message: Added!");
+            lblMessage.setText("Message: Added!");
             System.out.println("Course added.");
         } catch (SQLException e) {
-            lblStudents.setText("Message: Registration failed.");
+            lblMessage.setText("Message: Registration failed.");
             throw e;
         }
         cbCourses.setItems(CourseDAO.getListCourses());
@@ -156,10 +198,10 @@ public class Controller {
 
         try {
             CourseDAO.updateCourse(Integer.parseInt(cbCourses.getSelectionModel().getSelectedItem()), Integer.parseInt(tfCredits.getText()));
-            lblStudents.setText("Message: Updated.");
+            lblMessage.setText("Message: Updated.");
             System.out.println("Course updated");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Update failed.");
+            lblMessage.setText("Message: Update failed.");
             throw e;
         }
     }
@@ -169,10 +211,10 @@ public class Controller {
 
         try {
             CourseDAO.removeCourse(Integer.parseInt(cbCourses.getSelectionModel().getSelectedItem()));
-            lblCourses.setText("Message: Removed " + cbCourses.getSelectionModel().getSelectedItem());
+            lblMessage.setText("Message: Removed " + cbCourses.getSelectionModel().getSelectedItem());
             System.out.print("Course removed.");
         } catch(SQLException e) {
-            lblStudents.setText("Message: Remove failed.");
+            lblMessage.setText("Message: Remove failed.");
             throw e;
         }
         cbCourses.setItems(CourseDAO.getListCourses());
@@ -186,10 +228,10 @@ public class Controller {
 
         try {
             StudiesDAO.addStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-            lblRegistration.setText("Message: Registrated.");
+            lblMessage.setText("Message: Registrated.");
             System.out.println("Registration updated");
         } catch(SQLException e) {
-            lblRegistration.setText("Message: Registration failed.");
+            lblMessage.setText("Message: Registration failed.");
             throw e;
         }
     }
@@ -199,10 +241,10 @@ public class Controller {
 
         try {
             StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-            lblRegistration.setText("Message: Removed registration.");
+            lblMessage.setText("Message: Removed registration.");
             System.out.println("Registration removed");
         } catch(SQLException e) {
-            lblRegistration.setText("Message: Removing failed.");
+            lblMessage.setText("Message: Removing failed.");
             throw e;
         }
     }
@@ -212,10 +254,10 @@ public class Controller {
 
         try {
             HasStudiedDAO.addHasStudied(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()), cbGrade.getSelectionModel().getSelectedItem());
-            lblRegistration.setText("Message: Removed registration.");
+            lblMessage.setText("Message: Removed registration.");
             System.out.println("Registration removed");
         } catch(SQLException e) {
-            lblRegistration.setText("Message: Removing failed.");
+            lblMessage.setText("Message: Removing failed.");
             throw e;
         }
     }
