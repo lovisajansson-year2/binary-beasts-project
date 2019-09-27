@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import models.Course;
 import models.Student;
@@ -19,6 +20,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import javafx.event.ActionEvent;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Controller {
@@ -69,8 +73,16 @@ public class Controller {
     @FXML
     private Label lblRegistration;
     @FXML
-    private TableView<Studies> table;
     
+    //Overview
+    private TableView<Student> hasStudiedTable;
+    private TableColumn<String, Student> column1 = new TableColumn<>("");
+    private TableColumn<String, Student> column2 = new TableColumn<>("");
+    private TableColumn<String, Student> column3 = new TableColumn<>("");
+    private TableColumn<String, Student> column4 = new TableColumn<>("");
+    private ComboBox<Course> cbOverCourses;
+    private ComboBox<Student> cbOverStudents;
+
     
 
 
@@ -215,5 +227,45 @@ public class Controller {
             lblRegistration.setText("Message: Removing failed.");
             throw e;
         }
+    }
+    
+    @FXML
+    private void buildHasStudiedTable(ObservableList<Student> hasStudiedData) throws ClassNotFoundException {
+    	hasStudiedTable.setItems(hasStudiedData);	    		
+    }
+    
+    private void buildAllCompletedStudents() throws SQLException, ClassNotFoundException{
+    	int courseCode = cbOverCourses.getSelectionModel().getSelectedItem().getCourseCode();
+    	try {
+        	ObservableList<Student> hasList = HasStudiedDAO.findAllCompletedStudents(courseCode);
+        	hasStudiedTable.setItems(hasList);
+        	column1.setText("Student ID");
+        	column2.setText("First Name");
+        	column3.setText("Last Name");
+        	column4.setText("Grade");
+            
+    	} catch(SQLException e) {
+    		throw e;
+    	}
+    }
+    
+    private void buildData() throws SQLException, ClassNotFoundException {
+    	ObservableList<ObservableList> data;
+    	data = FXCollections.observableArrayList();
+    	int courseCode = cbOverCourses.getSelectionModel().getSelectedItem().getCourseCode();
+    	try {
+    		String sql = "SELECT * FROM HasStudied WHERE courseCode ="+courseCode+"";
+    		ResultSet rs = DatabaseConnection.dbExecuteQuery(sql);
+    		
+    		for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+    			final int j = i;                
+                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i));
+                
+    		}
+    		
+    	}catch(SQLException e) {
+    		throw e;
+    	}
+    	
     }
 }
