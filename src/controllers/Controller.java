@@ -248,24 +248,4 @@ public class Controller {
     		throw e;
     	}
     }
-    
-    private void buildData() throws SQLException, ClassNotFoundException {
-    	ObservableList<ObservableList> data;
-    	data = FXCollections.observableArrayList();
-    	int courseCode = cbOverCourses.getSelectionModel().getSelectedItem().getCourseCode();
-    	try {
-    		String sql = "SELECT * FROM HasStudied WHERE courseCode ="+courseCode+"";
-    		ResultSet rs = DatabaseConnection.dbExecuteQuery(sql);
-    		
-    		for(int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-    			final int j = i;                
-                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i));
-                
-    		}
-    		
-    	}catch(SQLException e) {
-    		throw e;
-    	}
-    	
-    }
 }
