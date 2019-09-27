@@ -148,7 +148,9 @@ public class Controller {
                      "FROM INFORMATION_SCHEMA.COLUMNS\n" +
                      "WHERE TABLE_NAME = 'CRONUS Sverige AB$Employee'\n";
          } else if(index == 11) {
-             stmt = "";
+             stmt = "SELECT TABLE_NAME, COLUMN_NAME\n" +
+                     "FROM INFORMATION_SCHEMA.COLUMNS\n" +
+                     "WHERE TABLE_NAME LIKE '%Employee%'";
          } else if(index == 12) {
              stmt = "SELECT TOP 1\n" +
                      "    [TableName] = o.name, \n" +
@@ -226,7 +228,7 @@ public class Controller {
 
     @FXML
     public void listenerCourse() throws SQLException, ClassNotFoundException {
-        cbStudent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        cbCourses.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
             {
@@ -262,9 +264,13 @@ public class Controller {
 
         try {
         	int index = cbStudent.getSelectionModel().getSelectedIndex();
+
         	if(index==0 && !tfFirstName.getText().equals("") && !tfLastName.getText().equals("")) {
-            StudentDAO.addStudent(tfFirstName.getText(), tfLastName.getText());
-            lblMessage.setText("Message: Student Added");
+        	    int id = StudentDAO.addStudent(tfFirstName.getText(), tfLastName.getText());
+        	    lblMessage.setText("Message: Student Added");
+                cbStudent.getItems().add(Integer.toString(id));
+                cbRegStudents.getItems().add(Integer.toString(id));
+                cbStudent.getSelectionModel().selectLast();
         	} else if(tfFirstName.getText()=="") {
         		lblMessage.setText("Message: Student must have a firstname");
         	} else if(tfLastName.getText()=="") {
@@ -274,13 +280,9 @@ public class Controller {
         	}
      
         }finally{
-        cbStudent.setItems(StudentDAO.getListStudents());
-        cbStudent.getSelectionModel().selectLast();
-        tfFirstName.setText("");
-        tfLastName.setText("");
+
         }
     }
-    
 
     @FXML
     private void updateStudent(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
@@ -313,6 +315,11 @@ public class Controller {
         	if(index!=0) {
             StudentDAO.removeStudent(Integer.parseInt(cbStudent.getSelectionModel().getSelectedItem()));
             lblMessage.setText("Message: Removed " + cbStudent.getSelectionModel().getSelectedItem());
+            cbRegStudents.getItems().remove(cbStudent.getSelectionModel().getSelectedItem());
+            cbStudent.getItems().remove(cbStudent.getSelectionModel().getSelectedItem());
+            cbStudent.getSelectionModel().selectFirst();
+            tfFirstName.setText("");
+            tfLastName.setText("");
         	}else {
         		lblMessage.setText("Message: must pick a student to remove.");
         	}
@@ -320,10 +327,7 @@ public class Controller {
             lblMessage.setText("Message: Cannot remove student that is studying or has studied");
 
         }
-        cbStudent.setItems(StudentDAO.getListStudents());
-        cbStudent.getSelectionModel().selectFirst();
-        tfFirstName.setText("");
-        tfLastName.setText("");
+
     }
 
     @FXML
@@ -332,16 +336,19 @@ public class Controller {
         try {
         	int index = cbCourses.getSelectionModel().getSelectedIndex();
         	if (index==0) {
-            CourseDAO.addCourse(Integer.parseInt(tfCredits.getText()));
-            lblMessage.setText("Message: "+cbCourses.getSelectionModel().getSelectedItem()+" Added!");
+                int id = CourseDAO.addCourse(Integer.parseInt(tfCredits.getText()));
+                lblMessage.setText("Message: "+cbCourses.getSelectionModel().getSelectedItem()+" added.");
+                cbCourses.getItems().add(Integer.toString(id));
+                cbRegCourses.getItems().add(Integer.toString(id));
+
+                cbCourses.getSelectionModel().selectLast();
         	} else {
         		lblMessage.setText("Message: You must choose 'Register new Course'");
         	}
         } catch (NumberFormatException e) {
         	lblMessage.setText("Message: course must have credits and they must be numbers");
         }
-        cbCourses.setItems(CourseDAO.getListCourses());
-        cbStudent.getSelectionModel().selectLast();
+
         
 
     }
@@ -371,17 +378,19 @@ public class Controller {
         	if(index!=0) {
             CourseDAO.removeCourse(Integer.parseInt(cbCourses.getSelectionModel().getSelectedItem()));
             lblMessage.setText("Message: Removed " + cbCourses.getSelectionModel().getSelectedItem());
-            System.out.print("Course removed.");
+            cbRegCourses.getItems().remove(cbCourses.getSelectionModel().getSelectedItem());
+            cbCourses.getItems().remove(cbCourses.getSelectionModel().getSelectedItem());
+            cbCourses.getSelectionModel().selectFirst();
+            tfFirstName.setText("");
+            tfLastName.setText("");
+
         	} else {
         		lblMessage.setText("Message: You must pick a Course to delete.");
         	}
         } catch(SQLException e) {
             lblMessage.setText("Cannot delete course on which students are studying or has studied");
         }
-        cbCourses.setItems(CourseDAO.getListCourses());
-        cbCourses.getSelectionModel().selectFirst();
-        tfFirstName.setText("");
-        tfLastName.setText("");
+
     }
 
     @FXML
@@ -403,8 +412,8 @@ public class Controller {
             }
 
         }finally {
-            cbRegStudents.getSelectionModel().selectFirst();
-            cbRegCourses.getSelectionModel().selectFirst();
+            // cbRegStudents.getSelectionModel().selectFirst();
+            // cbRegCourses.getSelectionModel().selectFirst();
 
         }
     }
@@ -424,7 +433,6 @@ public class Controller {
 
     @FXML
     private void setGrade(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
-
         try {
             HasStudiedDAO.addHasStudied(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()), cbGrade.getSelectionModel().getSelectedItem());
             lblMessage.setText("Message: Removed registration.");

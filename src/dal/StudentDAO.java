@@ -102,10 +102,10 @@ public class StudentDAO {
     }
 
 
-    public static void addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
-
+    public static int addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
+        int id = generateID();
         String stmt =
-                "insert into Student VALUES('"+generateID()+"', '"+fName+"', '"+lName+"');";
+                "insert into Student VALUES('"+id+"', '"+fName+"', '"+lName+"');";
 
         try {
             DatabaseConnection.dbExecuteUpdate(0, stmt);
@@ -113,6 +113,7 @@ public class StudentDAO {
             System.out.println("Error while inserting student");
             throw e;
         }
+        return id;
     }
 
     public static void updateStudent(int studentID, String fName, String lName) throws SQLException, ClassNotFoundException {

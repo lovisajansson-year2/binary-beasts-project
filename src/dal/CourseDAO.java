@@ -29,8 +29,9 @@ public class CourseDAO {
 
 	    }
 
-	public static void addCourse(int credits) throws SQLException, ClassNotFoundException {
-		String stmt = "insert into Course values("+generateID()+","+credits+")";
+	public static int addCourse(int credits) throws SQLException, ClassNotFoundException {
+	 	int id = generateID();
+		String stmt = "insert into Course values("+id+","+credits+")";
 	
 		try {
 			DatabaseConnection.dbExecuteUpdate(0, stmt);
@@ -38,6 +39,7 @@ public class CourseDAO {
 			System.out.println("Error while inserting Course");
 			throw e;
 		}
+		return id;
 	}
 	public static void updateCourse(int courseCode, int credits) throws SQLException, ClassNotFoundException {
 		String stmt = "update Course set credits = "+credits+" where courseCode = "+courseCode+"";
@@ -51,16 +53,18 @@ public class CourseDAO {
 	}
 	
 	public static Course findCourse(int courseCode) throws SQLException, ClassNotFoundException{
-		String stmt = "select * from Course where courseCode = "+courseCode+""; 
-		ResultSet rs = null;
-		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+
+		String stmt = "select * from course where courseCode = '" +courseCode+"'";
+
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
-			crs.populate(rs);
-			Course c = getCourseFromResultSet(crs);
-			return c;
+			ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+
+			Course course = getCourse(rs);
+
+			return course;
+
 		} catch (SQLException e) {
-			System.out.println("error while finding student");
+			System.out.println("Error while running findCourse in dao");
 			throw e;
 		}
 	}
@@ -88,14 +92,15 @@ public class CourseDAO {
 			throw e;
 		}
 	}
-	private static Course getCourseFromResultSet(CachedRowSet crs) throws SQLException {
-		Course c = new Course();
-		if(crs.next()) {
-			c= new Course();
-			c.setCourseCode(crs.getInt(1));
-			c.setCredits(crs.getInt(2));
+	private static Course getCourse(ResultSet rs) throws SQLException {
+		Course tmp = new Course();
+
+		if(rs.next()) {
+			tmp.setCourseCode(rs.getInt("courseCode"));
+			tmp.setCredits(rs.getInt("credits"));
 		}
-	return c;
+	return tmp;
+
 	}
 	private static ObservableList<Course> getCourseList(CachedRowSet crs) throws SQLException, ClassNotFoundException{
         ObservableList<Course> cList = FXCollections.observableArrayList();
