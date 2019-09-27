@@ -10,7 +10,7 @@ public class Test {
 
         DatabaseConnection db = new DatabaseConnection();
 
-        ResultSet rs = db.dbExecuteQuery("select * from student");
+        ResultSet rs = db.dbExecuteQuery(0,"select * from student");
 
         while(rs.next()) {
             System.out.println(rs.getString(1));

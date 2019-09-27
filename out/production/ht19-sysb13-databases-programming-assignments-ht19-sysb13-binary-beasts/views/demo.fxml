@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -86,7 +85,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tableView" layoutX="22.0" layoutY="76.0" prefHeight="276.0" prefWidth="553.0">
+                        <TableView layoutX="22.0" layoutY="76.0" prefHeight="276.0" prefWidth="553.0">
                           <columns>
                           </columns>
                         </TableView>
@@ -99,6 +98,38 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="A2">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tableView" layoutX="18.0" layoutY="47.0" prefHeight="306.0" prefWidth="565.0">
+                          <columns>
+                          </columns>
+                        </TableView>
+                        <ComboBox fx:id="cbQ" layoutX="18.0" layoutY="14.0" prefHeight="27.0" prefWidth="349.0" />
+                        <Button layoutX="391.0" layoutY="14.0" mnemonicParsing="false" onAction="#getAnswer" text="Select" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="A3">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="300.0" layoutY="30.0" mnemonicParsing="false" text="Excel" />
+                        <Button layoutX="372.0" layoutY="30.0" mnemonicParsing="false" text="Access" />
+                        <Button layoutX="449.0" layoutY="30.0" mnemonicParsing="false" text="MSQLM" />
+                        <Button layoutX="300.0" layoutY="144.0" mnemonicParsing="false" text="Excel" />
+                        <Button layoutX="372.0" layoutY="144.0" mnemonicParsing="false" text="Access" />
+                        <Button layoutX="300.0" layoutY="262.0" mnemonicParsing="false" text="Excel" />
+                        <Button layoutX="380.0" layoutY="262.0" mnemonicParsing="false" text="Access" />
+                        <Label layoutX="41.0" layoutY="35.0" text="Choose applications for querys" />
+                        <Label layoutX="41.0" layoutY="149.0" text="Choose application for customer report" />
+                        <Label layoutX="41.0" layoutY="267.0" text="Choose application for employee report" />
                      </children>
                   </AnchorPane>
               </content>
