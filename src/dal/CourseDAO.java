@@ -1,8 +1,8 @@
 package dal;
+
 import database.DatabaseConnection;
 import javafx.collections.*;
 import models.*;
-import dal.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -106,6 +106,15 @@ public class CourseDAO {
         	cList.add(c);
         }
         return cList;
+	}
+
+	public static ObservableList<String> getListCourses() throws SQLException, ClassNotFoundException {
+		ObservableList<String> courses = FXCollections.observableArrayList();
+		courses.add("Register course");
+		for(Course c : findAllCourses()) {
+			courses.add(Integer.toString(c.getCourseCode()));
+		}
+		return courses;
 	}
 
 	
