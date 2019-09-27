@@ -77,17 +77,6 @@ public class Controller {
     @FXML
     private Label lblRegistration;
     @FXML
-    
-    //Overview
-    private TableView<Student> hasStudiedTable;
-    private TableColumn<String, Student> column1 = new TableColumn<>("");
-    private TableColumn<String, Student> column2 = new TableColumn<>("");
-    private TableColumn<String, Student> column3 = new TableColumn<>("");
-    private TableColumn<String, Student> column4 = new TableColumn<>("");
-    private ComboBox<Course> cbOverCourses;
-    private ComboBox<Student> cbOverStudents;
-
-    
     private TableView tableView;
     @FXML
     private ComboBox<String> cbQ;
@@ -459,23 +448,4 @@ public class Controller {
         }
     }
     
-    @FXML
-    private void buildHasStudiedTable(ObservableList<Student> hasStudiedData) throws ClassNotFoundException {
-    	hasStudiedTable.setItems(hasStudiedData);	    		
-    }
-    
-    private void buildAllCompletedStudents() throws SQLException, ClassNotFoundException{
-    	int courseCode = cbOverCourses.getSelectionModel().getSelectedItem().getCourseCode();
-    	try {
-        	ObservableList<Student> hasList = HasStudiedDAO.findAllCompletedStudents(courseCode);
-        	hasStudiedTable.setItems(hasList);
-        	column1.setText("Student ID");
-        	column2.setText("First Name");
-        	column3.setText("Last Name");
-        	column4.setText("Grade");
-            
-    	} catch(SQLException e) {
-    		throw e;
-    	}
-    }
 }

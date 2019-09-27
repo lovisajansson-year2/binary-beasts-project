@@ -22,7 +22,6 @@ public class DatabaseConnection {
 	private static final String password = "pass";
 
 	public static void dbConnect(int index) throws SQLException, ClassNotFoundException {
-		    	String message = null;
 		        try {
 		            Class.forName(JDBC_DRIVER);
 		        } catch (ClassNotFoundException e) {
