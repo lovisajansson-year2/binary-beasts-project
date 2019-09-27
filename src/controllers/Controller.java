@@ -427,7 +427,6 @@ public class Controller {
             System.out.println("Registration removed");
         } catch(SQLException e) {
             lblMessage.setText("Message: Removing failed.");
-            throw e;
         }
     }
 
@@ -439,7 +438,6 @@ public class Controller {
             System.out.println("Registration removed");
         } catch(SQLException e) {
             lblMessage.setText("Message: Removing failed.");
-            throw e;
         }
     }
 }
