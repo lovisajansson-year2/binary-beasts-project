@@ -18,7 +18,7 @@ public class StudiesDAO {
 		  String stmt =
 	                "insert into Studies values("+studentID+", "+courseCode+")";
 	        try {
-	            DatabaseConnection.dbExecuteUpdate(stmt);
+	            DatabaseConnection.dbExecuteUpdate(0, stmt);
 	        } catch (SQLException e) {
 	            System.out.println("Error while inserting studies");
 	            throw e;
@@ -27,7 +27,7 @@ public class StudiesDAO {
 	public static void removeStudies(int studentID, int courseCode) throws SQLException, ClassNotFoundException{
 		String stmt = "delete from Studies where studentID = "+studentID+" and courseCode="+courseCode+"";
         try {
-            DatabaseConnection.dbExecuteUpdate(stmt);
+            DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
             System.out.println("Error while deleting studies.");
             throw e;
@@ -47,7 +47,7 @@ public class StudiesDAO {
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 			crs.populate(rs);
 			ObservableList<Student> SList = getStudentList(crs);
 			return SList;
@@ -71,7 +71,7 @@ public class StudiesDAO {
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
-			rs = DatabaseConnection.dbExecuteQuery(stmt);
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 			crs.populate(rs);
 			ObservableList<Course> cList = getCourseList(crs);
 			return cList;

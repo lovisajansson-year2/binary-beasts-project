@@ -17,7 +17,7 @@ public class StudentDAO {
         String stmt = "select max(studentID) from student";
 
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
             if(rs.next()) {
                 id = rs.getInt(1);
                 id++;
@@ -36,7 +36,7 @@ public class StudentDAO {
         String stmt = "select * from student where studentID = '" +studentID+"'";
 
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 
             Student student = getStudent(rs);
 
@@ -50,7 +50,7 @@ public class StudentDAO {
     }
 
     public static Student getStudent(ResultSet rs) throws SQLException, ClassNotFoundException {
-        Student tmp = null;
+        Student tmp = new Student();
 
         if (rs.next()) {
             tmp.setStudentID(rs.getInt("studentID"));
@@ -64,7 +64,7 @@ public class StudentDAO {
         String stmt = "select * from student";
 
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
 
             ObservableList<Student> studentList = getAllStudent(rs);
 
@@ -102,25 +102,26 @@ public class StudentDAO {
     }
 
 
-    public static void addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
-
+    public static int addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
+        int id = generateID();
         String stmt =
-                "insert into Student VALUES('"+generateID()+"', '"+fName+"', '"+lName+"');";
+                "insert into Student VALUES('"+id+"', '"+fName+"', '"+lName+"');";
 
         try {
-            DatabaseConnection.dbExecuteUpdate(stmt);
+            DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
             System.out.println("Error while inserting student");
             throw e;
         }
+        return id;
     }
 
     public static void updateStudent(int studentID, String fName, String lName) throws SQLException, ClassNotFoundException {
 
-        String stmt = "update student set firstName = '" +fName+ "', lastName = '" +lName+ "' where studentID = '" +studentID+"'";
+        String stmt = "update student set firstName = '" + fName + "', lastName = '" + lName + "' where studentID = '" + studentID + "'";
 
         try {
-            DatabaseConnection.dbExecuteUpdate(stmt);
+            DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
             System.out.println("Error while updating student.");
             throw e;
@@ -132,7 +133,7 @@ public class StudentDAO {
         String stmt = "delete from student where studentID = '"+studentID+"'";
 
         try {
-            DatabaseConnection.dbExecuteUpdate(stmt);
+            DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
             System.out.println("Error while deleting student.");
             throw e;
