@@ -44,8 +44,7 @@ local.properties
 
 .DS_Store
 .idea
-
-
+.kotlin_module
 
 
 # External tool builders

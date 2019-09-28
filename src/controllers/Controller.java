@@ -189,7 +189,6 @@ public class Controller {
                     //Iterate Column
                     row.add(rs.getString(i));
                 }
-                System.out.println("Row [1] added " + row);
                 data.add(row);
 
             }
