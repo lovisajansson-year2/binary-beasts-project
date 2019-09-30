@@ -400,8 +400,9 @@ public class Controller {
         try {
 
             for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
-              credits =+ c.getCredits();
+              credits = credits + c.getCredits();
             }
+            System.out.println(credits);
             if(credits <= 45) {
                 StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
                 lblMessage.setText("Message: Registrated.");

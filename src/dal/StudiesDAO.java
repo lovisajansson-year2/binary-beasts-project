@@ -59,15 +59,16 @@ public class StudiesDAO {
 	private static ObservableList<Course> getCourseList(CachedRowSet crs) throws SQLException, ClassNotFoundException{
 		ObservableList<Course> cList = FXCollections.observableArrayList();
         while (crs.next()) {
-        	Course c= new Course();
-        	c.setCourseCode(crs.getInt(1));
+        	Course c = new Course();
+        	c.setCourseCode(crs.getInt("courseCode"));
+        	c.setCredits(crs.getInt("credits"));
         	cList.add(c);
         }
         return cList;
 	}
 
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
-		String stmt = "select courseCode from Studies where studentID ="+studentID+"";
+		String stmt = "select c.courseCode, c.credits from course c join studies s on c.courseCode = s.courseCode where studentID = "+studentID+"";
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
