@@ -2,7 +2,6 @@ package controllers;
 
 import dal.*;
 
-
 import database.DatabaseConnection;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -10,15 +9,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import models.Course;
 import models.Student;
 import javafx.fxml.FXML;
-
 import javafx.event.ActionEvent;
 
-import java.awt.event.ActionListener;
 import java.sql.*;
 
 
@@ -68,6 +66,15 @@ public class Controller {
     @FXML
     private Button btnRegGrade;
 
+    //Overview
+    @FXML
+    private TextField tfSearch;
+    @FXML
+    private ComboBox<String> cbSearch;
+    @FXML
+    private ComboBox<String> cbFilter;
+    @FXML
+    private TableView tbOverview;
 
 
     @FXML
@@ -91,11 +98,13 @@ public class Controller {
     
     @FXML
     private void initialize() throws SQLException, ClassNotFoundException {
+        // Stu & Cou
         cbStudent.setItems(StudentDAO.getListStudents());
         cbStudent.getSelectionModel().selectFirst();
         cbCourses.setItems(CourseDAO.getListCourses());
         cbCourses.getSelectionModel().selectFirst();
 
+        //Registration
         cbRegStudents.setItems(StudentDAO.getListStudents());
         cbRegStudents.getItems().remove(0);
         cbRegStudents.getItems().add(0, "Select student");
@@ -104,10 +113,14 @@ public class Controller {
         cbRegCourses.getItems().remove(0);
         cbRegCourses.getItems().add(0, "Select course");
         cbRegCourses.getSelectionModel().selectFirst();
-
         ObservableList<String> grades = FXCollections.observableArrayList("Select grade","F","E","D","C","B","A");
         cbGrade.setItems(grades);
         cbGrade.getSelectionModel().selectFirst();
+
+        //Overview
+        ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
+        cbSearch.setItems(search);
+        cbSearch.getSelectionModel().selectFirst();
 
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
         "1","2","3","4","5","6");
@@ -117,62 +130,62 @@ public class Controller {
 
         listenerStudent();
         listenerCourse();
+        listenerOverview();
     }
 
-    @FXML
     private void buildData(int index) throws SQLException, ClassNotFoundException {
         ObservableList data = FXCollections.observableArrayList();
         String stmt = "";
-         if(index == 0) {
+        if(index == 0) {
             stmt = "SELECT No_, [First Name], [Last Name], Address, City\n" +
                     "FROM [CRONUS Sverige AB$Employee]\n";
         } else if(index == 1) {
-             stmt = "SELECT [Employee No_], [From Date], [To Date], Description, Quantity\n" +
-                     "FROM [CRONUS Sverige AB$Employee Absence]\n";
-         } else if(index == 2) {
-             stmt = "SELECT timestamp, [Search Limit], [Temp_ Key Index], [Temp_ Table No_], [Temp_ Option Value]\n" +
-                     "FROM [CRONUS Sverige AB$Employee Portal Setup]\n";
-         } else if(index == 3) {
-             stmt = "SELECT [Employee No_], [Qualification Code], Description, Institution_Company, Cost\n" +
-                     "FROM [CRONUS Sverige AB$Employee Qualification]\n";
-         } else if(index == 4) {
-             stmt = "SELECT [Employee No_], [Relative Code], [First Name], [Last Name], [Birth Date]\n" +
-                     "FROM [CRONUS Sverige AB$Employee Relative]\n";
-         } else if(index == 5) {
-             stmt = "SELECT *\n" +
-                     "FROM [CRONUS Sverige AB$Employee Statistics Group]\n";
-         } else if(index == 6) {
-             stmt = "SELECT *\n" +
-                     "FROM [CRONUS Sverige AB$Employment Contract]\n";
-         } else if(index == 7) {
-             stmt = "SELECT name, type FROM sys.key_constraints;";
-         } else if(index == 8) {
-             stmt = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE\n" +
-                     "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
-         } else if(index == 9) {
-             stmt = "SELECT TABLE_NAME\n" +
-                     "FROM INFORMATION_SCHEMA.TABLES\n";
-         } else if(index == 10) {
-             stmt = "SELECT COLUMN_NAME\n" +
-                     "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                     "WHERE TABLE_NAME = 'CRONUS Sverige AB$Employee'\n";
-         } else if(index == 11) {
-             stmt = "SELECT TABLE_NAME, COLUMN_NAME\n" +
-                     "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                     "WHERE TABLE_NAME LIKE '%Employee%'";
-         } else if(index == 12) {
-             stmt = "SELECT TOP 1\n" +
-                     "    [TableName] = o.name, \n" +
-                     "    [RowCount] = i.rows\n" +
-                     "FROM \n" +
-                     "    sysobjects o, \n" +
-                     "    sysindexes i \n" +
-                     "WHERE \n" +
-                     "    o.xtype = 'U' \n" +
-                     "    AND \n" +
-                     "    i.id = OBJECT_ID(o.name)\n" +
-                     "ORDER BY i.rows DESC\n";
-         }
+            stmt = "SELECT [Employee No_], [From Date], [To Date], Description, Quantity\n" +
+                    "FROM [CRONUS Sverige AB$Employee Absence]\n";
+        } else if(index == 2) {
+            stmt = "SELECT timestamp, [Search Limit], [Temp_ Key Index], [Temp_ Table No_], [Temp_ Option Value]\n" +
+                    "FROM [CRONUS Sverige AB$Employee Portal Setup]\n";
+        } else if(index == 3) {
+            stmt = "SELECT [Employee No_], [Qualification Code], Description, Institution_Company, Cost\n" +
+                    "FROM [CRONUS Sverige AB$Employee Qualification]\n";
+        } else if(index == 4) {
+            stmt = "SELECT [Employee No_], [Relative Code], [First Name], [Last Name], [Birth Date]\n" +
+                    "FROM [CRONUS Sverige AB$Employee Relative]\n";
+        } else if(index == 5) {
+            stmt = "SELECT *\n" +
+                    "FROM [CRONUS Sverige AB$Employee Statistics Group]\n";
+        } else if(index == 6) {
+            stmt = "SELECT *\n" +
+                    "FROM [CRONUS Sverige AB$Employment Contract]\n";
+        } else if(index == 7) {
+            stmt = "SELECT name, type FROM sys.key_constraints;";
+        } else if(index == 8) {
+            stmt = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE\n" +
+                    "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
+        } else if(index == 9) {
+            stmt = "SELECT TABLE_NAME\n" +
+                    "FROM INFORMATION_SCHEMA.TABLES\n";
+        } else if(index == 10) {
+            stmt = "SELECT COLUMN_NAME\n" +
+                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
+                    "WHERE TABLE_NAME = 'CRONUS Sverige AB$Employee'\n";
+        } else if(index == 11) {
+            stmt = "SELECT TABLE_NAME, COLUMN_NAME\n" +
+                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
+                    "WHERE TABLE_NAME LIKE '%Employee%'";
+        } else if(index == 12) {
+            stmt = "SELECT TOP 1\n" +
+                    "    [TableName] = o.name, \n" +
+                    "    [RowCount] = i.rows\n" +
+                    "FROM \n" +
+                    "    sysobjects o, \n" +
+                    "    sysindexes i \n" +
+                    "WHERE \n" +
+                    "    o.xtype = 'U' \n" +
+                    "    AND \n" +
+                    "    i.id = OBJECT_ID(o.name)\n" +
+                    "ORDER BY i.rows DESC\n";
+        }
 
         try {
             ResultSet rs = DatabaseConnection.dbExecuteQuery(1, stmt);
@@ -206,6 +219,22 @@ public class Controller {
             throw e;
         }
 
+    }
+
+    @FXML
+    public void onEnter(ActionEvent actionEvent){
+        if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
+            System.out.println("1");
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
+            System.out.println("2");
+            // taHighestGrade.settext tableview.getSelectedCourse
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
+            System.out.println("3");
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
+            System.out.println("4");
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
+            System.out.println("5");
+        }
     }
 
     @FXML
@@ -253,6 +282,32 @@ public class Controller {
                 } catch (SQLException e) {
 
                 } catch (ClassNotFoundException e) {
+
+                } catch (NullPointerException e) {
+
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void listenerOverview() throws SQLException, ClassNotFoundException {
+        cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput");
+                ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
+                try {
+                  if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
+                        cbFilter.setItems(null);
+                  } else if (cbSearch.getSelectionModel().getSelectedIndex() == 1) {
+                      cbFilter.setItems(filter1);
+                      cbFilter.getSelectionModel().selectFirst();
+                  } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
+                      cbFilter.setItems(filter2);
+                      cbFilter.getSelectionModel().selectFirst();
+                  }
+
 
                 } catch (NullPointerException e) {
 
@@ -402,7 +457,7 @@ public class Controller {
     private void addRegistration(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
     	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
     	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
-        if (index==0 && index2==0) {
+        if (index != 0 && index2 != 0) {
         	int sID = Integer.parseInt(getItem(cbRegStudents));
         	int credits = 0;
         	for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
