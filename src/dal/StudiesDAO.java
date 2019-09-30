@@ -8,7 +8,6 @@ import javax.sql.rowset.RowSetProvider;
 
 import database.DatabaseConnection;
 import javafx.collections.*;
-import javafx.collections.ObservableList;
 import models.Course;
 import models.Student;
 
@@ -60,8 +59,8 @@ public class StudiesDAO {
 		ObservableList<Course> cList = FXCollections.observableArrayList();
         while (crs.next()) {
         	Course c = new Course();
-        	c.setCourseCode(crs.getInt("courseCode"));
-        	c.setCredits(crs.getInt("credits"));
+        	c.setCourseCode(crs.getInt(1));
+        	c.setCredits(crs.getInt(2));
         	cList.add(c);
         }
         return cList;
@@ -70,7 +69,6 @@ public class StudiesDAO {
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
 
 		String stmt = "select c.courseCode, c.credits from course c join studies s on c.courseCode = s.courseCode where studentID = "+studentID+"";
-
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
