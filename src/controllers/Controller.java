@@ -440,6 +440,7 @@ public class Controller {
     }
 
     @FXML
+
     private void addRegistration(ActionEvent actionEvent) {
     	try {
     		int index = cbRegStudents.getSelectionModel().getSelectedIndex();
@@ -471,6 +472,7 @@ public class Controller {
 			lblMessage.setText("Message: This student is already studying this course");
 		}
     	
+
     }
 
     @FXML
