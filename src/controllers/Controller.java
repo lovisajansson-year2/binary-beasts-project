@@ -18,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 
@@ -237,8 +239,7 @@ public class Controller {
 
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
-        //getResult();
-        searchStudent();
+        getResult();
     }
 
     @FXML
@@ -620,6 +621,30 @@ public class Controller {
         }
     }
     
+    public void buildCourseResultTable () {
+    	String stmt = "select * from HasStudied where courseCode="+searchCourseGetID()+"";
+    	try {
+    		buildData(0, tbOverview, stmt);
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+		}
+    }
+    private int searchCourseGetID() {
+		String cID = tfSearch.getText().toString();
+    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !cID.equals("")) {
+    		String valueID = cID.substring(1);
+    		int courseCode= Integer.parseInt(valueID);
+    		return courseCode;
+    	} else {
+    		txtAError.setText("Please enter a valid studentID.");
+    		return 0;
+    	}
+
+    }
+    
     private Student searchStudent() {
     	String sID = tfSearch.getText().toString();
     	Student student = new Student();
@@ -629,6 +654,7 @@ public class Controller {
             	int studentID = Integer.parseInt(valueID);
         		
             	student = StudentDAO.findStudent(studentID);
+            	return student;
         	}
         	else {
         		txtAError.setText("Please enter a valid studentID.");
@@ -639,7 +665,34 @@ public class Controller {
 		} catch (SQLException e) {
 	
         }
-    	return student;
-    	
+    	return null;
     }
+    
+    private Course searchCourse() {
+    	String cID = tfSearch.getText().toString();
+    	Course course = new Course();
+    	try {
+    		if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
+        		String valueID = cID.substring(1);
+            	int courseCode = Integer.parseInt(valueID);
+        		
+            	course = CourseDAO.findCourse(courseCode);
+            	return course;
+        	}
+        	else {
+        		txtAError.setText("Please enter a valid courseCode.");
+        	}
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+	
+        }
+    	return null;
+    
+    	
+    	
+    
+	}
+   
 }
