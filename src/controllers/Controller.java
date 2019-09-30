@@ -75,6 +75,8 @@ public class Controller {
     private ComboBox<String> cbFilter;
     @FXML
     private TableView tbOverview;
+    @FXML
+    private TextArea taGrades;
 
 
     @FXML
@@ -324,11 +326,16 @@ public class Controller {
     @FXML
     private void getResult() throws SQLException, ClassNotFoundException {
         String stmt = "";
+        int as = 0;
         if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
             stmt = "select * from student";
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = "select * from course";
-            // taHighestGrade.settext tableview.getSelectedCourse
+            stmt = "select c.courseCode, c.credits,\n" +
+                    "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 /\n" +
+                    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s'\n" +
+                    "from course c\n" +
+                    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
+                    "group by c.courseCode, c.credits";
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
             stmt = "select c.courseCode, \n" +
                     "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
