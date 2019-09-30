@@ -468,7 +468,7 @@ public class Controller {
     	}catch(ClassNotFoundException e) {
 	        e.printStackTrace();
 	    } catch (SQLException e) {
-			e.printStackTrace();
+			lblMessage.setText("Message: This student is already studying this course");
 		}
     	
     }

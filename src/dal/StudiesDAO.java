@@ -67,7 +67,7 @@ public class StudiesDAO {
 	}
 
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
-		String stmt = "select courseCode from Studies where studentID ="+studentID+"";
+		String stmt = "select * from Studies where studentID ="+studentID+"";
 		ResultSet rs = null;
 		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
 		try {
