@@ -86,14 +86,14 @@ public class Controller {
 
     private void resetFields() {
       	 cbRegStudents.getSelectionModel().selectFirst();
-   	 cbRegCourses.getSelectionModel().selectFirst();
-   	 cbGrade.getSelectionModel().selectFirst();
-   	 cbStudent.getSelectionModel().selectFirst();
-   	 cbCourses.getSelectionModel().selectFirst();
-   	 tfFirstName.setText(null);
-   	 tfLastName.setText(null);
-
-       } 
+      	 cbRegCourses.getSelectionModel().selectFirst();
+      	 cbGrade.getSelectionModel().selectFirst();
+      	 cbStudent.getSelectionModel().selectFirst();
+      	 cbCourses.getSelectionModel().selectFirst();
+      	 tfFirstName.setText(null);
+      	 tfLastName.setText(null);
+    } 
+    
     private static String getItem(ComboBox<String> comboBoxName ) {
        	String item = comboBoxName.getSelectionModel().getSelectedItem();
        	return item;
@@ -124,7 +124,9 @@ public class Controller {
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
         cbSearch.setItems(search);
         cbSearch.getSelectionModel().selectFirst();
-
+        
+        
+        //A2
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
         "1","2","3","4","5","6");
 
