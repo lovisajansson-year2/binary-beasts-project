@@ -136,8 +136,7 @@ public class Controller {
         listenerOverview();
     }
 
-    private void buildData(int index) throws SQLException, ClassNotFoundException {
-        ObservableList data = FXCollections.observableArrayList();
+    private String getStmt(int index) {
         String stmt = "";
         if(index == 0) {
             stmt = "SELECT No_, [First Name], [Last Name], Address, City\n" +
@@ -189,9 +188,15 @@ public class Controller {
                     "    i.id = OBJECT_ID(o.name)\n" +
                     "ORDER BY i.rows DESC\n";
         }
+        return stmt;
+
+    }
+
+    private void buildData(int connection, TableView tableView, String stmt) throws SQLException, ClassNotFoundException {
+        ObservableList data = FXCollections.observableArrayList();
 
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(1, stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
 
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                 //We are using non property style for making dynamic table
@@ -225,19 +230,8 @@ public class Controller {
     }
 
     @FXML
-    public void onEnter(ActionEvent actionEvent){
-        if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
-            System.out.println("1");
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            System.out.println("2");
-            // taHighestGrade.settext tableview.getSelectedCourse
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            System.out.println("3");
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            System.out.println("4");
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            System.out.println("5");
-        }
+    public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
+        getResult();
     }
 
     @FXML
@@ -324,7 +318,34 @@ public class Controller {
         int index = cbQ.getSelectionModel().getSelectedIndex();
         tableView.getItems().clear();
         tableView.getColumns().clear();
-        buildData(index);
+        buildData(1, tableView, getStmt(index));
+    }
+
+    @FXML
+    private void getResult() throws SQLException, ClassNotFoundException {
+        String stmt = "";
+        if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
+            stmt = "select * from student";
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
+            stmt = "select * from course";
+            // taHighestGrade.settext tableview.getSelectedCourse
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
+            stmt = "select c.courseCode, \n" +
+                    "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
+                    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n" +
+                    "from course c\n" +
+                    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
+                    "group by c.courseCode\n" +
+                    "order by Troughput DESC";
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
+            stmt = "select * from studies";
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
+            stmt = "select * from hasStudied";
+        }
+
+        tbOverview.getItems().clear();
+        tbOverview.getColumns().clear();
+        buildData(0, tbOverview, stmt);
     }
 
     @FXML
