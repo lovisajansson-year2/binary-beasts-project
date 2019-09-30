@@ -75,6 +75,8 @@ public class Controller {
     private ComboBox<String> cbFilter;
     @FXML
     private TableView tbOverview;
+    @FXML
+    private TextArea txtAError;
 
 
     @FXML
@@ -233,7 +235,8 @@ public class Controller {
 
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
-        getResult();
+        //getResult();
+        searchStudent();
     }
 
     @FXML
@@ -608,5 +611,28 @@ public class Controller {
 			lblMessage.setText("Message: This student already has a grade for this course");
 	
         }
+    }
+    
+    private Student searchStudent() {
+    	String sID = tfSearch.getText().toString();
+    	Student student = new Student();
+    	try {
+    		if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !sID.equals("")) {
+        		String valueID = sID.substring(1);
+            	int studentID = Integer.parseInt(valueID);
+        		
+            	student = StudentDAO.findStudent(studentID);
+        	}
+        	else {
+        		txtAError.setText("Please enter a valid studentID.");
+        	}
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+	
+        }
+    	return student;
+    	
     }
 }

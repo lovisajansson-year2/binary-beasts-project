@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -95,7 +95,7 @@
                           </columns>
                         </TableView>
                         <ComboBox fx:id="cbSearch" layoutX="224.0" layoutY="42.0" prefWidth="150.0" promptText="Select Course" />
-                        <TextArea  layoutX="489.0" layoutY="30.0" prefHeight="18.0" prefWidth="85.0" />
+                        <TextArea id="txtAError" layoutX="489.0" layoutY="30.0" prefHeight="18.0" prefWidth="85.0" />
                         <ComboBox fx:id="cbFilter" layoutX="388.0" layoutY="42.0" prefWidth="92.0" />
                         <Label layoutX="22.0" layoutY="13.0" text="Show Information About Students and Courses">
                            <font>
