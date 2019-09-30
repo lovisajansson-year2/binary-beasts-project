@@ -8,7 +8,6 @@ import javax.sql.rowset.RowSetProvider;
 
 import database.DatabaseConnection;
 import javafx.collections.*;
-import javafx.collections.ObservableList;
 import models.Course;
 import models.Student;
 
@@ -60,12 +59,13 @@ public class StudiesDAO {
 		ObservableList<Course> cList = FXCollections.observableArrayList();
         while (crs.next()) {
         	Course c = new Course();
-        	c.setCourseCode(crs.getInt("courseCode"));
-        	c.setCredits(crs.getInt("credits"));
+        	c.setCourseCode(crs.getInt(1));
+        	c.setCredits(crs.getInt(2));
         	cList.add(c);
         }
         return cList;
 	}
+	
 
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
 		String stmt = "select c.courseCode, c.credits from course c join studies s on c.courseCode = s.courseCode where studentID = "+studentID+"";
@@ -78,6 +78,20 @@ public class StudiesDAO {
 			return cList;
 		} catch (SQLException e) {
 			System.out.println("error while finding student");
+			throw e;
+		}
+	}
+	public static ObservableList<Student> findUncompletedStudentsOnCourse(int courseCode) throws SQLException, ClassNotFoundException {
+		String stmt = "select studentID from Studies s where not exists(select studentID, courseCode from HasStudied hs where hs.studentID = s.studentID and hs.courseCode=s.courseCode) and courseCode ="+courseCode+"";
+		ResultSet rs= null;
+		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
+		try {
+			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+			crs.populate(rs);
+			ObservableList<Student> sList = getStudentList(crs);
+			return sList;
+		} catch (SQLException e) {
+			System.out.println("error while finding students");
 			throw e;
 		}
 	}
