@@ -98,7 +98,7 @@ public class StudentDAO {
         ObservableList<String> students = FXCollections.observableArrayList();
         students.add("Register student");
         for(Student s : findAllStudent()) {
-            students.add("S"+Integer.toString(s.getStudentID()));
+            students.add(Integer.toString(s.getStudentID()));
         }
         return students;
     }

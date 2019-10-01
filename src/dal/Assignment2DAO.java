@@ -78,7 +78,7 @@ public class Assignment2DAO {
 		 return stmt;
 	 }
 	 
-	 public static String getthroughputStmt() {
+	 public static String getThroughputStmt() {
 		 String stmt = "select c.courseCode, \n" +
                  "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
                  "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n" +

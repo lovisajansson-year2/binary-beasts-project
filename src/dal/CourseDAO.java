@@ -117,7 +117,7 @@ public class CourseDAO {
 		ObservableList<String> courses = FXCollections.observableArrayList();
 		courses.add("Register course");
 		for(Course c : findAllCourses()) {
-			courses.add("C"+Integer.toString(c.getCourseCode()));
+			courses.add(Integer.toString(c.getCourseCode()));
 		}
 		return courses;
 	}
