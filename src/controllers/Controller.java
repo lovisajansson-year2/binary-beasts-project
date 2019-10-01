@@ -574,17 +574,23 @@ public class Controller {
 
         	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
         	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
+        	int index3 = cbGrade.getSelectionModel().getSelectedIndex();
+        	int sID = Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem());
         	if(index!=0 && index2!=0) {
-				HasStudiedDAO.addHasStudied(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()), cbGrade.getSelectionModel().getSelectedItem());			
+				HasStudiedDAO.addHasStudied(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()), cbGrade.getSelectionModel().getSelectedItem());			
         		lblMessage.setText("Message: set Grade " + getItem(cbGrade)+" for Student "+getItem(cbRegStudents)+" on course " + getItem(cbRegCourses) );
+        		StudiesDAO.removeStudies(sID, Integer.parseInt(getItem(cbRegCourses)));
         		resetFields();
                 buildData(0,tvRegistration,buildStatement(2));
-        	}else if(index+index2==0) {
-        		lblMessage.setText("Message: You have to pick a student and a course to update grade");
+                
+        	}else if(index+index2+index3==0) {
+        		lblMessage.setText("Message: You have to pick a student, a course and a grade to update grade");
         	} else if(index==0) {
         		lblMessage.setText("Message: You have to pick a student to update grade");
         	} else if(index2==0) {
         		lblMessage.setText("Message: You have to pick a course to update grade.");
+        	} else if(index3==0) {
+        		lblMessage.setText("Message: You have to pick a grade to update grade");
         	}
         } catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
