@@ -303,11 +303,11 @@ public class Controller {
             stmt = Assignment2DAO.getPercentAStmt();
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
             stmt = Assignment2DAO.getthroughputStmt();
-        }/* else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
             stmt = "select * from studies";
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
             stmt = "select * from hasStudied";
-        }*/
+        }
 
         tvOverview.getColumns().clear();
         buildData(0, tvOverview, stmt);
