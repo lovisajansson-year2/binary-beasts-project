@@ -2,7 +2,11 @@ package test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import dal.StudiesDAO;
 import database.DatabaseConnection;
+import javafx.collections.ObservableList;
+import models.Course;
 
 public class Test {
 
@@ -10,10 +14,10 @@ public class Test {
 
         DatabaseConnection db = new DatabaseConnection();
 
-        ResultSet rs = db.dbExecuteQuery(0,"select * from student");
+        ObservableList<Course> clist = StudiesDAO.findAllStudiesForStudents(30);
 
-        while(rs.next()) {
-            System.out.println(rs.getString(1));
+        for(Course c : clist) {
+            System.out.println(c.getCourseCode());
        }
     }
 
