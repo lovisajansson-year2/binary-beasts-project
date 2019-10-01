@@ -100,6 +100,11 @@ public class HasStudiedDAO {
 		return stmt;
 	}
 	
+	public static String getAllResultsStudent() {
+		String stmt = "select courseCode, grade from HasStudied where studentID=";
+		return stmt;
+	}
+	
 	public static int nbrOfStudentsWithAGrade(int courseCode) throws ClassNotFoundException {
 		String stmt = "select count(grade) from HasStudied where courseCode ="+courseCode+" and grade="+'A'+"";
 		ResultSet rs = null;
