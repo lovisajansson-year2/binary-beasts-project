@@ -78,9 +78,9 @@ public class Controller {
     @FXML
     private TableView tbOverview;
     @FXML
-    private TextArea txtAError;
-    @FXML
     private TextArea taGrades;
+    @FXML
+    private Label lblError;
 
 
     @FXML
@@ -144,61 +144,7 @@ public class Controller {
         listenerOverview();
     }
 
-    private String getStmt(int index) {
-        String stmt = "";
-        if(index == 0) {
-            stmt = "SELECT No_, [First Name], [Last Name], Address, City\n" +
-                    "FROM [CRONUS Sverige AB$Employee]\n";
-        } else if(index == 1) {
-            stmt = "SELECT [Employee No_], [From Date], [To Date], Description, Quantity\n" +
-                    "FROM [CRONUS Sverige AB$Employee Absence]\n";
-        } else if(index == 2) {
-            stmt = "SELECT timestamp, [Search Limit], [Temp_ Key Index], [Temp_ Table No_], [Temp_ Option Value]\n" +
-                    "FROM [CRONUS Sverige AB$Employee Portal Setup]\n";
-        } else if(index == 3) {
-            stmt = "SELECT [Employee No_], [Qualification Code], Description, Institution_Company, Cost\n" +
-                    "FROM [CRONUS Sverige AB$Employee Qualification]\n";
-        } else if(index == 4) {
-            stmt = "SELECT [Employee No_], [Relative Code], [First Name], [Last Name], [Birth Date]\n" +
-                    "FROM [CRONUS Sverige AB$Employee Relative]\n";
-        } else if(index == 5) {
-            stmt = "SELECT *\n" +
-                    "FROM [CRONUS Sverige AB$Employee Statistics Group]\n";
-        } else if(index == 6) {
-            stmt = "SELECT *\n" +
-                    "FROM [CRONUS Sverige AB$Employment Contract]\n";
-        } else if(index == 7) {
-            stmt = "SELECT name, type FROM sys.key_constraints;";
-        } else if(index == 8) {
-            stmt = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE\n" +
-                    "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
-        } else if(index == 9) {
-            stmt = "SELECT TABLE_NAME\n" +
-                    "FROM INFORMATION_SCHEMA.TABLES\n";
-        } else if(index == 10) {
-            stmt = "SELECT COLUMN_NAME\n" +
-                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE TABLE_NAME = 'CRONUS Sverige AB$Employee'\n";
-        } else if(index == 11) {
-            stmt = "SELECT TABLE_NAME, COLUMN_NAME\n" +
-                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE TABLE_NAME LIKE '%Employee%'";
-        } else if(index == 12) {
-            stmt = "SELECT TOP 1\n" +
-                    "    [TableName] = o.name, \n" +
-                    "    [RowCount] = i.rows\n" +
-                    "FROM \n" +
-                    "    sysobjects o, \n" +
-                    "    sysindexes i \n" +
-                    "WHERE \n" +
-                    "    o.xtype = 'U' \n" +
-                    "    AND \n" +
-                    "    i.id = OBJECT_ID(o.name)\n" +
-                    "ORDER BY i.rows DESC\n";
-        }
-        return stmt;
-
-    }
+   
 
     private void buildData(int connection, TableView tableView, String stmt) throws SQLException, ClassNotFoundException {
         ObservableList data = FXCollections.observableArrayList();
@@ -331,7 +277,7 @@ public class Controller {
         int index = cbQ.getSelectionModel().getSelectedIndex();
         tableView.getItems().clear();
         tableView.getColumns().clear();
-        buildData(1, tableView, getStmt(index));
+        buildData(1, tableView, Assignment2DAO.getStmt(index));
     }
 
     @FXML
@@ -657,7 +603,7 @@ public class Controller {
     		int courseCode= Integer.parseInt(valueID);
     		return courseCode;
     	} else {
-    		txtAError.setText("Please enter a valid studentID.");
+    		lblError.setText("Please enter a valid courseCode.");
     		return 0;
     	}
 
@@ -675,7 +621,7 @@ public class Controller {
             	return student;
         	}
         	else {
-        		txtAError.setText("Please enter a valid studentID.");
+        		lblError.setText("Please enter a valid studentID.");
         	}
     	} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -698,7 +644,7 @@ public class Controller {
             	return course;
         	}
         	else {
-        		txtAError.setText("Please enter a valid courseCode.");
+        		lblError.setText("Please enter a valid courseCode.");
         	}
     	} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
