@@ -497,16 +497,27 @@ public class Controller {
     	try {
     		int index = cbRegStudents.getSelectionModel().getSelectedIndex();
     		int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
+    		boolean match = false;
     		if(index!=0 && index2!=0) {
 		        int sID = Integer.parseInt(getItem(cbRegStudents));
 		        int credits = 0;
 		        for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
 		        	credits = credits + c.getCredits();
 		        }if(credits <= 45) {
-		            StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-		            lblMessage.setText("Message: Registered " +getItem(cbRegStudents)+" on course "+getItem(cbRegCourses));
-		            resetFields();
-		            buildData(0,tvRegistration,buildStatement(2));
+		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
+		                if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
+		                    match = true;
+		                    break;
+                        }
+                    }
+		            if(match=false) {
+                        StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
+                        lblMessage.setText("Message: Registered " + getItem(cbRegStudents) + " on course " + getItem(cbRegCourses));
+                        resetFields();
+                        buildData(0, tvRegistration, buildStatement(2));
+                    } else {
+		                lblMessage.setText("Message: Student has already completed this course.");
+                    }
 		        } else {
 	            lblMessage.setText("Message: Student is studying too many courses");
 	            } 
