@@ -17,6 +17,9 @@ import models.Student;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -668,5 +671,15 @@ public class Controller {
     	
     
 	}
+    @FXML
+    public void openQExcel(ActionEvent actionEvent) {
+    	File excelFile = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-quaries.xlsx");
+    	
+    	try {
+			Desktop.getDesktop().open(excelFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
    
 }
