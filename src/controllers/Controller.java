@@ -497,7 +497,7 @@ public class Controller {
     	try {
     		int index = cbRegStudents.getSelectionModel().getSelectedIndex();
     		int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
-    		boolean match = false;
+    		boolean match = true;
     		if(index!=0 && index2!=0) {
 		        int sID = Integer.parseInt(getItem(cbRegStudents));
 		        int credits = 0;
@@ -505,12 +505,13 @@ public class Controller {
 		        	credits = credits + c.getCredits();
 		        }if(credits <= 45) {
 		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
+		                System.out.println("iterate " +c.getCourseCode());
+                        System.out.println("match " + Integer.parseInt(getItem(cbRegCourses)));
 		                if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
-		                    match = true;
-		                    break;
+		                    match = false;
                         }
-                    }
-		            if(match=false) {
+                    } System.out.println(match);
+		            if(match) {
                         StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
                         lblMessage.setText("Message: Registered " + getItem(cbRegStudents) + " on course " + getItem(cbRegCourses));
                         resetFields();
