@@ -102,8 +102,8 @@ public class Controller {
       	 tfLastName.setText(null);
     } 
     
-    private static String getItem(ComboBox<String> comboBoxName ) {
-       	String item = comboBoxName.getSelectionModel().getSelectedItem();
+    private static int getID(ComboBox<String> comboBoxName ) {
+       	int item = Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
        	return item;
      }
     
@@ -362,8 +362,8 @@ public class Controller {
         try {
         	int index = cbStudent.getSelectionModel().getSelectedIndex();
             if(index!=0 && !tfFirstName.getText().equals("") && !tfLastName.getText().equals("")) {
-        	StudentDAO.updateStudent(Integer.parseInt(cbStudent.getSelectionModel().getSelectedItem()), tfFirstName.getText(), tfLastName.getText());
-            lblMessage.setText("Message: Student " + getItem(cbStudent)+" updated.");
+        	StudentDAO.updateStudent(getID(cbStudent), tfFirstName.getText(), tfLastName.getText());
+            lblMessage.setText("Message: Student " + getID(cbStudent)+" updated.");
             resetFields();
         	} else if(index==0){
             	lblMessage.setText("Message: You must select a student to update");
@@ -391,8 +391,8 @@ public class Controller {
         try {
         	int index = cbStudent.getSelectionModel().getSelectedIndex();
         	if(index!=0) {
-        		StudentDAO.removeStudent(Integer.parseInt(cbStudent.getSelectionModel().getSelectedItem()));
-        		lblMessage.setText("Message: Removed student " + getItem(cbStudent));
+        		StudentDAO.removeStudent(getID(cbStudent));
+        		lblMessage.setText("Message: Removed student " + getID(cbStudent));
         		cbRegStudents.getItems().remove(cbStudent.getSelectionModel().getSelectedItem());
         		cbStudent.getItems().remove(cbStudent.getSelectionModel().getSelectedItem());
         	}else {
@@ -446,8 +446,8 @@ public class Controller {
         try {
         	int index = cbCourses.getSelectionModel().getSelectedIndex();
         	if(index!=0) {
-            CourseDAO.updateCourse(Integer.parseInt(cbCourses.getSelectionModel().getSelectedItem()), Integer.parseInt(tfCredits.getText()));
-            lblMessage.setText("Message: Course "+getItem(cbCourses)+" Updated.");
+            CourseDAO.updateCourse(getID(cbCourses), Integer.parseInt(tfCredits.getText()));
+            lblMessage.setText("Message: Course "+getID(cbCourses)+" Updated.");
             resetFields();
         	} else {
             	lblMessage.setText("Message: you must pick a course to update.");
@@ -471,8 +471,8 @@ public class Controller {
         try {
         	int index = cbCourses.getSelectionModel().getSelectedIndex();
         	if(index!=0) {
-            CourseDAO.removeCourse(Integer.parseInt(cbCourses.getSelectionModel().getSelectedItem()));
-            lblMessage.setText("Message: Removed course " + getItem(cbCourses));
+            CourseDAO.removeCourse(getID(cbCourses));
+            lblMessage.setText("Message: Removed course " + getID(cbCourses));
             cbRegCourses.getItems().remove(cbCourses.getSelectionModel().getSelectedItem());
             cbCourses.getItems().remove(cbCourses.getSelectionModel().getSelectedItem());
             resetFields();
@@ -499,21 +499,21 @@ public class Controller {
     		int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
     		boolean match = true;
     		if(index!=0 && index2!=0) {
-		        int sID = Integer.parseInt(getItem(cbRegStudents));
+		        int sID = getID(cbRegStudents);
 		        int credits = 0;
 		        for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
 		        	credits = credits + c.getCredits();
 		        }if(credits <= 45) {
 		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
 		                System.out.println("iterate " +c.getCourseCode());
-                        System.out.println("match " + Integer.parseInt(getItem(cbRegCourses)));
-		                if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
+                        System.out.println("match " + getID(cbRegCourses));
+		                if(c.getCourseCode()==getID(cbRegCourses)) {
 		                    match = false;
                         }
                     } System.out.println(match);
 		            if(match) {
-                        StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-                        lblMessage.setText("Message: Registered " + getItem(cbRegStudents) + " on course " + getItem(cbRegCourses));
+                        StudiesDAO.addStudies(sID,getID(cbRegCourses));
+                        lblMessage.setText("Message: Registered " + getID(cbRegStudents) + " on course " + getID(cbRegCourses));
                         resetFields();
                         buildData(0, tvRegistration, buildStatement(2));
                     } else {
@@ -544,8 +544,8 @@ public class Controller {
          	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
          	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
          	if(index!=0 && index2!=0) {	
-				StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-         		lblMessage.setText("Message: Removed student " + getItem(cbRegStudents)+" from course " +getItem(cbRegCourses));
+				StudiesDAO.removeStudies(getID(cbRegStudents), getID(cbRegCourses));
+         		lblMessage.setText("Message: Removed student " + getID(cbRegStudents)+" from course " +getID(cbRegCourses));
          		resetFields();
                 buildData(0,tvRegistration,buildStatement(2));
          	}else if(index+index2==0) {
@@ -575,11 +575,11 @@ public class Controller {
         	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
         	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
         	int index3 = cbGrade.getSelectionModel().getSelectedIndex();
-        	int sID = Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem());
+        	int sID = getID(cbRegStudents);
         	if(index!=0 && index2!=0) {
-				HasStudiedDAO.addHasStudied(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()), cbGrade.getSelectionModel().getSelectedItem());			
-        		lblMessage.setText("Message: set Grade " + getItem(cbGrade)+" for Student "+getItem(cbRegStudents)+" on course " + getItem(cbRegCourses) );
-        		StudiesDAO.removeStudies(sID, Integer.parseInt(getItem(cbRegCourses)));
+				HasStudiedDAO.addHasStudied(sID, getID(cbRegCourses), cbGrade.getSelectionModel().getSelectedItem());			
+        		lblMessage.setText("Message: set Grade " + getID(cbGrade)+" for Student "+getID(cbRegStudents)+" on course " + getID(cbRegCourses) );
+        		StudiesDAO.removeStudies(sID, getID(cbRegCourses));
         		resetFields();
                 buildData(0,tvRegistration,buildStatement(2));
                 
