@@ -575,10 +575,10 @@ public class Controller {
         	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
         	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
         	int index3 = cbGrade.getSelectionModel().getSelectedIndex();
-        	int sID = getID(cbRegStudents);
-        	if(index!=0 && index2!=0) {
+        	if(index!=0 && index2!=0 && index3!=0) {
+        		int sID = getID(cbRegStudents);
 				HasStudiedDAO.addHasStudied(sID, getID(cbRegCourses), cbGrade.getSelectionModel().getSelectedItem());			
-        		lblMessage.setText("Message: set Grade " + getID(cbGrade)+" for Student "+getID(cbRegStudents)+" on course " + getID(cbRegCourses) );
+        		lblMessage.setText("Message: set Grade " + cbGrade.getSelectionModel().getSelectedItem()+" for Student "+getID(cbRegStudents)+" on course " + getID(cbRegCourses) );
         		StudiesDAO.removeStudies(sID, getID(cbRegCourses));
         		resetFields();
                 buildData(0,tvRegistration,buildStatement(2));
