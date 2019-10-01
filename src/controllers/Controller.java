@@ -205,7 +205,8 @@ public class Controller {
 
         try {
             ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
-
+            
+            tableView.getColumns().clear();
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                 //We are using non property style for making dynamic table
                 final int j = i;
@@ -239,7 +240,11 @@ public class Controller {
 
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
-        getResult();
+        //getResult();
+    	tbOverview.getItems().clear();
+    	//buildCourseResultTable();
+    	buildCourseUnfinishedTable();
+    	
     }
 
     @FXML
@@ -622,7 +627,7 @@ public class Controller {
     }
     
     public void buildCourseResultTable () {
-    	String stmt = "select * from HasStudied where courseCode="+searchCourseGetID()+"";
+    	String stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
     	try {
     		buildData(0, tbOverview, stmt);
     	} catch (ClassNotFoundException e) {
@@ -632,9 +637,22 @@ public class Controller {
 			
 		}
     }
+    
+    public void buildCourseUnfinishedTable() {
+    	String stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
+    	try {
+    		buildData(0, tbOverview, stmt);
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+		}
+    }
+    
     private int searchCourseGetID() {
 		String cID = tfSearch.getText().toString();
-    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !cID.equals("")) {
+    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
     		String valueID = cID.substring(1);
     		int courseCode= Integer.parseInt(valueID);
     		return courseCode;
