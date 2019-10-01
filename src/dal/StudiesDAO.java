@@ -67,7 +67,7 @@ public class StudiesDAO {
 	}
 	
 	public static String getAllUnfinishedCourseStmt() {
-		String stmt = "select studentID from Studies where courseCode="; //ska vi skriva ut namn också med join?
+		String stmt = "select studentID from Studies where courseCode="; 
 		return stmt;
 	}
 

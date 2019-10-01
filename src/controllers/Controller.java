@@ -130,7 +130,8 @@ public class Controller {
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
         cbSearch.setItems(search);
         cbSearch.getSelectionModel().selectFirst();
-        
+        ObservableList<String> filter = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
+        cbFilter.setItems(filter);
         
         //A2
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
@@ -141,7 +142,7 @@ public class Controller {
 
         listenerStudent();
         listenerCourse();
-        listenerOverview();
+        //listenerOverview();
     }
 
    
@@ -179,7 +180,7 @@ public class Controller {
             }
             tableView.setItems(data);
         } catch(SQLException e) {
-            throw e;
+            //throw e;
         }
 
     }
@@ -189,8 +190,16 @@ public class Controller {
         //getResult();
     	tbOverview.getItems().clear();
     	//buildCourseResultTable();
-    	buildCourseUnfinishedTable();
-    	
+        if (cbFilter.getSelectionModel().getSelectedItem().equals("Uncompleted")) {
+            buildCourseUnfinishedTable();
+        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
+        	buildCourseResultTable();
+        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
+        	 // does not work
+        }
+        else {
+    		lblError.setText("Please choose on item from the filter list."); // does not work
+    	} 	
     }
 
     @FXML
@@ -246,13 +255,13 @@ public class Controller {
         });
     }
 
-    @FXML
-    public void listenerOverview() throws SQLException, ClassNotFoundException {
+   @FXML 
+   public void listenerOverview() throws SQLException, ClassNotFoundException {
         cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput");
-                ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
+                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
+                //ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
                 try {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
                         cbFilter.setItems(null);
@@ -260,11 +269,12 @@ public class Controller {
                       cbFilter.setItems(filter1);
                       cbFilter.getSelectionModel().selectFirst();
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
-                      cbFilter.setItems(filter2);
+                      cbFilter.setItems(filter1);
+                      cbFilter.getSelectionModel().selectFirst();
+                  } else if (cbSearch.getSelectionModel().getSelectedIndex() == 3) {
+                      cbFilter.setItems(filter1);
                       cbFilter.getSelectionModel().selectFirst();
                   }
-
-
                 } catch (NullPointerException e) {
 
                 }
@@ -575,7 +585,7 @@ public class Controller {
     public void buildCourseResultTable () {
     	String stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
     	try {
-    		buildData(0, tbOverview, stmt);
+        	buildData(0, tbOverview, stmt);
     	} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -587,7 +597,7 @@ public class Controller {
     public void buildCourseUnfinishedTable() {
     	String stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
     	try {
-    		buildData(0, tbOverview, stmt);
+        	buildData(0, tbOverview, stmt);	
     	} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
