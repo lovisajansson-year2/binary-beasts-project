@@ -67,6 +67,8 @@ public class Controller {
     private Button btnRegRemove;
     @FXML
     private Button btnRegGrade;
+    @FXML
+    private TableView tvRegistration;
 
     //Overview
     @FXML
@@ -76,7 +78,7 @@ public class Controller {
     @FXML
     private ComboBox<String> cbFilter;
     @FXML
-    private TableView tbOverview;
+    private TableView tvOverview;
     @FXML
     private TextArea taGrades;
     @FXML
@@ -126,6 +128,8 @@ public class Controller {
         cbGrade.setItems(grades);
         cbGrade.getSelectionModel().selectFirst();
 
+        buildData(0,tvRegistration,buildStatement(2));
+
         //Overview
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
         cbSearch.setItems(search);
@@ -135,7 +139,7 @@ public class Controller {
         
         //A2
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
-        "1","2","3","4","5","6");
+        "1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","2.3","2.4","2.5","2.6","2.7");
 
         cbQ.setItems(questions);
         cbQ.getSelectionModel().selectFirst();
@@ -188,12 +192,12 @@ public class Controller {
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
         //getResult();
-    	tbOverview.getItems().clear();
+    	tvOverview.getItems().clear();
     	//buildCourseResultTable();
         if (cbFilter.getSelectionModel().getSelectedItem().equals("Uncompleted")) {
-            buildCourseUnfinishedTable();
+            buildData(0,tvOverview, buildStatement(0));
         } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
-        	buildCourseResultTable();
+        	buildData(0,tvOverview, buildStatement(1));
         } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
         	 // does not work
         }
@@ -221,8 +225,7 @@ public class Controller {
                 } catch (ClassNotFoundException e) {
 
                 } catch (NullPointerException e) {
-
-                
+                    
 				} catch (SQLException e) {
 					
 				}
@@ -317,9 +320,8 @@ public class Controller {
             stmt = "select * from hasStudied";
         }
 
-        tbOverview.getItems().clear();
-        tbOverview.getColumns().clear();
-        buildData(0, tbOverview, stmt);
+        tvOverview.getColumns().clear();
+        buildData(0, tvOverview, stmt);
     }
 
     @FXML
@@ -504,6 +506,7 @@ public class Controller {
 		            StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem().substring(1)));
 		            lblMessage.setText("Message: Registered " +getItem(cbRegStudents)+" on course "+getItem(cbRegCourses));
 		            resetFields();
+		            buildData(0,tvRegistration,buildStatement(2));
 		        } else {
 	            lblMessage.setText("Message: Student is studying too many courses");
 	            } 
@@ -532,6 +535,7 @@ public class Controller {
 				StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem().substring(1)), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem().substring(1)));
          		lblMessage.setText("Message: Removed student " + getItem(cbRegStudents)+" from course " +getItem(cbRegCourses));
          		resetFields();
+                buildData(0,tvRegistration,buildStatement(2));
          	}else if(index+index2==0) {
         		lblMessage.setText("Message: You have to pick a student and a course to remove registration");
          	} else if(index==0) {
@@ -562,6 +566,7 @@ public class Controller {
 				HasStudiedDAO.addHasStudied(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem().substring(1)), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem().substring(1)), cbGrade.getSelectionModel().getSelectedItem());			
         		lblMessage.setText("Message: set Grade " + getItem(cbGrade)+" for Student "+getItem(cbRegStudents)+" on course " + getItem(cbRegCourses) );
         		resetFields();
+                buildData(0,tvRegistration,buildStatement(2));
         	}else if(index+index2==0) {
         		lblMessage.setText("Message: You have to pick a student and a course to update grade");
         	} else if(index==0) {
@@ -582,29 +587,22 @@ public class Controller {
         }
     }
     
-    public void buildCourseResultTable () {
-    	String stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
-    	try {
-        	buildData(0, tbOverview, stmt);
-    	} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			
-		}
+    public String buildStatement(int index) {
+        String stmt = "";
+        switch (index) {
+            case 0:
+                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
+                break;
+            case 1:
+                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
+                break;
+            case 2:
+                stmt = Assignment2DAO.getRegistrations();
+                break;
+        }
+        return stmt;
     }
-    
-    public void buildCourseUnfinishedTable() {
-    	String stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
-    	try {
-        	buildData(0, tbOverview, stmt);	
-    	} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			
-		}
-    }
+
     
     private int searchCourseGetID() {
     	String cID = tfSearch.getText().toString();
@@ -650,4 +648,5 @@ public class Controller {
     }
     
     
+
 }
