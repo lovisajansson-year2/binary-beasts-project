@@ -67,4 +67,26 @@ public class Assignment2DAO {
 				"from HasStudied";
 	 	return stmt;
 	 }
+	 
+	 public static String getPercentAStmt() {
+		 String stmt = "select c.courseCode, c.credits,\n" +
+	             "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 /\n" +
+	             "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s'\n" +
+	             "from course c\n" +
+	             "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
+	             "group by c.courseCode, c.credits";
+		 return stmt;
+	 }
+	 
+	 public static String getthroughputStmt() {
+		 String stmt = "select c.courseCode, \n" +
+                 "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
+                 "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n" +
+                 "from course c\n" +
+                 "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
+                 "group by c.courseCode\n" +
+                 "order by Troughput DESC";
+		 return stmt;
+	 }
+		 
 }
