@@ -661,6 +661,37 @@ public class Controller {
 			e.printStackTrace();
 		}
     }
+    
+   @FXML
+   public void openQAccess(ActionEvent actionEvent) {
+	   File accessFile = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-quaries.accdb");
+	   
+	   try {
+		   Desktop.getDesktop().open(accessFile);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
    
+   @FXML
+   public void openCRExcel(ActionEvent actionEvent) {
+	   File excelCR = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Customer-Report.xlsx");
+	   
+	   try {
+		   Desktop.getDesktop().open(excelCR);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   
+   public void openERExcel (ActionEvent actionEvent) {
+	   File excelER = new File("C:\\Users\\Administrator\\Desktop\\assingment3_files\\Assignment3-Employee-Report.xlsx");
+	   
+	   try {
+		   Desktop.getDesktop().open(excelER);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
 
 }
