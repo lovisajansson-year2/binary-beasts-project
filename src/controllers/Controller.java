@@ -18,6 +18,8 @@ import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 
@@ -77,6 +79,8 @@ public class Controller {
     private TableView tbOverview;
     @FXML
     private TextArea taGrades;
+    @FXML
+    private Label lblError;
 
 
     @FXML
@@ -88,14 +92,14 @@ public class Controller {
 
     private void resetFields() {
       	 cbRegStudents.getSelectionModel().selectFirst();
-   	 cbRegCourses.getSelectionModel().selectFirst();
-   	 cbGrade.getSelectionModel().selectFirst();
-   	 cbStudent.getSelectionModel().selectFirst();
-   	 cbCourses.getSelectionModel().selectFirst();
-   	 tfFirstName.setText(null);
-   	 tfLastName.setText(null);
-
-       } 
+      	 cbRegCourses.getSelectionModel().selectFirst();
+      	 cbGrade.getSelectionModel().selectFirst();
+      	 cbStudent.getSelectionModel().selectFirst();
+      	 cbCourses.getSelectionModel().selectFirst();
+      	 tfFirstName.setText(null);
+      	 tfLastName.setText(null);
+    } 
+    
     private static String getItem(ComboBox<String> comboBoxName ) {
        	String item = comboBoxName.getSelectionModel().getSelectedItem();
        	return item;
@@ -126,7 +130,10 @@ public class Controller {
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
         cbSearch.setItems(search);
         cbSearch.getSelectionModel().selectFirst();
-
+        ObservableList<String> filter = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
+        cbFilter.setItems(filter);
+        
+        //A2
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
         "1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","2.3","2.4","2.5","2.6","2.7");
 
@@ -135,71 +142,18 @@ public class Controller {
 
         listenerStudent();
         listenerCourse();
-        listenerOverview();
+        //listenerOverview();
     }
 
-    private String getStmt(int index) {
-        String stmt = "";
-        if(index == 0) {
-            stmt = "SELECT No_, [First Name], [Last Name], Address, City\n" +
-                    "FROM [CRONUS Sverige AB$Employee]\n";
-        } else if(index == 1) {
-            stmt = "SELECT [Employee No_], [From Date], [To Date], Description, Quantity\n" +
-                    "FROM [CRONUS Sverige AB$Employee Absence]\n";
-        } else if(index == 2) {
-            stmt = "SELECT timestamp, [Search Limit], [Temp_ Key Index], [Temp_ Table No_], [Temp_ Option Value]\n" +
-                    "FROM [CRONUS Sverige AB$Employee Portal Setup]\n";
-        } else if(index == 3) {
-            stmt = "SELECT [Employee No_], [Qualification Code], Description, Institution_Company, Cost\n" +
-                    "FROM [CRONUS Sverige AB$Employee Qualification]\n";
-        } else if(index == 4) {
-            stmt = "SELECT [Employee No_], [Relative Code], [First Name], [Last Name], [Birth Date]\n" +
-                    "FROM [CRONUS Sverige AB$Employee Relative]\n";
-        } else if(index == 5) {
-            stmt = "SELECT *\n" +
-                    "FROM [CRONUS Sverige AB$Employee Statistics Group]\n";
-        } else if(index == 6) {
-            stmt = "SELECT *\n" +
-                    "FROM [CRONUS Sverige AB$Employment Contract]\n";
-        } else if(index == 7) {
-            stmt = "SELECT name, type FROM sys.key_constraints;";
-        } else if(index == 8) {
-            stmt = "SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE\n" +
-                    "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
-        } else if(index == 9) {
-            stmt = "SELECT TABLE_NAME\n" +
-                    "FROM INFORMATION_SCHEMA.TABLES\n";
-        } else if(index == 10) {
-            stmt = "SELECT COLUMN_NAME\n" +
-                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE TABLE_NAME = 'CRONUS Sverige AB$Employee'\n";
-        } else if(index == 11) {
-            stmt = "SELECT TABLE_NAME, COLUMN_NAME\n" +
-                    "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE TABLE_NAME LIKE '%Employee%'";
-        } else if(index == 12) {
-            stmt = "SELECT TOP 1\n" +
-                    "    [TableName] = o.name, \n" +
-                    "    [RowCount] = i.rows\n" +
-                    "FROM \n" +
-                    "    sysobjects o, \n" +
-                    "    sysindexes i \n" +
-                    "WHERE \n" +
-                    "    o.xtype = 'U' \n" +
-                    "    AND \n" +
-                    "    i.id = OBJECT_ID(o.name)\n" +
-                    "ORDER BY i.rows DESC\n";
-        }
-        return stmt;
-
-    }
+   
 
     private void buildData(int connection, TableView tableView, String stmt) throws SQLException, ClassNotFoundException {
         ObservableList data = FXCollections.observableArrayList();
 
         try {
             ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
-
+            
+            tableView.getColumns().clear();
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
                 //We are using non property style for making dynamic table
                 final int j = i;
@@ -226,14 +180,26 @@ public class Controller {
             }
             tableView.setItems(data);
         } catch(SQLException e) {
-            throw e;
+            //throw e;
         }
 
     }
 
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
-        getResult();
+        //getResult();
+    	tbOverview.getItems().clear();
+    	//buildCourseResultTable();
+        if (cbFilter.getSelectionModel().getSelectedItem().equals("Uncompleted")) {
+            buildCourseUnfinishedTable();
+        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
+        	buildCourseResultTable();
+        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
+        	 // does not work
+        }
+        else {
+    		lblError.setText("Please choose on item from the filter list."); // does not work
+    	} 	
     }
 
     @FXML
@@ -288,13 +254,13 @@ public class Controller {
         });
     }
 
-    @FXML
-    public void listenerOverview() throws SQLException, ClassNotFoundException {
+   @FXML 
+   public void listenerOverview() throws SQLException, ClassNotFoundException {
         cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput");
-                ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
+                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
+                //ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
                 try {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
                         cbFilter.setItems(null);
@@ -302,11 +268,12 @@ public class Controller {
                       cbFilter.setItems(filter1);
                       cbFilter.getSelectionModel().selectFirst();
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
-                      cbFilter.setItems(filter2);
+                      cbFilter.setItems(filter1);
+                      cbFilter.getSelectionModel().selectFirst();
+                  } else if (cbSearch.getSelectionModel().getSelectedIndex() == 3) {
+                      cbFilter.setItems(filter1);
                       cbFilter.getSelectionModel().selectFirst();
                   }
-
-
                 } catch (NullPointerException e) {
 
                 }
@@ -319,7 +286,7 @@ public class Controller {
         int index = cbQ.getSelectionModel().getSelectedIndex();
         tableView.getItems().clear();
         tableView.getColumns().clear();
-        buildData(1, tableView, getStmt(index));
+        buildData(1, tableView, Assignment2DAO.getStmt(index));
     }
 
     @FXML
@@ -521,6 +488,7 @@ public class Controller {
     }
 
     @FXML
+
     private void addRegistration(ActionEvent actionEvent) {
     	try {
     		int index = cbRegStudents.getSelectionModel().getSelectedIndex();
@@ -585,6 +553,7 @@ public class Controller {
     @FXML
     private void setGrade(ActionEvent actionEvent) {
         try {
+
         	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
         	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
         	if(index!=0 && index2!=0) {
@@ -610,4 +579,92 @@ public class Controller {
 	
         }
     }
+    
+    public void buildCourseResultTable () {
+    	String stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
+    	try {
+        	buildData(0, tbOverview, stmt);
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+		}
+    }
+    
+    public void buildCourseUnfinishedTable() {
+    	String stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
+    	try {
+        	buildData(0, tbOverview, stmt);	
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			
+		}
+    }
+    
+    private int searchCourseGetID() {
+		String cID = tfSearch.getText().toString();
+    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
+    		String valueID = cID.substring(1);
+    		int courseCode= Integer.parseInt(valueID);
+    		return courseCode;
+    	} else {
+    		lblError.setText("Please enter a valid courseCode.");
+    		return 0;
+    	}
+
+    }
+    
+    private Student searchStudent() {
+    	String sID = tfSearch.getText().toString();
+    	Student student = new Student();
+    	try {
+    		if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !sID.equals("")) {
+        		String valueID = sID.substring(1);
+            	int studentID = Integer.parseInt(valueID);
+        		
+            	student = StudentDAO.findStudent(studentID);
+            	return student;
+        	}
+        	else {
+        		lblError.setText("Please enter a valid studentID.");
+        	}
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+	
+        }
+    	return null;
+    }
+    
+    private Course searchCourse() {
+    	String cID = tfSearch.getText().toString();
+    	Course course = new Course();
+    	try {
+    		if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
+        		String valueID = cID.substring(1);
+            	int courseCode = Integer.parseInt(valueID);
+        		
+            	course = CourseDAO.findCourse(courseCode);
+            	return course;
+        	}
+        	else {
+        		lblError.setText("Please enter a valid courseCode.");
+        	}
+    	} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+	
+        }
+    	return null;
+    
+    	
+    	
+    
+	}
+   
 }

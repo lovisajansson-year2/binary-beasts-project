@@ -7,13 +7,12 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Controller">
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -90,19 +89,19 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tbOverview" layoutX="22.0" layoutY="76.0" prefHeight="276.0" prefWidth="553.0">
+                        <TableView fx:id="tbOverview" layoutX="24.0" layoutY="92.0" prefHeight="260.0" prefWidth="551.0">
                           <columns>
                           </columns>
                         </TableView>
-                        <ComboBox fx:id="cbSearch" layoutX="224.0" layoutY="42.0" prefWidth="150.0" promptText="Select Course" />
-                        <TextArea  layoutX="489.0" layoutY="30.0" prefHeight="18.0" prefWidth="85.0" />
-                        <ComboBox fx:id="cbFilter" layoutX="388.0" layoutY="42.0" prefWidth="92.0" />
+                        <ComboBox fx:id="cbSearch" layoutX="24.0" layoutY="36.0" prefWidth="150.0" promptText="Select Course" />
+                        <ComboBox fx:id="cbFilter" layoutX="208.0" layoutY="36.0" prefWidth="92.0" />
                         <Label layoutX="22.0" layoutY="13.0" text="Show Information About Students and Courses">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfSearch" layoutX="22.0" layoutY="42.0" onAction="#onEnter" promptText="Search" />
+                        <TextField fx:id="tfSearch" layoutX="339.0" layoutY="36.0" onAction="#onEnter" promptText="Search" />
+                        <Label id="lblError" layoutX="30.0" layoutY="68.0" />
                      </children>
                   </AnchorPane>
               </content>

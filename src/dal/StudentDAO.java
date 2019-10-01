@@ -9,6 +9,8 @@ import dal.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.sql.rowset.CachedRowSet;
+
 public class StudentDAO {
 
     public static int generateID() throws SQLException, ClassNotFoundException {
@@ -139,4 +141,5 @@ public class StudentDAO {
             throw e;
         }
     }
+
 }

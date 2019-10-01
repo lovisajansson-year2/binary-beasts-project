@@ -66,6 +66,10 @@ public class StudiesDAO {
         return cList;
 	}
 	
+	public static String getAllUnfinishedCourseStmt() {
+		String stmt = "select studentID from Studies where courseCode="; 
+		return stmt;
+	}
 
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
 		String stmt = "select c.courseCode, c.credits from course c join studies s on c.courseCode = s.courseCode where studentID = "+studentID+"";
