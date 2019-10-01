@@ -67,6 +67,8 @@ public class Controller {
     private Button btnRegRemove;
     @FXML
     private Button btnRegGrade;
+    @FXML
+    private TableView tvRegistration;
 
     //Overview
     @FXML
@@ -76,7 +78,7 @@ public class Controller {
     @FXML
     private ComboBox<String> cbFilter;
     @FXML
-    private TableView tbOverview;
+    private TableView tvOverview;
     @FXML
     private TextArea taGrades;
     @FXML
@@ -125,6 +127,8 @@ public class Controller {
         ObservableList<String> grades = FXCollections.observableArrayList("Select grade","F","E","D","C","B","A");
         cbGrade.setItems(grades);
         cbGrade.getSelectionModel().selectFirst();
+
+        buildData(0,tvRegistration,buildStatement(2));
 
         //Overview
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
@@ -188,12 +192,12 @@ public class Controller {
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
         //getResult();
-    	tbOverview.getItems().clear();
+    	tvOverview.getItems().clear();
     	//buildCourseResultTable();
         if (cbFilter.getSelectionModel().getSelectedItem().equals("Uncompleted")) {
-            buildCourseUnfinishedTable();
+            buildData(0,tvOverview, buildStatement(0));
         } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
-        	buildCourseResultTable();
+        	buildData(0,tvOverview, buildStatement(1));
         } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
         	 // does not work
         }
@@ -316,8 +320,8 @@ public class Controller {
             stmt = "select * from hasStudied";
         }
 
-        tbOverview.getColumns().clear();
-        buildData(0, tbOverview, stmt);
+        tvOverview.getColumns().clear();
+        buildData(0, tvOverview, stmt);
     }
 
     @FXML
@@ -502,6 +506,7 @@ public class Controller {
 		            StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
 		            lblMessage.setText("Message: Registered " +getItem(cbRegStudents)+" on course "+getItem(cbRegCourses));
 		            resetFields();
+		            buildData(0,tvRegistration,buildStatement(2));
 		        } else {
 	            lblMessage.setText("Message: Student is studying too many courses");
 	            } 
@@ -530,6 +535,7 @@ public class Controller {
 				StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
          		lblMessage.setText("Message: Removed student " + getItem(cbRegStudents)+" from course " +getItem(cbRegCourses));
          		resetFields();
+                buildData(0,tvRegistration,buildStatement(2));
          	}else if(index+index2==0) {
         		lblMessage.setText("Message: You have to pick a student and a course to remove registration");
          	} else if(index==0) {
@@ -560,6 +566,7 @@ public class Controller {
 				HasStudiedDAO.addHasStudied(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()), cbGrade.getSelectionModel().getSelectedItem());			
         		lblMessage.setText("Message: set Grade " + getItem(cbGrade)+" for Student "+getItem(cbRegStudents)+" on course " + getItem(cbRegCourses) );
         		resetFields();
+                buildData(0,tvRegistration,buildStatement(2));
         	}else if(index+index2==0) {
         		lblMessage.setText("Message: You have to pick a student and a course to update grade");
         	} else if(index==0) {
@@ -580,29 +587,22 @@ public class Controller {
         }
     }
     
-    public void buildCourseResultTable () {
-    	String stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
-    	try {
-        	buildData(0, tbOverview, stmt);
-    	} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			
-		}
+    public String buildStatement(int index) {
+        String stmt = "";
+        switch (index) {
+            case 0:
+                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
+                break;
+            case 1:
+                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
+                break;
+            case 2:
+                stmt = Assignment2DAO.getRegistrations();
+                break;
+        }
+        return stmt;
     }
-    
-    public void buildCourseUnfinishedTable() {
-    	String stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
-    	try {
-        	buildData(0, tbOverview, stmt);	
-    	} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			
-		}
-    }
+
     
     private int searchCourseGetID() {
 		String cID = tfSearch.getText().toString();
@@ -616,55 +616,4 @@ public class Controller {
     	}
 
     }
-    
-    private Student searchStudent() {
-    	String sID = tfSearch.getText().toString();
-    	Student student = new Student();
-    	try {
-    		if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !sID.equals("")) {
-        		String valueID = sID.substring(1);
-            	int studentID = Integer.parseInt(valueID);
-        		
-            	student = StudentDAO.findStudent(studentID);
-            	return student;
-        	}
-        	else {
-        		lblError.setText("Please enter a valid studentID.");
-        	}
-    	} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-	
-        }
-    	return null;
-    }
-    
-    private Course searchCourse() {
-    	String cID = tfSearch.getText().toString();
-    	Course course = new Course();
-    	try {
-    		if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
-        		String valueID = cID.substring(1);
-            	int courseCode = Integer.parseInt(valueID);
-        		
-            	course = CourseDAO.findCourse(courseCode);
-            	return course;
-        	}
-        	else {
-        		lblError.setText("Please enter a valid courseCode.");
-        	}
-    	} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-	
-        }
-    	return null;
-    
-    	
-    	
-    
-	}
-   
 }
