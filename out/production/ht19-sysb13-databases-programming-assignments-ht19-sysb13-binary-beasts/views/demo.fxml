@@ -7,7 +7,6 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
@@ -94,15 +93,14 @@
                           <columns>
                           </columns>
                         </TableView>
-                        <ComboBox fx:id="cbSearch" layoutX="224.0" layoutY="42.0" prefWidth="150.0" promptText="Select Course" />
-                        <TextArea  layoutX="489.0" layoutY="30.0" prefHeight="18.0" prefWidth="85.0" />
-                        <ComboBox fx:id="cbFilter" layoutX="388.0" layoutY="42.0" prefWidth="92.0" />
+                        <ComboBox fx:id="cbSearch" layoutX="119.0" layoutY="42.0" prefWidth="150.0" />
+                        <ComboBox fx:id="cbFilter" layoutX="286.0" layoutY="42.0" prefWidth="92.0" />
                         <Label layoutX="22.0" layoutY="13.0" text="Show Information About Students and Courses">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfSearch" layoutX="22.0" layoutY="42.0" onAction="#onEnter" promptText="Search" />
+                        <TextField fx:id="tfSearch" layoutX="22.0" layoutY="42.0" onAction="#onEnter" prefHeight="27.0" prefWidth="83.0" promptText="Search" />
                      </children>
                   </AnchorPane>
               </content>

@@ -128,7 +128,7 @@ public class Controller {
         cbSearch.getSelectionModel().selectFirst();
 
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
-        "1","2","3","4","5","6");
+        "1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","2.3","2.4","2.5","2.6","2.7");
 
         cbQ.setItems(questions);
         cbQ.getSelectionModel().selectFirst();
@@ -255,8 +255,7 @@ public class Controller {
                 } catch (ClassNotFoundException e) {
 
                 } catch (NullPointerException e) {
-
-                
+                    
 				} catch (SQLException e) {
 					
 				}
@@ -350,7 +349,6 @@ public class Controller {
             stmt = "select * from hasStudied";
         }
 
-        tbOverview.getItems().clear();
         tbOverview.getColumns().clear();
         buildData(0, tbOverview, stmt);
     }
