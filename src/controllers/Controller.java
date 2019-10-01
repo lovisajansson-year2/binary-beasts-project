@@ -503,14 +503,13 @@ public class Controller {
 		        int credits = 0;
 		        for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
 		        	credits = credits + c.getCredits();
-		        }if(credits <= 45) {
+		        }
+		        if(credits <= 45) {
 		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
-		                System.out.println("iterate " +c.getCourseCode());
-                        System.out.println("match " + Integer.parseInt(getItem(cbRegCourses)));
 		                if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
 		                    match = false;
                         }
-                    } System.out.println(match);
+                    }
 		            if(match) {
                         StudiesDAO.addStudies(sID, Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
                         lblMessage.setText("Message: Registered " + getItem(cbRegStudents) + " on course " + getItem(cbRegCourses));
@@ -543,11 +542,22 @@ public class Controller {
     	 try {
          	int index = cbRegStudents.getSelectionModel().getSelectedIndex();
          	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
-         	if(index!=0 && index2!=0) {	
-				StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-         		lblMessage.setText("Message: Removed student " + getItem(cbRegStudents)+" from course " +getItem(cbRegCourses));
-         		resetFields();
-                buildData(0,tvRegistration,buildStatement(2));
+         	boolean match = false;
+         	if(index!=0 && index2!=0) {
+                int sID = Integer.parseInt(getItem(cbRegStudents));
+                for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
+                    if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
+                        match = true;
+                    }
+                }
+                if(match) {
+                    StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
+                    lblMessage.setText("Message: Removed student " + getItem(cbRegStudents) + " from course " + getItem(cbRegCourses));
+                    resetFields();
+                    buildData(0, tvRegistration, buildStatement(2));
+                } else {
+                    lblMessage.setText("Message: Student is not studying this course.");
+                }
          	}else if(index+index2==0) {
         		lblMessage.setText("Message: You have to pick a student and a course to remove registration");
          	} else if(index==0) {
