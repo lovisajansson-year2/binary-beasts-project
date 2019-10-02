@@ -110,6 +110,7 @@ public class Controller {
         ObservableList<String> filter1 = FXCollections.observableArrayList("None");
         cbFilter.setItems(filter1);
         cbFilter.getSelectionModel().selectFirst();
+        lblError.setText("Message:");
         
         //Querys
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
@@ -145,7 +146,6 @@ public class Controller {
                 });
 
                 tableView.getColumns().addAll(col);
-                System.out.println("Column [" + i + "] ");
             }
 
             while (rs.next()) {
@@ -478,6 +478,7 @@ public class Controller {
 		        for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
 		        	credits = credits + c.getCredits();
 		        }
+		        credits = credits + CourseDAO.findCourse(getID(cbRegCourses)).getCredits();
 		        if(credits <= 45) {
 		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
 		                if(c.getCourseCode()==getID(cbRegCourses)) {
@@ -493,7 +494,7 @@ public class Controller {
 		                lblMessage.setText("Message: Student has already completed this course.");
                     }
 		        } else {
-	            lblMessage.setText("Message: Student is studying too many courses");
+	            lblMessage.setText("Message: Can't add registration, credits for student would be higher than 45.");
 	            } 
     		} else if(index+index2==0) {
         		lblMessage.setText("Message: You have to pick a student and a course to add registration");
