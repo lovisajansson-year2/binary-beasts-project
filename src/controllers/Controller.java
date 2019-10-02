@@ -71,8 +71,8 @@ public class Controller {
       	 cbGrade.getSelectionModel().selectFirst();
       	 cbStudent.getSelectionModel().selectFirst();
       	 cbCourses.getSelectionModel().selectFirst();
-      	 tfFirstName.setText(null);
-      	 tfLastName.setText(null);
+      	 tfFirstName.setText("");
+      	 tfLastName.setText("");
     } 
     
     private static String getItem(ComboBox<String> comboBoxName ) {
