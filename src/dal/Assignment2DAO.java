@@ -56,6 +56,41 @@ public class Assignment2DAO {
 					 "    i.id = OBJECT_ID(o.name)\n" +
 					 "ORDER BY i.rows DESC\n";
 			 break;
+			 case 13: stmt = "SELECT [Relational Exch_ Rate Amount]\n" +
+					 "FROM [CRONUS Sverige AB$Currency Exchange Rate]\n" +
+					 "WHERE [Currency Code] = 'NOK'\n";
+			 break;
+			 case 14: stmt = "SELECT [Currency Code]\n" +
+					 "FROM [CRONUS Sverige AB$Currency Exchange Rate]\n" +
+					 "WHERE ([Relational Exch_ Rate Amount] = (SELECT MAX([Relational Exch_ Rate Amount])\n" +
+					 "FROM [CRONUS Sverige AB$Currency Exchange Rate]))";
+			 break;
+			 case 15: stmt = "SELECT Address, City\n" +
+					 "FROM [CRONUS Sverige AB$Customer]\n" +
+					 "WHERE [Search Name] LIKE '%FOTOGRAFERNA%'\n";
+			 break;
+			 case 16: stmt = "SELECT DISTINCT emp.[Search Name]\n" +
+					 "FROM [CRONUS Sverige AB$Employee] emp\n" +
+					 "JOIN [CRONUS Sverige AB$Employee Absence] empAb\n" +
+					 "ON emp.No_ = empAb.[Employee No_]\n" +
+					 "WHERE empAb.[Cause of Absence Code] = 'SJUK'\n";
+			 break;
+			 case 17: stmt = "SELECT emp.[Search Name], empRel.[First Name], empRel.[Last Name], empRel.[Relative Code]\n" +
+					 "FROM [CRONUS Sverige AB$Employee Relative] empRel\n" +
+					 "JOIN [CRONUS Sverige AB$Employee] emp\n" +
+					 "ON empRel.[Employee No_] = emp.No_\n" +
+					 "ORDER BY emp.[Search Name]\n";
+			 break;
+			 case 18: stmt = "SELECT cus.Name\n" +
+					 "FROM [CRONUS Sverige AB$Customer] cus\n" +
+					 "JOIN [CRONUS Sverige AB$Employee] emp\n" +
+					 "ON cus.[Salesperson Code] = emp.No_\n" +
+					 "WHERE emp.[First Name] = 'Andreas' AND emp.[Last Name] = 'Berglund'\n";
+			 break;
+			 case 19: stmt = "SELECT [Bank Account No_]\n" +
+					 "FROM [CRONUS Sverige AB$Customer Bank Account] \n" +
+					 "WHERE [CRONUS Sverige AB$Customer Bank Account].[Customer No_] = '10000'\n";
+			 break;
 		 }
 		 return stmt;
 	 }
