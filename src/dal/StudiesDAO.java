@@ -99,4 +99,9 @@ public class StudiesDAO {
 			throw e;
 		}
 	}
+	
+	public static String getStartedStmt(int cID) {
+		String stmt = "select studentID from Studies where courseCode="+cID;
+		return stmt;
+	}
 }
