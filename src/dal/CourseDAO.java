@@ -130,7 +130,7 @@ public class CourseDAO {
 			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n"+
 			    "from course c\n"+
 			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+
-			    "group by c.courseCode, c.credits'";
+			    "group by c.courseCode, c.credits";
 		return stmt;
 	}
 	
@@ -142,8 +142,9 @@ public class CourseDAO {
 			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n"+
 			    "from course c\n"+
 			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+
-			    "group by c.courseCode, c.credits'\n"+
-			    "where c.courseCode="+cID;
+			    "where c.courseCode="+cID+" \n"+
+			    "group by c.courseCode, c.credits";
+			    ;
 		return stmt;
 	}
 	

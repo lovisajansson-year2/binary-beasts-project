@@ -111,6 +111,7 @@ public class Controller {
         ObservableList<String> filter1 = FXCollections.observableArrayList("None");
         cbFilter.setItems(filter1);
         cbFilter.getSelectionModel().selectFirst();
+        tfSearch.setText("");
         
         //Querys
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
@@ -276,15 +277,15 @@ public class Controller {
     private void getResult() throws SQLException, ClassNotFoundException {
         String stmt = "";
         int as = 0;
-        if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && tfSearch.equals("")) {
+        if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
         	stmt = StudentDAO.getAllStudents();
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && searchGetID() != 0) {
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
         	stmt = StudentDAO.getSpecificStudent(searchGetID());
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && tfSearch.equals("")) {
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
             stmt = CourseDAO.getAllCourses();
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && searchGetID() != 0) {
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
             stmt = CourseDAO.getSpecificCourse(searchGetID());
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.equals("")) {
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
         	stmt = Assignment2DAO.getRegistrations();
         } else if((cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedItem().equals("Started") && searchGetID() != 0)) {
         	stmt = StudiesDAO.getStartedStmt(searchGetID());
@@ -603,8 +604,6 @@ public class Controller {
             case 2:
                 stmt = Assignment2DAO.getRegistrations();
                 break;
-            case 3:
-            	stmt = Assignment2DAO.getAllStudents();
         }
         return stmt;
     }
