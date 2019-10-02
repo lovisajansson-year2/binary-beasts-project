@@ -124,7 +124,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="300.0" layoutY="30.0" mnemonicParsing="false" onAction="#openQExcel" text="Excel" />
+                        <Button layoutX="300.0" layoutY="30.0" mnemonicParsing="false" text="Excel" />
                         <Button layoutX="372.0" layoutY="30.0" mnemonicParsing="false" text="Access" />
                         <Button layoutX="300.0" layoutY="144.0" mnemonicParsing="false" text="Excel" />
                         <Button layoutX="372.0" layoutY="144.0" mnemonicParsing="false" text="Access" />

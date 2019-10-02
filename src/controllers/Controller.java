@@ -253,7 +253,7 @@ public class Controller {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput");
-                ObservableList<String> filter2 = FXCollections.observableArrayList("None","Completed", "Uncompleted");
+                ObservableList<String> filter2 = FXCollections.observableArrayList("Completed", "Uncompleted");
                 try {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
                         cbFilter.setItems(null);
@@ -601,10 +601,10 @@ public class Controller {
         String stmt = "";
         switch (index) {
             case 0:
-                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
+                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchGetID()+"";
                 break;
             case 1:
-                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
+                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchGetID()+"";
                 break;
             case 2:
                 stmt = Assignment2DAO.getRegistrations();
@@ -614,49 +614,18 @@ public class Controller {
         }
         return stmt;
     }
-
-    
-    private int searchCourseGetID() {
-    	String cID = tfSearch.getText().toString();
-    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
-    		String valueID = cID;
-    		int courseCode= Integer.parseInt(valueID);
-    		return courseCode;
-    	} else {
-    		lblError.setText("Please enter a valid studentID.");
-    		return 0;
-    	}
-    	
-    }
     
     private int searchGetID() {
-		String vID = tfSearch.getText().toString();
-		char firstChar = vID.charAt(0);
-    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !vID.equals("") && firstChar == 'C') {
-    		String valueID = vID;
-    		int courseCode= Integer.parseInt(valueID);
-    		return courseCode;
-    	} else if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !vID.equals("") && firstChar == 'S') {
-    		String valueID = vID;
-    		int studentID= Integer.parseInt(valueID);
-    		return studentID;
-    	}else {
-    		lblError.setText("Please enter a valid courseCode.");
-    		return 0;
-    	}
-    }
-    
-    private int searchStudentID() {
-    	String sID = tfSearch.getText().toString();
-    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Student") && !sID.equals("")) {
-    		String valueID = sID;
-    		int studentID= Integer.parseInt(valueID);
-    		return studentID;
-    	} else {
-    		lblError.setText("Please enter a valid studentID.");
-    		return 0;
-    	}
-    	
+		String value = tfSearch.getText().toString();
+		if (value != "") {
+	    	int vID= Integer.parseInt(value);
+	    	return vID;
+		} else if (value == "") {
+			
+		} else {
+			//felmeddelande
+		}
+		return 0;		 
     }
     
     
