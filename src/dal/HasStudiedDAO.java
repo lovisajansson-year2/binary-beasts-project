@@ -135,4 +135,9 @@ public class HasStudiedDAO {
 		throw e;
 		}
 	}
+	
+	public static String getCompletedStmt(int cID) {
+		String stmt = "select studentID from HasStudied where courseCode="+cID;
+		return stmt;
+	}
 }

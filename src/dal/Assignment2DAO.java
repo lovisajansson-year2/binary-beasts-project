@@ -69,6 +69,17 @@ public class Assignment2DAO {
 	 	return stmt;
 	 }
 	 
+	 public static String getRegistrationsForCourse(int ID) {
+		 String stmt = "select studentID, courseCode, '' as grade\n" +
+					"from studies\n" +
+					"union\n" +
+					"where courseCode="+ID+""+
+					"select *\n" +
+					"from HasStudied\n"+
+					"where courseCode ="+ID+"";
+		 	return stmt;
+	 }
+	 
 	 public static String getPercentAStmt() {
 		 String stmt = "select c.courseCode, c.credits,\n" +
 	             "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 /\n" +
@@ -90,9 +101,6 @@ public class Assignment2DAO {
 		 return stmt;
 	 }
 	 
-	 public static String getAllStudents() {
-		 String stmt = "select * from Student";
-		 return stmt;
-	 }
+	
 		 
 }

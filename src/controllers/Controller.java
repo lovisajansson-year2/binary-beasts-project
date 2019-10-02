@@ -77,7 +77,6 @@ public class Controller {
     
     private static String getID(ComboBox<String> comboBoxName ) {
        	return comboBoxName.getSelectionModel().getSelectedItem();
-
      }
     
     @FXML
@@ -273,18 +272,20 @@ public class Controller {
     private void getResult() throws SQLException, ClassNotFoundException {
         String stmt = "";
         int as = 0;
-        if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
-        	stmt = Assignment2DAO.getAllStudents();
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = Assignment2DAO.getPercentAStmt();
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            stmt = Assignment2DAO.getThroughputStmt();
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-        	//Union statement
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            stmt = buildStatement(1);
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 2) {
-        	stmt = buildStatement(0);
+        if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && tfSearch.equals("")) {
+        	stmt = StudentDAO.getAllStudents();
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && searchGetID() != 0) {
+        	stmt = StudentDAO.getSpecificStudent(searchGetID());
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && tfSearch.equals("")) {
+            stmt = CourseDAO.getAllCourses();
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && searchGetID() != 0) {
+            stmt = CourseDAO.getSpecificCourse(searchGetID());
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.equals("")) {
+        	stmt = Assignment2DAO.getRegistrations();
+        } else if((cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedItem().equals("Started") && searchGetID() != 0)) {
+        	stmt = StudiesDAO.getStartedStmt(searchGetID());
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedItem().equals("Completed") && searchGetID() != 0) {
+            stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
         } else {
         	lblError.setText("Please choose an item from the list.");
         }

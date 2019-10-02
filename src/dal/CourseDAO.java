@@ -121,6 +121,34 @@ public class CourseDAO {
 		}
 		return courses;
 	}
+	
+	public static String getAllCourses() {
+		String stmt = "select c.courseCode, c.credits," +
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / "+
+			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',"+
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /" +
+			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n"+
+			    "from course c\n"+
+			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+
+			    "group by c.courseCode, c.credits'";
+		return stmt;
+	}
+	
+	public static String getSpecificCourse(int cID) {
+		String stmt = "select c.courseCode, c.credits," +
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / "+
+			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',"+
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /" +
+			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n"+
+			    "from course c\n"+
+			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+
+			    "group by c.courseCode, c.credits'\n"+
+			    "where c.courseCode="+cID;
+		return stmt;
+	}
+	
+	
+
 
 	
 }
