@@ -15,6 +15,9 @@ import models.Course;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 
 
@@ -521,9 +524,11 @@ public class Controller {
          	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
          	boolean match = false;
          	if(index!=0 && index2!=0) {
+
                 int sID = getID(cbRegStudents);
                 for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
                     if(c.getCourseCode()==getID(cbRegCourses)) {
+
                         match = true;
                     }
                 }
@@ -620,7 +625,70 @@ public class Controller {
 		}
 		return 0;		 
     }
+
+	
+    @FXML
+    public void openQExcel(ActionEvent actionEvent) {
+    	File excelFile = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-queries.xlsx");
+    	
+    	try {
+			Desktop.getDesktop().open(excelFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
     
-    
+   @FXML
+   public void openQAccess(ActionEvent actionEvent) {
+	   File accessFile = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-queries.accdb");
+	   
+	   try {
+		   Desktop.getDesktop().open(accessFile);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   
+   @FXML
+   public void openCRExcel(ActionEvent actionEvent) {
+	   File excelCR = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Customer-Report.xlsx");
+	   
+	   try {
+		   Desktop.getDesktop().open(excelCR);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   @FXML
+   public void openERExcel (ActionEvent actionEvent) {
+	   File excelER = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Employee-Report.xlsx");
+	   
+	   try {
+		   Desktop.getDesktop().open(excelER);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   @FXML 
+   public void openCRAccess(ActionEvent actionEvent) {
+	   File accessCR = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Customer-Report.accdb");
+	   
+	   try {
+		   Desktop.getDesktop().open(accessCR);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   @FXML
+   public void openERAccess(ActionEvent actionEvent) {
+	   File accessER = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Employee-Report.accdb");
+			   
+	   
+	   try {
+		   Desktop.getDesktop().open(accessER);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
 
 }
