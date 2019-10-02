@@ -9,11 +9,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 import models.Course;
-import models.Student;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
@@ -21,8 +19,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
 
 
 
@@ -34,12 +30,6 @@ public class Controller {
     @FXML
     private TextField tfCredits;
     @FXML
-    private Button btnCoursesAdd;
-    @FXML
-    private Button btnCoursesUpdate;
-    @FXML
-    private Button btnCoursesRemove;
-    @FXML
     private Label lblMessage;
 
     //Student
@@ -49,13 +39,6 @@ public class Controller {
     private TextField tfFirstName;
     @FXML
     private TextField tfLastName;
-    @FXML
-    private Button btnStudentAdd;
-    @FXML
-    private Button btnStudentUpdate;
-    @FXML
-    private Button btnStudentRemove;
-
 
     //Registration
     @FXML
@@ -64,12 +47,6 @@ public class Controller {
     private ComboBox<String> cbRegStudents;
     @FXML
     private ComboBox<String> cbGrade;
-    @FXML
-    private Button btnRegAdd;
-    @FXML
-    private Button btnRegRemove;
-    @FXML
-    private Button btnRegGrade;
     @FXML
     private TableView tvRegistration;
 
@@ -83,8 +60,6 @@ public class Controller {
     @FXML
     private TableView tvOverview;
     @FXML
-    private TextArea taGrades;
-    @FXML
     private Label lblError;
 
 
@@ -92,8 +67,6 @@ public class Controller {
     private TableView tableView;
     @FXML
     private ComboBox<String> cbQ;
-    @FXML
-    private Button btnA1;
 
     private void resetFields() {
       	 cbRegStudents.getSelectionModel().selectFirst();
@@ -101,13 +74,13 @@ public class Controller {
       	 cbGrade.getSelectionModel().selectFirst();
       	 cbStudent.getSelectionModel().selectFirst();
       	 cbCourses.getSelectionModel().selectFirst();
-      	 tfFirstName.setText(null);
-      	 tfLastName.setText(null);
+      	 tfFirstName.setText("");
+      	 tfLastName.setText("");
     } 
     
     private static int getID(ComboBox<String> comboBoxName ) {
-       	int item = Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
-       	return item;
+       	return Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
+
      }
     
     @FXML
@@ -137,19 +110,22 @@ public class Controller {
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Relation");
         cbSearch.setItems(search);
         cbSearch.getSelectionModel().selectFirst();
-        ObservableList<String> filter = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
-        cbFilter.setItems(filter);
+        ObservableList<String> filter1 = FXCollections.observableArrayList("None");
+        cbFilter.setItems(filter1);
+        cbFilter.getSelectionModel().selectFirst();
         
-        //A2
+        //Querys
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
-        "1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","2.3","2.4","2.5","2.6","2.7");
-
+        "1.1 All keys","1.2 All table constraints","1.3 All tables","1.4 All columns in 'Employee'", "1.5 Metadata for 'Employee'",
+                "1.6 Table with most rows","2.1 How much is 100NOK?","2.2 What value is the most expensive?",
+                "2.3 Fotograferna AB's address","2.4 Name of employees that have been ill","2.5 Family relations","2.6 Andreas B's customers",
+                "2.7 Bank accounts beloning to CuNO 10,000");
         cbQ.setItems(questions);
         cbQ.getSelectionModel().selectFirst();
 
         listenerStudent();
         listenerCourse();
-        //listenerOverview();
+        listenerOverview();
     }
 
    
@@ -197,7 +173,7 @@ public class Controller {
         //getResult();
     	tvOverview.getItems().clear();
     	//buildCourseResultTable();
-        if (cbFilter.getSelectionModel().getSelectedItem().equals("Uncompleted")) {
+        if (cbFilter.getSelectionModel().getSelectedItem().equals("Started")) {
             buildData(0,tvOverview, buildStatement(0));
         } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
         	buildData(0,tvOverview, buildStatement(1));
@@ -266,19 +242,17 @@ public class Controller {
         cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
-                //ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
+                ObservableList<String> filter1 = FXCollections.observableArrayList("None");
+                ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Completed");
                 try {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
-                        cbFilter.setItems(null);
+                        cbFilter.setItems(filter1);
+                        cbFilter.getSelectionModel().selectFirst();
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 1) {
                       cbFilter.setItems(filter1);
                       cbFilter.getSelectionModel().selectFirst();
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
-                      cbFilter.setItems(filter1);
-                      cbFilter.getSelectionModel().selectFirst();
-                  } else if (cbSearch.getSelectionModel().getSelectedIndex() == 3) {
-                      cbFilter.setItems(filter1);
+                      cbFilter.setItems(filter2);
                       cbFilter.getSelectionModel().selectFirst();
                   }
                 } catch (NullPointerException e) {
@@ -509,7 +483,7 @@ public class Controller {
 		        }
 		        if(credits <= 45) {
 		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
-		                if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
+		                if(c.getCourseCode()==getID(cbRegCourses)) {
 		                    match = false;
                         }
                     }
@@ -547,15 +521,17 @@ public class Controller {
          	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
          	boolean match = false;
          	if(index!=0 && index2!=0) {
-                int sID = Integer.parseUnsignedInt(getID(cbRegStudents));
+
+                int sID = getID(cbRegStudents);
                 for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
-                    if(c.getCourseCode()==Integer.parseInt(getID(cbRegCourses))) {
+                    if(c.getCourseCode()==getID(cbRegCourses)) {
+
                         match = true;
                     }
                 }
                 if(match) {
                     StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-                    lblMessage.setText("Message: Removed student " + getItem(cbRegStudents) + " from course " + getItem(cbRegCourses));
+                    lblMessage.setText("Message: Removed student " + getID(cbRegStudents) + " from course " + getID(cbRegCourses));
                     resetFields();
                     buildData(0, tvRegistration, buildStatement(2));
                 } else {
