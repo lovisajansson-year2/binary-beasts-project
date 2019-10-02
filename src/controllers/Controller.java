@@ -71,12 +71,14 @@ public class Controller {
       	 cbGrade.getSelectionModel().selectFirst();
       	 cbStudent.getSelectionModel().selectFirst();
       	 cbCourses.getSelectionModel().selectFirst();
-      	 tfFirstName.setText(null);
-      	 tfLastName.setText(null);
+      	 tfFirstName.setText("");
+      	 tfLastName.setText("");
     } 
     
-    private static String getID(ComboBox<String> comboBoxName ) {
-       	return comboBoxName.getSelectionModel().getSelectedItem();
+
+    private static int getID(ComboBox<String> comboBoxName ) {
+       	return Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
+
      }
     
     @FXML
@@ -112,8 +114,10 @@ public class Controller {
         
         //Querys
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
-        "1.1","1.2","1.3","1.4","1.5","1.6","2.1","2.2","2.3","2.4","2.5","2.6","2.7");
-
+        "1.1 All keys","1.2 All table constraints","1.3 All tables","1.4 All columns in 'Employee'", "1.5 Metadata for 'Employee'",
+                "1.6 Table with most rows","2.1 How much is 100NOK?","2.2 What value is the most expensive?",
+                "2.3 Fotograferna AB's address","2.4 Name of employees that have been ill","2.5 Family relations","2.6 Andreas B's customers",
+                "2.7 Bank accounts beloning to CuNO 10,000");
         cbQ.setItems(questions);
         cbQ.getSelectionModel().selectFirst();
 
