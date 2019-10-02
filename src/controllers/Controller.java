@@ -15,6 +15,9 @@ import models.Course;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 
 
@@ -75,6 +78,7 @@ public class Controller {
       	 tfLastName.setText("");
     } 
     
+
     private static int getID(ComboBox<String> comboBoxName ) {
        	return Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
 
@@ -110,6 +114,7 @@ public class Controller {
         ObservableList<String> filter1 = FXCollections.observableArrayList("None");
         cbFilter.setItems(filter1);
         cbFilter.getSelectionModel().selectFirst();
+        tfSearch.setText("");
         
         //Querys
         ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
@@ -167,9 +172,11 @@ public class Controller {
 
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
-        //getResult();
+        getResult();
+    	//tvOverview.getItems().clear();	
+        /*getResult();
     	tvOverview.getItems().clear();
-    	//buildCourseResultTable();
+    	buildCourseResultTable();
         if (cbFilter.getSelectionModel().getSelectedItem().equals("Started")) {
             buildData(0,tvOverview, buildStatement(0));
         } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
@@ -179,7 +186,7 @@ public class Controller {
         }
         else {
     		lblError.setText("Please choose on item from the filter list."); // does not work
-    	} 	
+    	} 	*/
     }
 
     @FXML
@@ -239,6 +246,7 @@ public class Controller {
         cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
                 ObservableList<String> filter1 = FXCollections.observableArrayList("None");
                 ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Completed");
                 try {
@@ -252,6 +260,7 @@ public class Controller {
                       cbFilter.setItems(filter2);
                       cbFilter.getSelectionModel().selectFirst();
                   }
+                  
                 } catch (NullPointerException e) {
 
                 }
@@ -271,31 +280,27 @@ public class Controller {
     private void getResult() throws SQLException, ClassNotFoundException {
         String stmt = "";
         int as = 0;
-        if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = "select * from student";
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = "select c.courseCode, c.credits,\n" +
-                    "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 /\n" +
-                    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s'\n" +
-                    "from course c\n" +
-                    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
-                    "group by c.courseCode, c.credits";
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            stmt = "select c.courseCode, \n" +
-                    "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
-                    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n" +
-                    "from course c\n" +
-                    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
-                    "group by c.courseCode\n" +
-                    "order by Troughput DESC";
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = "select * from studies";
-        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            stmt = "select * from hasStudied";
+        if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+        	stmt = StudentDAO.getAllStudents();
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
+        	stmt = StudentDAO.getSpecificStudent(searchGetID());
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+            stmt = CourseDAO.getAllCourses();
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
+            stmt = CourseDAO.getSpecificCourse(searchGetID());
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+        	stmt = Assignment2DAO.getRegistrations();
+        } else if((cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedItem().equals("Started") && searchGetID() != 0)) {
+        	stmt = StudiesDAO.getStartedStmt(searchGetID());
+        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Relation") && cbFilter.getSelectionModel().getSelectedItem().equals("Completed") && searchGetID() != 0) {
+            stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
+        } else {
+        	lblError.setText("Please choose an item from the list.");
         }
 
         tvOverview.getColumns().clear();
         buildData(0, tvOverview, stmt);
+        
     }
 
     @FXML
@@ -492,6 +497,7 @@ public class Controller {
                     } else {
 		                lblMessage.setText("Message: Student has already completed this course.");
                     }
+
 		        } else {
 	            lblMessage.setText("Message: Student is studying too many courses");
 	            } 
@@ -518,9 +524,11 @@ public class Controller {
          	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
          	boolean match = false;
          	if(index!=0 && index2!=0) {
+
                 int sID = getID(cbRegStudents);
                 for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
                     if(c.getCourseCode()==getID(cbRegCourses)) {
+
                         match = true;
                     }
                 }
@@ -593,10 +601,10 @@ public class Controller {
         String stmt = "";
         switch (index) {
             case 0:
-                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchCourseGetID()+"";
+                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchGetID()+"";
                 break;
             case 1:
-                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchCourseGetID()+"";
+                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchGetID()+"";
                 break;
             case 2:
                 stmt = Assignment2DAO.getRegistrations();
@@ -604,18 +612,83 @@ public class Controller {
         }
         return stmt;
     }
-
     
-    private int searchCourseGetID() {
-		String cID = tfSearch.getText().toString();
-    	if (cbSearch.getSelectionModel().getSelectedItem().equals("Course") && !cID.equals("")) {
-    		String valueID = cID.substring(1);
-    		int courseCode= Integer.parseInt(valueID);
-    		return courseCode;
-    	} else {
-    		lblError.setText("Please enter a valid courseCode.");
-    		return 0;
-    	}
-
+    private int searchGetID() {
+		String value = tfSearch.getText().toString();
+		if (value != "") {
+	    	int vID= Integer.parseInt(value);
+	    	return vID;
+		} else if (value == "") {
+			
+		} else {
+			//felmeddelande
+		}
+		return 0;		 
     }
+
+	
+    @FXML
+    public void openQExcel(ActionEvent actionEvent) {
+    	File excelFile = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-queries.xlsx");
+    	
+    	try {
+			Desktop.getDesktop().open(excelFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+   @FXML
+   public void openQAccess(ActionEvent actionEvent) {
+	   File accessFile = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-queries.accdb");
+	   
+	   try {
+		   Desktop.getDesktop().open(accessFile);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   
+   @FXML
+   public void openCRExcel(ActionEvent actionEvent) {
+	   File excelCR = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Customer-Report.xlsx");
+	   
+	   try {
+		   Desktop.getDesktop().open(excelCR);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   @FXML
+   public void openERExcel (ActionEvent actionEvent) {
+	   File excelER = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Employee-Report.xlsx");
+	   
+	   try {
+		   Desktop.getDesktop().open(excelER);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   @FXML 
+   public void openCRAccess(ActionEvent actionEvent) {
+	   File accessCR = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Customer-Report.accdb");
+	   
+	   try {
+		   Desktop.getDesktop().open(accessCR);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+   @FXML
+   public void openERAccess(ActionEvent actionEvent) {
+	   File accessER = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Employee-Report.accdb");
+			   
+	   
+	   try {
+		   Desktop.getDesktop().open(accessER);
+	   } catch (IOException e) {
+		   e.printStackTrace();
+	   }
+   }
+
 }

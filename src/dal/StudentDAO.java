@@ -141,5 +141,15 @@ public class StudentDAO {
             throw e;
         }
     }
+    
+    public static String getAllStudents() {
+		 String stmt = "select * from Student";
+		 return stmt;
+	 }
+    
+    public static String getSpecificStudent(int sID) {
+    	String stmt = "select * from Student where studentID="+sID;
+    	return stmt;
+    }
 
 }
