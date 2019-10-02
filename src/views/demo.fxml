@@ -127,7 +127,7 @@
                         <Button layoutX="300.0" layoutY="30.0" mnemonicParsing="false" onAction="#openQExcel" text="Excel" />
                         <Button layoutX="372.0" layoutY="30.0" mnemonicParsing="false" onAction="#openQAccess" text="Access" />
                         <Button layoutX="300.0" layoutY="144.0" mnemonicParsing="false" onAction="#openCRExcel" text="Excel" />
-                        <Button layoutX="372.0" layoutY="144.0" mnemonicParsing="false" onAction="#openCRAccess" text="Access" />
+                        <Button layoutX="379.0" layoutY="144.0" mnemonicParsing="false" onAction="#openCRAccess" text="Access" />
                         <Button layoutX="300.0" layoutY="262.0" mnemonicParsing="false" onAction="#openERExcel" text="Excel" />
                         <Button layoutX="380.0" layoutY="262.0" mnemonicParsing="false" onAction="#openERAccess" text="Access" />
                         <Label layoutX="41.0" layoutY="35.0" text="Choose applications for querys" />
