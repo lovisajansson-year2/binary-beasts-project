@@ -101,7 +101,12 @@ public class StudiesDAO {
 	}
 	
 	public static String getStartedStmt(int cID) {
-		String stmt = "select studentID from Studies where courseCode="+cID;
+		String stmt = "select * from Studies where courseCode="+cID;
 		return stmt;
 	}
+
+	public static String getAllStudies() {
+		return "select * from studies";
+	}
 }
+
