@@ -89,7 +89,6 @@ public class DatabaseConnection {
 		            stmt = conn.createStatement();
 		            stmt.executeUpdate(sqlStmt);
 		        } catch (SQLException e) {
-		            System.out.println("Problem occurred at executeUpdate operation : " + e);
 		            throw e;
 		        }finally {
 		        	if (stmt != null) {

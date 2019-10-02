@@ -525,7 +525,7 @@ public class Controller {
                     }
                 }
                 if(match) {
-                    StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
+                    StudiesDAO.removeStudies(getID(cbRegStudents), getID(cbRegCourses));
                     lblMessage.setText("Message: Removed student " + getID(cbRegStudents) + " from course " + getID(cbRegCourses));
                     resetFields();
                     buildData(0, tvRegistration, buildStatement(2));
