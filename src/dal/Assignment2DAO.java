@@ -88,5 +88,10 @@ public class Assignment2DAO {
                  "order by Troughput DESC";
 		 return stmt;
 	 }
+	 
+	 public static String getAllStudents() {
+		 String stmt = "select * from Student";
+		 return stmt;
+	 }
 		 
 }

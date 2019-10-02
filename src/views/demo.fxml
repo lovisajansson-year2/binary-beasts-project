@@ -94,13 +94,13 @@
                           </columns>
                         </TableView>
                         <ComboBox fx:id="cbSearch" layoutX="24.0" layoutY="36.0" prefWidth="150.0" promptText="Select Course" />
-                        <ComboBox fx:id="cbFilter" layoutX="208.0" layoutY="36.0" prefWidth="92.0" />
+                        <ComboBox fx:id="cbFilter" layoutX="208.0" layoutY="36.0" prefHeight="25.0" prefWidth="116.0" />
                         <Label layoutX="22.0" layoutY="13.0" text="Show Information About Students and Courses">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfSearch" layoutX="339.0" layoutY="36.0" onAction="#onEnter" promptText="Search" />
+                        <TextField fx:id="tfSearch" layoutX="361.0" layoutY="36.0" onAction="#onEnter" promptText="Search" />
                         <Label id="lblError" layoutX="30.0" layoutY="68.0" />
                      </children>
                   </AnchorPane>

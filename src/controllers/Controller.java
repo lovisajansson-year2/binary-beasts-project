@@ -191,19 +191,8 @@ public class Controller {
 
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
-        //getResult();
-    	tvOverview.getItems().clear();
-    	//buildCourseResultTable();
-        if (cbFilter.getSelectionModel().getSelectedItem().equals("Uncompleted")) {
-            buildData(0,tvOverview, buildStatement(0));
-        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
-        	buildData(0,tvOverview, buildStatement(1));
-        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
-        	 // does not work
-        }
-        else {
-    		lblError.setText("Please choose on item from the filter list."); // does not work
-    	} 	
+        getResult();
+    	//tvOverview.getItems().clear();	
     }
 
     @FXML
@@ -263,8 +252,8 @@ public class Controller {
         cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput", "Completed", "Uncompleted");
-                //ObservableList<String> filter2 = FXCollections.observableArrayList("Started", "Finished");
+                ObservableList<String> filter1 = FXCollections.observableArrayList("None", "Troughput");
+                ObservableList<String> filter2 = FXCollections.observableArrayList("None","Completed", "Uncompleted");
                 try {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
                         cbFilter.setItems(null);
@@ -272,12 +261,10 @@ public class Controller {
                       cbFilter.setItems(filter1);
                       cbFilter.getSelectionModel().selectFirst();
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
-                      cbFilter.setItems(filter1);
-                      cbFilter.getSelectionModel().selectFirst();
-                  } else if (cbSearch.getSelectionModel().getSelectedIndex() == 3) {
-                      cbFilter.setItems(filter1);
+                      cbFilter.setItems(filter2);
                       cbFilter.getSelectionModel().selectFirst();
                   }
+                  
                 } catch (NullPointerException e) {
 
                 }
@@ -298,19 +285,24 @@ public class Controller {
         String stmt = "";
         int as = 0;
         if(cbSearch.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = "select * from student";
+        	stmt = Assignment2DAO.getAllStudents();
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
             stmt = Assignment2DAO.getPercentAStmt();
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 1 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
             stmt = Assignment2DAO.getThroughputStmt();
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 0) {
-            stmt = "select * from studies";
+        	//Union statement
         } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 1) {
-            stmt = "select * from hasStudied";
+            stmt = buildStatement(1);
+        } else if(cbSearch.getSelectionModel().getSelectedIndex() == 2 && cbFilter.getSelectionModel().getSelectedIndex() == 2) {
+        	stmt = buildStatement(0);
+        } else {
+        	lblError.setText("Please choose an item from the list.");
         }
 
         tvOverview.getColumns().clear();
         buildData(0, tvOverview, stmt);
+        
     }
 
     @FXML
@@ -495,7 +487,7 @@ public class Controller {
 		        }
 		        if(credits <= 45) {
 		            for(Course c : HasStudiedDAO.findAllCompletedCourses(sID)) {
-		                if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
+		                if(c.getCourseCode()==getID(cbRegCourses)) {
 		                    match = false;
                         }
                     }
@@ -534,15 +526,15 @@ public class Controller {
          	int index2 = cbRegCourses.getSelectionModel().getSelectedIndex();
          	boolean match = false;
          	if(index!=0 && index2!=0) {
-                int sID = Integer.parseInt(getItem(cbRegStudents));
+                int sID = getID(cbRegStudents);
                 for(Course c : StudiesDAO.findAllStudiesForStudents(sID)) {
-                    if(c.getCourseCode()==Integer.parseInt(getItem(cbRegCourses))) {
+                    if(c.getCourseCode()==getID(cbRegCourses)) {
                         match = true;
                     }
                 }
                 if(match) {
                     StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
-                    lblMessage.setText("Message: Removed student " + getItem(cbRegStudents) + " from course " + getItem(cbRegCourses));
+                    lblMessage.setText("Message: Removed student " + getID(cbRegStudents) + " from course " + getID(cbRegCourses));
                     resetFields();
                     buildData(0, tvRegistration, buildStatement(2));
                 } else {
@@ -617,6 +609,8 @@ public class Controller {
             case 2:
                 stmt = Assignment2DAO.getRegistrations();
                 break;
+            case 3:
+            	stmt = Assignment2DAO.getAllStudents();
         }
         return stmt;
     }
