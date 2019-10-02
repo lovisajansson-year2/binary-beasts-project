@@ -661,7 +661,7 @@ public class Controller {
    }
    @FXML
    public void openERExcel (ActionEvent actionEvent) {
-	   File excelER = new File("C:\\Users\\Administrator\\Desktop\\assingment3_files\\Assignment3-Employee-Report.xlsx");
+	   File excelER = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Employee-Report.xlsx");
 	   
 	   try {
 		   Desktop.getDesktop().open(excelER);
@@ -671,7 +671,7 @@ public class Controller {
    }
    @FXML 
    public void openCRAccess(ActionEvent actionEvent) {
-	   File accessCR = new File("C:\\Users\\Administrator\\Desktop\\assingment3_files\\Assignment3-Customer-Report.accdb");
+	   File accessCR = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Customer-Report.accdb");
 	   
 	   try {
 		   Desktop.getDesktop().open(accessCR);
@@ -679,8 +679,10 @@ public class Controller {
 		   e.printStackTrace();
 	   }
    }
+   @FXML
    public void openERAccess(ActionEvent actionEvent) {
-	   File accessER = new File("C:\\Users\\Administrator\\Desktop\\assingment3_files\\Assignment3-Employee-Report.accdb");
+	   File accessER = new File("C:\\Users\\Administrator\\Desktop\\assignment3_files\\Assignment3-Employee-Report.accdb");
+			   
 	   
 	   try {
 		   Desktop.getDesktop().open(accessER);
