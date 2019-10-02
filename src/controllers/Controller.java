@@ -178,20 +178,6 @@ public class Controller {
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
         getResult();
-    	//tvOverview.getItems().clear();	
-        /*getResult();
-    	tvOverview.getItems().clear();
-    	buildCourseResultTable();
-        if (cbFilter.getSelectionModel().getSelectedItem().equals("Started")) {
-            buildData(0,tvOverview, buildStatement(0));
-        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
-        	buildData(0,tvOverview, buildStatement(1));
-        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
-        	 // does not work
-        }
-        else {
-    		lblError.setText("Please choose on item from the filter list."); // does not work
-    	} 	*/
     }
 
     @FXML
@@ -689,6 +675,7 @@ public class Controller {
         }
     }
     
+    //bara case 2 används
     public String buildStatement(int index) {
         String stmt = "";
         switch (index) {
@@ -717,6 +704,7 @@ public class Controller {
 		}
     }
 
+    //Assignment 3
 	
     @FXML
     public void openQExcel(ActionEvent actionEvent) {
