@@ -107,10 +107,15 @@ public class CourseDAO {
 		}
 		return courses;
 	}
-	
 	public static String getAllCourses() {
-		String stmt = "set nocount on\n" +
-				"select c.courseCode, c.credits,\n" +
+		return "select * from course";
+	}
+	public static String getSpecificCourse(int cID) {
+		return "select * from course where courseCode ="+cID ;
+	}
+	
+	public static String getCoursesDetailed() {
+		String stmt = "select c.courseCode, c.credits,\n" +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / \n" +
 				"(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',\n" +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
@@ -121,7 +126,7 @@ public class CourseDAO {
 		return stmt;
 	}
 	
-	public static String getSpecificCourse(int cID) {
+	public static String getSpecificCourseDetailed(int cID) {
 		String stmt = "select c.courseCode, c.credits," +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / \n"+
 			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',\n"+
