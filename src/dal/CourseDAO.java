@@ -109,14 +109,15 @@ public class CourseDAO {
 	}
 	
 	public static String getAllCourses() {
-		String stmt = "select c.courseCode, c.credits, \n" +
-				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / \n"+
-			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',\n"+
+		String stmt = "set nocount on\n" +
+				"select c.courseCode, c.credits,\n" +
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / \n" +
+				"(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',\n" +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
-			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n"+
-			    "from course c\n"+
-			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+
-			    "group by c.courseCode, c.credits";
+				"(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n" +
+				"from course c\n" +
+				"join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
+				"group by c.courseCode, c.credits";
 		return stmt;
 	}
 	
