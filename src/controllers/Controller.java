@@ -79,9 +79,12 @@ public class Controller {
     
 
     private static int getID(ComboBox<String> comboBoxName ) {
-       	return Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
-
+       	try{return Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
+	       }catch(NumberFormatException e) {
+	    	   return 0;
+	       }
      }
+    
     private static String getItem(ComboBox<String> comboboxName) {
     	return comboboxName.getSelectionModel().getSelectedItem();
     }
@@ -194,8 +197,10 @@ public class Controller {
 
     @FXML
     public void onEnter(ActionEvent actionEvent) {
-        getResult();
-    }
+       try { getResult();
+       		} catch (NullPointerException e) {
+       		}
+       	}
 
     @FXML
     public void listenerStudent() {
