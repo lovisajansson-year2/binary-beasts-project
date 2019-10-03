@@ -1,8 +1,8 @@
 package controllers;
 
 import dal.*;
+import models.Course;
 
-import database.DatabaseConnection;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -10,7 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.util.Callback;
-import models.Course;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
@@ -111,7 +110,7 @@ public class Controller {
         cbGrade.setItems(grades);
         cbGrade.getSelectionModel().selectFirst();
 
-        buildData(0,tvRegistration,buildStatement(2));
+        buildData(0,tvRegistration, Assignment2DAO.getRegistrations());
 
         //Overview
         ObservableList<String> search = FXCollections.observableArrayList("Student", "Course", "Studies");
@@ -149,7 +148,7 @@ public class Controller {
         listenerRegistration();
         } catch (SQLException e) {
             System.out.println("Connection failed: " + e);
-            lblMessage.setText("Message: Connection failed.");
+            lblMessage.setText("Message: Connection to database failed contact admin.");
             lblError.setText("Message: Connection failed.");
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -165,11 +164,9 @@ public class Controller {
 
    
 
-    private void buildData(int connection, TableView tableView, String stmt) {
+    private void buildData(int connection, TableView tableView, ResultSet rs) {
         ObservableList data = FXCollections.observableArrayList();
-
         try {
-             ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
 
                 tableView.getColumns().clear();
                 for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
@@ -198,19 +195,15 @@ public class Controller {
                 tableView.setItems(data);
             
         } catch(SQLException e) {
-            lblError.setText("Message: Connection failed.");
-        } catch (ClassNotFoundException e) {
-
+            lblError.setText("Message: Connection to database failed contact admin.");
         }
 
     }
 
     @FXML
-    public void onEnter(ActionEvent actionEvent) {
-       try { getResult();
-       		} catch (NullPointerException e) {
-       		}
-       	}
+    public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        getResult();
+    }
 
     @FXML
     public void listenerStudent() {
@@ -234,8 +227,8 @@ public class Controller {
                     
 				} catch (SQLException e) {
                     System.out.println("Connection failed: " + e);
-                    lblMessage.setText("Message: Connection failed.");
-                    lblError.setText("Message: Connection failed.");
+                    lblMessage.setText("Message: Message: Connection to database failed contact admin.");
+                    lblError.setText("Message: Message: Connection to database failed contact admin.");
 				}
             }
         });
@@ -257,8 +250,8 @@ public class Controller {
                     }
                 } catch (SQLException e) {
                     System.out.println("Connection failed: " + e);
-                    lblMessage.setText("Message: Connection failed.");
-                    lblError.setText("Message: Connection failed.");
+                    lblMessage.setText("Message: Connection to database failed contact admin.");
+                    lblError.setText("Message: Connection to database failed contact admin.");
                 } catch (ClassNotFoundException e) {
 
                 } catch (NullPointerException e) {
@@ -290,8 +283,8 @@ public class Controller {
 
                 } catch (SQLException e) {
                     System.out.println("Connection failed: " + e);
-                    lblMessage.setText("Message: Connection failed.");
-                    lblError.setText("Message: Connection failed.");
+                    lblMessage.setText("Message: Connection to database failed contact admin.");
+                    lblError.setText("Message: Connection to database failed contact admin.");
                 } catch (NumberFormatException e) {
 
                 }
@@ -319,8 +312,8 @@ public class Controller {
 
                 } catch (SQLException e) {
                     System.out.println("Connection failed: " + e);
-                    lblMessage.setText("Message: Connection failed.");
-                    lblError.setText("Message: Connection failed.");
+                    lblMessage.setText("Message: Connection to database failed contact admin.");
+                    lblError.setText("Message: Connection to database failed contact admin.");
                 } catch (NumberFormatException e) {
 
                 }
@@ -341,22 +334,26 @@ public class Controller {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
                         cbFilter.setItems(filter1);
                         cbFilter.getSelectionModel().selectFirst();
-                       // getResult();
+                        getResult();
                         tfSearch.setPromptText("Search studentID");
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 1) {
                       cbFilter.setItems(filter3);
                       cbFilter.getSelectionModel().selectFirst();
-                      //getResult();
+                      getResult();
                       tfSearch.setPromptText("Search courseCode");
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
                       cbFilter.setItems(filter2);
                       cbFilter.getSelectionModel().selectFirst();
-                     // getResult();
+                      getResult();
                       tfSearch.setPromptText("Search courseCode");
                   }
                   
                 } catch (NullPointerException e) {
 
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -366,6 +363,11 @@ public class Controller {
                try {
                    getResult();
                } catch (NullPointerException e) {
+
+               } catch (SQLException e) {
+                   e.printStackTrace();
+               } catch (ClassNotFoundException e) {
+                   e.printStackTrace();
                }
 
            }
@@ -373,7 +375,7 @@ public class Controller {
     }
 
     @FXML
-    private void getAnswer(ActionEvent actionEvent) {
+    private void getAnswer(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         int index = cbQ.getSelectionModel().getSelectedIndex();
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -381,18 +383,18 @@ public class Controller {
     }
 
     @FXML
-    private void getResult() {
-        String stmt = "";
+    private void getResult() throws SQLException, ClassNotFoundException {
+        ResultSet rs;
         try {
             if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-                stmt = StudentDAO.getAllStudents();
+                rs = StudentDAO.getAllStudents();
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 lblError.setText("Message: Shows all students");
             } else if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
-                stmt = StudentDAO.getSpecificStudent(searchGetID());
+                rs = StudentDAO.getSpecificStudent(searchGetID());
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 ObservableList<String> list = tvOverview.getItems();
                 if (!list.isEmpty()) {
                     lblError.setText("Message: Shows student "+searchGetID()+"");
@@ -400,19 +402,19 @@ public class Controller {
                     lblError.setText("Message: The student does not exist.");
                 }
             } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-                stmt = CourseDAO.getAllCourses();
+                rs = CourseDAO.getAllCourses();
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 lblError.setText("Message: Shows all courses");
             } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
-                stmt = CourseDAO.getCoursesDetailed();
+                rs = CourseDAO.getCoursesDetailed();
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 lblError.setText("Message: Shows all courses with details");
             } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
-                stmt = CourseDAO.getSpecificCourse(searchGetID());
+                rs = CourseDAO.getSpecificCourse(searchGetID());
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 ObservableList<String> list = tvOverview.getItems();
                 if (!list.isEmpty()) {
                     lblError.setText("Message: Shows course "+searchGetID()+"");
@@ -420,29 +422,29 @@ public class Controller {
                     lblError.setText("Message: The course does not exist.");
                 }
             } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && searchGetID() != 0) {
-                stmt = CourseDAO.getSpecificCourseDetailed(searchGetID());
+                rs = CourseDAO.getSpecificCourseDetailed(searchGetID());
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 ObservableList<String> list = tvOverview.getItems();
                 if (!list.isEmpty()) {
                     lblError.setText("Message: Shows details for course " + searchGetID() + "");
                 } else {
-                    lblError.setText("Message: The course does not exist.");
+                    lblError.setText("Message: Details for this course does not exist.");
                 }
             } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-                stmt = StudiesDAO.getAllStudies();
+                rs = StudiesDAO.getAllStudies();
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 lblError.setText("Message: Shows all ongoing studies");
             } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
-                stmt = HasStudiedDAO.getAllHasStudied();
+                rs = HasStudiedDAO.getAllHasStudied();
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 lblError.setText("Message: Shows all completed studies");
             } else if((getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Ongoing") && searchGetID() != 0)) {
-                stmt = StudiesDAO.getStartedStmt(searchGetID());
+                rs = StudiesDAO.getStartedStmt(searchGetID());
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 ObservableList<String> list = tvOverview.getItems();
                 if (!list.isEmpty()) {
                     lblError.setText("Message: Shows all ongoing studies for course "+searchGetID()+"");
@@ -450,9 +452,9 @@ public class Controller {
                     lblError.setText("Message: The course does not exist.");
                 }
             } else if(getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Completed") && searchGetID() != 0) {
-                stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
+                rs = HasStudiedDAO.getCompletedStmt(searchGetID());
                 tvOverview.getColumns().clear();
-                buildData(0, tvOverview, stmt);
+                buildData(0, tvOverview, rs);
                 ObservableList<String> list = tvOverview.getItems();
                 if (!list.isEmpty()) {
                     lblError.setText("Message: Shows all completed studies for course "+searchGetID()+"");
@@ -460,10 +462,14 @@ public class Controller {
                     lblError.setText("Message: The course does not exist.");
                 }
             } else {
-                lblError.setText("Message: Please choose an item from the list.");
+                lblError.setText("Message: Please choose an valid id");
             }
         } catch (NumberFormatException e) {
             lblError.setText("You must search for a number");
+        } catch (SQLException e) {
+            lblError.setText("Message: Connection to database failed contact admin.");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -576,8 +582,8 @@ public class Controller {
 			e.printStackTrace();
 		} catch (SQLException e) {
             System.out.println("Connection failed: " + e);
-            lblMessage.setText("Message: Connection failed.");
-            lblError.setText("Message: Connection failed.");
+            lblMessage.setText("Message: Connection to database failed contact admin.");
+            lblError.setText("Message: Connection to database failed contact admin.");
 		}
 
         
@@ -604,8 +610,8 @@ public class Controller {
 			e.printStackTrace();
 		} catch (SQLException e) {
             System.out.println("Connection failed: " + e);
-            lblMessage.setText("Message: Connection failed.");
-            lblError.setText("Message: Connection failed.");
+            lblMessage.setText("Message: Connection to database failed contact admin.");
+            lblError.setText("Message: Connection to database failed contact admin.");
 		}
 
     }
@@ -660,7 +666,7 @@ public class Controller {
                         StudiesDAO.addStudies(sID,getID(cbRegCourses));
                         lblMessage.setText("Message: Registered " + getID(cbRegStudents) + " on course " + getID(cbRegCourses));
                         resetFields();
-                        buildData(0, tvRegistration, buildStatement(2));
+                        buildData(0, tvRegistration, Assignment2DAO.getRegistrations());
                     } else {
 		                lblMessage.setText("Message: Student has already completed this course.");
                     }
@@ -703,7 +709,7 @@ public class Controller {
                     StudiesDAO.removeStudies(getID(cbRegStudents), getID(cbRegCourses));
                     lblMessage.setText("Message: Removed student " + getID(cbRegStudents) + " from course " + getID(cbRegCourses));
                     resetFields();
-                    buildData(0, tvRegistration, buildStatement(2));
+                    buildData(0, tvRegistration, Assignment2DAO.getRegistrations());
                 } else {
                     lblMessage.setText("Message: Student is not studying this course.");
                 }
@@ -722,8 +728,8 @@ public class Controller {
 			e.printStackTrace();
 		} catch (SQLException e) {
              System.out.println("Connection failed: " + e);
-             lblMessage.setText("Message: Connection failed.");
-             lblError.setText("Message: Connection failed.");
+             lblMessage.setText("Message: Connection to database failed contact admin.");
+             lblError.setText("Message: Connection to database failed contact admin.");
 		}
 	
      }
@@ -741,8 +747,7 @@ public class Controller {
         		lblMessage.setText("Message: set Grade " + cbGrade.getSelectionModel().getSelectedItem()+" for Student "+getID(cbRegStudents)+" on course " + getID(cbRegCourses) );
         		StudiesDAO.removeStudies(sID, getID(cbRegCourses));
         		resetFields();
-                buildData(0,tvRegistration,buildStatement(2));
-                
+                buildData(0,tvRegistration, Assignment2DAO.getRegistrations());
         	}else if(index+index2+index3==0) {
         		lblMessage.setText("Message: You have to pick a student, a course and a grade to update grade");
         	} else if(index==0) {
@@ -764,24 +769,7 @@ public class Controller {
 	
         }
     }
-    
-    //bara case 2 används
-    public String buildStatement(int index) {
-        String stmt = "";
-        switch (index) {
-            case 0:
-                stmt = StudiesDAO.getAllUnfinishedCourseStmt()+searchGetID()+"";
-                break;
-            case 1:
-                stmt = HasStudiedDAO.getAllCompletedCourseStmt()+searchGetID()+"";
-                break;
-            case 2:
-                stmt = Assignment2DAO.getRegistrations();
-                break;
-        }
-        return stmt;
-    }
-    
+
     private int searchGetID() throws NumberFormatException  {
     	int vid =0;
 		String value = tfSearch.getText();

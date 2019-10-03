@@ -127,14 +127,16 @@ public class StudentDAO {
         }
     }
     
-    public static String getAllStudents() {
-		 String stmt = "select * from Student";
-		 return stmt;
+    public static ResultSet getAllStudents() throws SQLException, ClassNotFoundException {
+        String stmt = "select * from Student";
+		 ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		 return rs;
 	 }
     
-    public static String getSpecificStudent(int sID) {
+    public static ResultSet getSpecificStudent(int sID) throws SQLException, ClassNotFoundException {
     	String stmt = "select * from Student where studentID="+sID;
-    	return stmt;
+        ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+    	return rs;
     }
 
 }
