@@ -70,11 +70,10 @@ public class StudentDAO {
 
             ObservableList<Student> studentList = getAllStudent(rs);
 
+
             return studentList;
 
-
         } catch (SQLException e) {
-            System.out.println("Error while running findAllStudent in dao");
             throw e;
         }
 

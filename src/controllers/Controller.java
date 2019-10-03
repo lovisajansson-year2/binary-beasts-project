@@ -15,9 +15,11 @@ import models.Course;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
+import javax.sql.rowset.CachedRowSet;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
 
@@ -136,6 +138,16 @@ public class Controller {
         listenerOverview();
         listenerRegistration();
         } catch (SQLException e) {
+            System.out.println("Connection failed: " + e);
+            lblMessage.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection failed.");
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Database connection failed");
+            alert.setContentText("Check that your database is correctly up and running.\n" +
+            "Press ok to load the application without proper connection.");
+            alert.showAndWait();
         }
     }
 
@@ -173,7 +185,9 @@ public class Controller {
             }
             tableView.setItems(data);
         } catch(SQLException e) {
-            //throw e;
+            System.out.println("Connection failed: " + e);
+            lblMessage.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection failed.");
         }
 
     }
@@ -181,20 +195,6 @@ public class Controller {
     @FXML
     public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
         getResult();
-    	//tvOverview.getItems().clear();	
-        /*getResult();
-    	tvOverview.getItems().clear();
-    	buildCourseResultTable();
-        if (cbFilter.getSelectionModel().getSelectedItem().equals("Started")) {
-            buildData(0,tvOverview, buildStatement(0));
-        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Completed")) {
-        	buildData(0,tvOverview, buildStatement(1));
-        } else if (cbFilter.getSelectionModel().getSelectedItem().equals("Throughput")) {
-        	 // does not work
-        }
-        else {
-    		lblError.setText("Please choose on item from the filter list."); // does not work
-    	} 	*/
     }
 
     @FXML
@@ -218,7 +218,9 @@ public class Controller {
                 } catch (NullPointerException e) {
                     
 				} catch (SQLException e) {
-					
+                    System.out.println("Connection failed: " + e);
+                    lblMessage.setText("Message: Connection failed.");
+                    lblError.setText("Message: Connection failed.");
 				}
             }
         });
@@ -239,7 +241,9 @@ public class Controller {
                         tfCredits.setText("");
                     }
                 } catch (SQLException e) {
-
+                    System.out.println("Connection failed: " + e);
+                    lblMessage.setText("Message: Connection failed.");
+                    lblError.setText("Message: Connection failed.");
                 } catch (ClassNotFoundException e) {
 
                 } catch (NullPointerException e) {
@@ -261,6 +265,8 @@ public class Controller {
                         cbGrade.getSelectionModel().select(HasStudiedDAO.findGrade(getID(cbRegStudents),getID(cbRegCourses)));
                     } else if (HasStudiedDAO.findGrade(getID(cbRegStudents),getID(cbRegCourses)) == null) {
                         cbGrade.getSelectionModel().selectFirst();
+                    } else {
+                        cbGrade.getSelectionModel().selectFirst();
                     }
 
                 } catch (ClassNotFoundException e) {
@@ -268,7 +274,9 @@ public class Controller {
                 } catch (NullPointerException e) {
 
                 } catch (SQLException e) {
-
+                    System.out.println("Connection failed: " + e);
+                    lblMessage.setText("Message: Connection failed.");
+                    lblError.setText("Message: Connection failed.");
                 } catch (NumberFormatException e) {
 
                 }
@@ -285,6 +293,8 @@ public class Controller {
                         cbGrade.getSelectionModel().select(HasStudiedDAO.findGrade(getID(cbRegStudents),getID(cbRegCourses)));
                     } else if (HasStudiedDAO.findGrade(getID(cbRegStudents),getID(cbRegCourses)) == null) {
                         cbGrade.getSelectionModel().selectFirst();
+                    } else {
+                        cbGrade.getSelectionModel().selectFirst();
                     }
 
 
@@ -293,7 +303,9 @@ public class Controller {
                 } catch (NullPointerException e) {
 
                 } catch (SQLException e) {
-
+                    System.out.println("Connection failed: " + e);
+                    lblMessage.setText("Message: Connection failed.");
+                    lblError.setText("Message: Connection failed.");
                 } catch (NumberFormatException e) {
 
                 }
@@ -330,7 +342,9 @@ public class Controller {
                 } catch (NullPointerException e) {
 
                 } catch (SQLException e) {
-
+                    System.out.println("Connection failed: " + e);
+                    lblMessage.setText("Message: Connection failed.");
+                    lblError.setText("Message: Connection failed.");
                 } catch (ClassNotFoundException e) {
 
                 }
@@ -344,7 +358,8 @@ public class Controller {
                } catch (NullPointerException e) {
 
                } catch (SQLException e) {
-
+                   System.out.println("Connection failed: " + e);
+                   lblMessage.setText("Message: Database connection failed");
                } catch (ClassNotFoundException e) {
 
                }
@@ -424,8 +439,9 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            System.out.println("Connection failed: " + e);
+            lblMessage.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection failed.");
         	
         }
         
@@ -453,8 +469,9 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();        	
+            System.out.println("Connection failed: " + e);
+            lblMessage.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection failed.");
         }
     }
 
@@ -505,8 +522,9 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            System.out.println("Connection failed: " + e);
+            lblMessage.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection failed.");
 		}
 
         
@@ -532,8 +550,9 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            System.out.println("Connection failed: " + e);
+            lblMessage.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection failed.");
 		}
 
     }
@@ -649,8 +668,9 @@ public class Controller {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+             System.out.println("Connection failed: " + e);
+             lblMessage.setText("Message: Connection failed.");
+             lblError.setText("Message: Connection failed.");
 		}
 	
      }
