@@ -91,7 +91,6 @@ public class DatabaseConnection {
 		            stmt.setQueryTimeout(10);
 		            stmt.executeUpdate(sqlStmt);
 		        } catch (SQLException e) {
-		            System.out.println("Problem occurred at executeUpdate operation : " + e);
 		            throw e;
 		        }finally {
 		        	if (stmt != null) {

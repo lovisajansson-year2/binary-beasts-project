@@ -83,6 +83,9 @@ public class Controller {
        	return Integer.parseInt(comboBoxName.getSelectionModel().getSelectedItem());
 
      }
+    private static String getItem(ComboBox<String> comboboxName) {
+    	return comboboxName.getSelectionModel().getSelectedItem();
+    }
     
     @FXML
     private void initialize() throws SQLException, ClassNotFoundException {
@@ -361,29 +364,40 @@ public class Controller {
     private void getResult() throws SQLException, ClassNotFoundException {
         String stmt = "";
         int as = 0;
-        if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-        	stmt = StudentDAO.getAllStudents();
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
-        	stmt = StudentDAO.getSpecificStudent(searchGetID());
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-            stmt = CourseDAO.getAllCourses();
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
-            stmt = CourseDAO.getSpecificCourse(searchGetID());
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-        	stmt = StudiesDAO.getAllStudies();
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
-            stmt = HasStudiedDAO.getAllHasStudied();
-        } else if((cbSearch.getSelectionModel().getSelectedItem().equals("Studies") && cbFilter.getSelectionModel().getSelectedItem().equals("Ongoing") && searchGetID() != 0)) {
-        	stmt = StudiesDAO.getStartedStmt(searchGetID());
-        } else if(cbSearch.getSelectionModel().getSelectedItem().equals("Studies") && cbFilter.getSelectionModel().getSelectedItem().equals("Completed") && searchGetID() != 0) {
-            stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
-        } else {
-        	lblError.setText("Please choose an item from the list.");
-        }
-
-        tvOverview.getColumns().clear();
-        buildData(0, tvOverview, stmt);
-        
+	    try {
+        	if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+	        	stmt = StudentDAO.getAllStudents();
+	        	lblError.setText("Message: Shows all students");
+	        } else if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
+	        	stmt = StudentDAO.getSpecificStudent(searchGetID());
+	        	lblError.setText("Message: Shows student "+searchGetID()+"");
+	        } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+	            stmt = CourseDAO.getAllCourses();
+	            lblError.setText("Message: Shows all courses");
+	        } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
+	            stmt = CourseDAO.getSpecificCourse(searchGetID());
+	            lblError.setText("Message: Shows course "+searchGetID()+"");
+	        } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+	        	stmt = StudiesDAO.getAllStudies();
+	        	lblError.setText("Message: Shows all ongoing studies");
+	        } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
+	            stmt = HasStudiedDAO.getAllHasStudied();
+	            lblError.setText("Message: Shows all completed studies");
+	        } else if((getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Ongoing") && searchGetID() != 0)) {
+	        	stmt = StudiesDAO.getStartedStmt(searchGetID());
+	        	lblError.setText("Message: Shows all ongoing studies for student "+searchGetID()+"");
+	        } else if(getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Completed") && searchGetID() != 0) {
+	            stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
+	            lblError.setText("Message: Shows all completed studies for student "+searchGetID()+"");
+	        } else {
+	        	lblError.setText("Message: Please choose an item from the list.");
+	        }
+	
+	        tvOverview.getColumns().clear();
+	        buildData(0, tvOverview, stmt);
+	    } catch (NumberFormatException e) {
+	    	lblError.setText("You must search for a number");
+	    }
     }
 
     @FXML
@@ -435,9 +449,6 @@ public class Controller {
         		lblMessage.setText("Message: Student must have a last name");
 
             }
-        } catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -617,7 +628,7 @@ public class Controller {
                     }
                 }
                 if(match) {
-                    StudiesDAO.removeStudies(Integer.parseInt(cbRegStudents.getSelectionModel().getSelectedItem()), Integer.parseInt(cbRegCourses.getSelectionModel().getSelectedItem()));
+                    StudiesDAO.removeStudies(getID(cbRegStudents), getID(cbRegCourses));
                     lblMessage.setText("Message: Removed student " + getID(cbRegStudents) + " from course " + getID(cbRegCourses));
                     resetFields();
                     buildData(0, tvRegistration, buildStatement(2));
@@ -697,17 +708,16 @@ public class Controller {
         return stmt;
     }
     
-    private int searchGetID() {
-		String value = tfSearch.getText().toString();
-		if (value != "") {
-	    	int vID= Integer.parseInt(value);
-	    	return vID;
-		} else if (value == "") {
-			
+    private int searchGetID() throws NumberFormatException  {
+    	int vid =0;
+		String value = tfSearch.getText();
+		if(value.equals("")) {
+			vid = 0;
+			return 0;
 		} else {
-			//felmeddelande
+	    vid= Integer.parseInt(value);
+	    return vid;	
 		}
-		return 0;		 
     }
 
 	
