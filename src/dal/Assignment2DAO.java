@@ -1,10 +1,13 @@
 package dal;
 
+import database.DatabaseConnection;
+
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Assignment2DAO {
 
-	 public static String getStmt(int index) {
+	 public static ResultSet getStmt(int index) throws SQLException, ClassNotFoundException {
 		 String stmt = "";
 		 switch (index) {
 			 case 0: stmt = "SELECT No_, [First Name], [Last Name], Address, City\n" +
@@ -91,51 +94,19 @@ public class Assignment2DAO {
 					 "FROM [CRONUS Sverige AB$Customer Bank Account] \n" +
 					 "WHERE [CRONUS Sverige AB$Customer Bank Account].[Customer No_] = '10000'\n";
 			 break;
+
 		 }
-		 return stmt;
+		 ResultSet rs = DatabaseConnection.dbExecuteQuery(1, stmt);
+		 return rs;
 	 }
 
-	 public static String getRegistrations() {
+	 public static ResultSet getRegistrations() throws SQLException, ClassNotFoundException {
 	 	String stmt = "select studentID, courseCode, '' as grade\n" +
 				"from studies\n" +
 				"union\n" +
 				"select *\n" +
 				"from HasStudied";
-	 	return stmt;
+		 ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+	 	return rs;
 	 }
-	 
-	 public static String getRegistrationsForCourse(int ID) {
-		 String stmt = "select studentID, courseCode, '' as grade\n" +
-					"from studies\n" +
-					"union\n" +
-					"where courseCode="+ID+""+
-					"select *\n" +
-					"from HasStudied\n"+
-					"where courseCode ="+ID+"";
-		 	return stmt;
-	 }
-	 
-	 public static String getPercentAStmt() {
-		 String stmt = "select c.courseCode, c.credits,\n" +
-	             "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 /\n" +
-	             "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s'\n" +
-	             "from course c\n" +
-	             "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
-	             "group by c.courseCode, c.credits";
-		 return stmt;
-	 }
-	 
-	 public static String getThroughputStmt() {
-		 String stmt = "select c.courseCode, \n" +
-                 "(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
-                 "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n" +
-                 "from course c\n" +
-                 "join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
-                 "group by c.courseCode\n" +
-                 "order by Troughput DESC";
-		 return stmt;
-	 }
-	 
-	
-		 
 }

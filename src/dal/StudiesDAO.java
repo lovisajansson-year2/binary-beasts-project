@@ -44,9 +44,10 @@ public class StudiesDAO {
         return cList;
 	}
 	
-	public static String getAllUnfinishedCourseStmt() {
-		String stmt = "select studentID from Studies where courseCode="; 
-		return stmt;
+	public static ResultSet getAllUnfinishedCourseStmt() throws SQLException, ClassNotFoundException {
+		String stmt = "select studentID from Studies where courseCode=";
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 
 	public static ObservableList<Course> findAllStudiesForStudents(int studentID) throws SQLException, ClassNotFoundException{
@@ -64,13 +65,16 @@ public class StudiesDAO {
 		}
 	}
 
-	public static String getStartedStmt(int cID) {
+	public static ResultSet getStartedStmt(int cID) throws SQLException, ClassNotFoundException {
 		String stmt = "select * from Studies where courseCode="+cID;
-		return stmt;
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 
-	public static String getAllStudies() {
-		return "select * from studies";
+	public static ResultSet getAllStudies() throws SQLException, ClassNotFoundException {
+		String stmt = "select * from studies";
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 }
 

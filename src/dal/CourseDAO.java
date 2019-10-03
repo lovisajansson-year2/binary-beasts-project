@@ -109,10 +109,19 @@ public class CourseDAO {
 		}
 		return courses;
 	}
+	public static ResultSet getAllCourses() throws SQLException, ClassNotFoundException {
+		String stmt = "select * from course";
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
+	}
+	public static ResultSet getSpecificCourse(int cID) throws SQLException, ClassNotFoundException {
+		String stmt =  "select * from course where courseCode ="+cID ;
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
+	}
 	
-	public static String getAllCourses() {
-		String stmt = "set nocount on\n" +
-				"select c.courseCode, c.credits,\n" +
+	public static ResultSet getCoursesDetailed() throws SQLException, ClassNotFoundException {
+		String stmt = "select c.courseCode, c.credits,\n" +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / \n" +
 				"(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',\n" +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
@@ -120,10 +129,11 @@ public class CourseDAO {
 				"from course c\n" +
 				"join hasStudied hs3 on c.courseCode = hs3.courseCode\n" +
 				"group by c.courseCode, c.credits";
-		return stmt;
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 	
-	public static String getSpecificCourse(int cID) {
+	public static ResultSet getSpecificCourseDetailed(int cID) throws SQLException, ClassNotFoundException {
 		String stmt = "select c.courseCode, c.credits," +
 				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / "+
 			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',"+
@@ -133,8 +143,8 @@ public class CourseDAO {
 			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+
 			    "where c.courseCode="+cID+" \n"+
 			    "group by c.courseCode, c.credits";
-			    ;
-		return stmt;
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 	
 	
