@@ -3,7 +3,6 @@ package controllers;
 import dal.*;
 
 import database.DatabaseConnection;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,11 +14,9 @@ import models.Course;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
-import javax.sql.rowset.CachedRowSet;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
 
@@ -159,7 +156,7 @@ public class Controller {
         ObservableList data = FXCollections.observableArrayList();
 
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
+             ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
 
                 tableView.getColumns().clear();
                 for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
@@ -188,8 +185,6 @@ public class Controller {
                 tableView.setItems(data);
             
         } catch(SQLException e) {
-            System.out.println("Connection failed: " + e);
-            lblMessage.setText("Message: Connection failed.");
             lblError.setText("Message: Connection failed.");
         } catch (ClassNotFoundException e) {
 

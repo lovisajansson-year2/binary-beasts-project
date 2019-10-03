@@ -32,29 +32,7 @@ public class StudiesDAO {
             throw e;
         }
 	}
-	private static ObservableList<Student> getStudentList(CachedRowSet crs) throws SQLException, ClassNotFoundException{
-        ObservableList<Student> sList = FXCollections.observableArrayList();
-        while (crs.next()) {
-        	Student s = new Student();
-        	s.setStudentID(crs.getInt(1));
-        	sList.add(s);
-        }
-        return sList;
-	}
-	public static ObservableList<Student> findAllStudentsOnCourse(int courseCode) throws SQLException, ClassNotFoundException{
-		String stmt = "select studentID from Studies where courseCode ="+courseCode+"";
-		ResultSet rs = null;
-		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
-		try {
-			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
-			crs.populate(rs);
-			ObservableList<Student> SList = getStudentList(crs);
-			return SList;
-		} catch (SQLException e) {
-			System.out.println("error while finding student");
-			throw e;
-		}
-	}
+
 	private static ObservableList<Course> getCourseList(CachedRowSet crs) throws SQLException, ClassNotFoundException{
 		ObservableList<Course> cList = FXCollections.observableArrayList();
         while (crs.next()) {
@@ -85,21 +63,7 @@ public class StudiesDAO {
 			throw e;
 		}
 	}
-	public static ObservableList<Student> findUncompletedStudentsOnCourse(int courseCode) throws SQLException, ClassNotFoundException {
-		String stmt = "select studentID from Studies s where not exists(select studentID, courseCode from HasStudied hs where hs.studentID = s.studentID and hs.courseCode=s.courseCode) and courseCode ="+courseCode+"";
-		ResultSet rs= null;
-		CachedRowSet crs = RowSetProvider.newFactory().createCachedRowSet();
-		try {
-			rs = DatabaseConnection.dbExecuteQuery(0, stmt);
-			crs.populate(rs);
-			ObservableList<Student> sList = getStudentList(crs);
-			return sList;
-		} catch (SQLException e) {
-			System.out.println("error while finding students");
-			throw e;
-		}
-	}
-	
+
 	public static String getStartedStmt(int cID) {
 		String stmt = "select * from Studies where courseCode="+cID;
 		return stmt;
