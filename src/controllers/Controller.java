@@ -3,7 +3,7 @@ package controllers;
 import dal.*;
 
 import database.DatabaseConnection;
-
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -385,13 +385,23 @@ public class Controller {
 	        	lblError.setText("Message: Shows all students");
 	        } else if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
 	        	stmt = StudentDAO.getSpecificStudent(searchGetID());
-	        	lblError.setText("Message: Shows student "+searchGetID()+"");
+	        	ObservableList<String> list = tableView.getItems();
+	        	if (!list.isEmpty()) {
+	        		lblError.setText("Message: Shows student "+searchGetID()+"");
+	        	} else {
+	        		lblError.setText("Message: The student does not exist.");
+	        	}
 	        } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
 	            stmt = CourseDAO.getAllCourses();
 	            lblError.setText("Message: Shows all courses");
 	        } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
 	            stmt = CourseDAO.getSpecificCourse(searchGetID());
-	            lblError.setText("Message: Shows course "+searchGetID()+"");
+	            ObservableList<String> list = tableView.getItems();
+	        	if (!list.isEmpty()) {
+	        		lblError.setText("Message: Shows course "+searchGetID()+"");
+	        	} else {
+	        		lblError.setText("Message: The course does not exist.");
+	        	}
 	        } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
 	        	stmt = StudiesDAO.getAllStudies();
 	        	lblError.setText("Message: Shows all ongoing studies");
@@ -400,10 +410,20 @@ public class Controller {
 	            lblError.setText("Message: Shows all completed studies");
 	        } else if((getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Ongoing") && searchGetID() != 0)) {
 	        	stmt = StudiesDAO.getStartedStmt(searchGetID());
-	        	lblError.setText("Message: Shows all ongoing studies for student "+searchGetID()+"");
+	        	ObservableList<String> list = tableView.getItems();
+	        	if (!list.isEmpty()) {
+	        		lblError.setText("Message: Shows all ongoing studies for course "+searchGetID()+"");
+	        	} else {
+	        		lblError.setText("Message: The course does not exist.");
+	        	}
 	        } else if(getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Completed") && searchGetID() != 0) {
 	            stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
-	            lblError.setText("Message: Shows all completed studies for student "+searchGetID()+"");
+	            ObservableList<String> list = tableView.getItems();
+	        	if (!list.isEmpty()) {
+		            lblError.setText("Message: Shows all completed studies for course "+searchGetID()+"");
+	        	} else {
+	        		lblError.setText("Message: The course does not exist.");
+	        	}
 	        } else {
 	        	lblError.setText("Message: Please choose an item from the list.");
 	        }
@@ -740,6 +760,7 @@ public class Controller {
 	    return vid;	
 		}
     }
+    
 
     //Assignment 3
 	
