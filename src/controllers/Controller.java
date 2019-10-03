@@ -122,10 +122,20 @@ public class Controller {
         getResult();
         
         //Querys
-        ObservableList<String> questions = FXCollections.observableArrayList("0.1","0.2","0.3","0.4","0.5","0.6","0.7",
-        "1.1 All keys","1.2 All table constraints","1.3 All tables","1.4 All columns in 'Employee'", "1.5 Metadata for 'Employee'",
+        ObservableList<String> questions = FXCollections.observableArrayList(
+                "0.1 TableCRONUS Sverige AB$Employee",
+                "0.2 Table CRONUS Sverige AB$Employee Absence",
+                "0.3 Table CRONUS Sverige AB$Employee Portal Setup",
+                "0.4 Table CRONUS Sverige AB$Employee Qualification",
+                "0.5 Table CRONUS Sverige AB$Employee Relative",
+                "0.6 Table CRONUS Sverige AB$Employee Statistics Group",
+                "0.7 Table CRONUS Sverige AB$Employment Contract",
+                "1.1 All keys", "1.2 All table constraints",
+                "1.3 All tables","1.4 All columns in 'Employee'",
+                "1.5 Metadata for 'Employee'",
                 "1.6 Table with most rows","2.1 How much is 100NOK?","2.2 What value is the most expensive?",
-                "2.3 Fotograferna AB's address","2.4 Name of employees that have been ill","2.5 Family relations","2.6 Andreas B's customers",
+                "2.3 Fotograferna AB's address","2.4 Name of employees that have been ill",
+                "2.5 Family relations","2.6 Andreas B's customers",
                 "2.7 Bank accounts beloning to CuNO 10,000");
         cbQ.setItems(questions);
         cbQ.getSelectionModel().selectFirst();
