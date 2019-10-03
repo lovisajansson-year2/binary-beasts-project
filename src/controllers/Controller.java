@@ -805,7 +805,9 @@ public class Controller {
 			Desktop.getDesktop().open(excelFile);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		 }catch (IllegalArgumentException e) {
+			   System.out.println("File does not exist");
+		   }
     }
     
    @FXML
@@ -816,6 +818,8 @@ public class Controller {
 		   Desktop.getDesktop().open(accessFile);
 	   } catch (IOException e) {
 		   e.printStackTrace();
+	   }catch (IllegalArgumentException e) {
+		   System.out.println("File does not exist");
 	   }
    }
    
@@ -827,6 +831,8 @@ public class Controller {
 		   Desktop.getDesktop().open(excelCR);
 	   } catch (IOException e) {
 		   e.printStackTrace();
+	   }catch (IllegalArgumentException e) {
+		   System.out.println("File does not exist");
 	   }
    }
    @FXML
@@ -837,6 +843,8 @@ public class Controller {
 		   Desktop.getDesktop().open(excelER);
 	   } catch (IOException e) {
 		   e.printStackTrace();
+	   }catch (IllegalArgumentException e) {
+		   System.out.println("File does not exist");
 	   }
    }
    @FXML 
@@ -847,6 +855,8 @@ public class Controller {
 		   Desktop.getDesktop().open(accessCR);
 	   } catch (IOException e) {
 		   e.printStackTrace();
+	   }catch (IllegalArgumentException e) {
+		   System.out.println("File does not exist");
 	   }
    }
    @FXML
@@ -858,6 +868,8 @@ public class Controller {
 		   Desktop.getDesktop().open(accessER);
 	   } catch (IOException e) {
 		   e.printStackTrace();
+	   }catch (IllegalArgumentException e) {
+		   System.out.println("File does not exist");
 	   }
    }
 
