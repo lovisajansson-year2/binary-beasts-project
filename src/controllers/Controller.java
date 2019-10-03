@@ -320,22 +320,23 @@ public class Controller {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
                 ObservableList<String> filter1 = FXCollections.observableArrayList("None");
+                ObservableList<String> filter3 = FXCollections.observableArrayList("None", "Details");
                 ObservableList<String> filter2 = FXCollections.observableArrayList("Ongoing", "Completed");
                 try {
                   if (cbSearch.getSelectionModel().getSelectedIndex() == 0) {
                         cbFilter.setItems(filter1);
                         cbFilter.getSelectionModel().selectFirst();
-                        getResult();
+                       // getResult();
                         tfSearch.setPromptText("Search studentID");
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 1) {
-                      cbFilter.setItems(filter1);
+                      cbFilter.setItems(filter3);
                       cbFilter.getSelectionModel().selectFirst();
-                      getResult();
+                      //getResult();
                       tfSearch.setPromptText("Search courseCode");
                   } else if (cbSearch.getSelectionModel().getSelectedIndex() == 2) {
                       cbFilter.setItems(filter2);
                       cbFilter.getSelectionModel().selectFirst();
-                      getResult();
+                     // getResult();
                       tfSearch.setPromptText("Search courseCode");
                   }
                   
@@ -367,62 +368,90 @@ public class Controller {
     @FXML
     private void getResult() {
         String stmt = "";
-        int as = 0;
-	    try {
-        	if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-	        	stmt = StudentDAO.getAllStudents();
-	        	lblError.setText("Message: Shows all students");
-	        } else if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
-	        	stmt = StudentDAO.getSpecificStudent(searchGetID());
-	        	ObservableList<String> list = tableView.getItems();
-	        	if (!list.isEmpty()) {
-	        		lblError.setText("Message: Shows student "+searchGetID()+"");
-	        	} else {
-	        		lblError.setText("Message: The student does not exist.");
-	        	}
-	        } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-	            stmt = CourseDAO.getAllCourses();
-	            lblError.setText("Message: Shows all courses");
-	        } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
-	            stmt = CourseDAO.getSpecificCourse(searchGetID());
-	            ObservableList<String> list = tableView.getItems();
-	        	if (!list.isEmpty()) {
-	        		lblError.setText("Message: Shows course "+searchGetID()+"");
-	        	} else {
-	        		lblError.setText("Message: The course does not exist.");
-	        	}
-	        } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
-	        	stmt = StudiesDAO.getAllStudies();
-	        	lblError.setText("Message: Shows all ongoing studies");
-	        } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
-	            stmt = HasStudiedDAO.getAllHasStudied();
-	            lblError.setText("Message: Shows all completed studies");
-	        } else if((getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Ongoing") && searchGetID() != 0)) {
-	        	stmt = StudiesDAO.getStartedStmt(searchGetID());
-	        	ObservableList<String> list = tableView.getItems();
-	        	if (!list.isEmpty()) {
-	        		lblError.setText("Message: Shows all ongoing studies for course "+searchGetID()+"");
-	        	} else {
-	        		lblError.setText("Message: The course does not exist.");
-	        	}
-	        } else if(getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Completed") && searchGetID() != 0) {
-	            stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
-	            ObservableList<String> list = tableView.getItems();
-	        	if (!list.isEmpty()) {
-		            lblError.setText("Message: Shows all completed studies for course "+searchGetID()+"");
-	        	} else {
-	        		lblError.setText("Message: The course does not exist.");
-	        	}
-	        } else {
-	        	lblError.setText("Message: Please choose an item from the list.");
-	        }
-	
-	        tvOverview.getColumns().clear();
-	        buildData(0, tvOverview, stmt);
-	    } catch (NumberFormatException e) {
-	    	lblError.setText("You must search for a number");
-	    }
+        try {
+            if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+                stmt = StudentDAO.getAllStudents();
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                lblError.setText("Message: Shows all students");
+            } else if(getItem(cbSearch).equals("Student") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
+                stmt = StudentDAO.getSpecificStudent(searchGetID());
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                ObservableList<String> list = tvOverview.getItems();
+                if (!list.isEmpty()) {
+                    lblError.setText("Message: Shows student "+searchGetID()+"");
+                } else {
+                    lblError.setText("Message: The student does not exist.");
+                }
+            } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+                stmt = CourseDAO.getAllCourses();
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                lblError.setText("Message: Shows all courses");
+            } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
+                stmt = CourseDAO.getCoursesDetailed();
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                lblError.setText("Message: Shows all courses with details");
+            } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && searchGetID() != 0) {
+                stmt = CourseDAO.getSpecificCourse(searchGetID());
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                ObservableList<String> list = tvOverview.getItems();
+                if (!list.isEmpty()) {
+                    lblError.setText("Message: Shows course "+searchGetID()+"");
+                } else {
+                    lblError.setText("Message: The course does not exist.");
+                }
+            } else if(getItem(cbSearch).equals("Course") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && searchGetID() != 0) {
+                stmt = CourseDAO.getSpecificCourseDetailed(searchGetID());
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                ObservableList<String> list = tvOverview.getItems();
+                if (!list.isEmpty()) {
+                    lblError.setText("Message: Shows details for course " + searchGetID() + "");
+                } else {
+                    lblError.setText("Message: The course does not exist.");
+                }
+            } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 0 && tfSearch.getText().equals("")) {
+                stmt = StudiesDAO.getAllStudies();
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                lblError.setText("Message: Shows all ongoing studies");
+            } else if(getItem(cbSearch).equals("Studies") && cbFilter.getSelectionModel().getSelectedIndex() == 1 && tfSearch.getText().equals("")) {
+                stmt = HasStudiedDAO.getAllHasStudied();
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                lblError.setText("Message: Shows all completed studies");
+            } else if((getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Ongoing") && searchGetID() != 0)) {
+                stmt = StudiesDAO.getStartedStmt(searchGetID());
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                ObservableList<String> list = tvOverview.getItems();
+                if (!list.isEmpty()) {
+                    lblError.setText("Message: Shows all ongoing studies for course "+searchGetID()+"");
+                } else {
+                    lblError.setText("Message: The course does not exist.");
+                }
+            } else if(getItem(cbSearch).equals("Studies") && getItem(cbFilter).equals("Completed") && searchGetID() != 0) {
+                stmt = HasStudiedDAO.getCompletedStmt(searchGetID());
+                tvOverview.getColumns().clear();
+                buildData(0, tvOverview, stmt);
+                ObservableList<String> list = tvOverview.getItems();
+                if (!list.isEmpty()) {
+                    lblError.setText("Message: Shows all completed studies for course "+searchGetID()+"");
+                } else {
+                    lblError.setText("Message: The course does not exist.");
+                }
+            } else {
+                lblError.setText("Message: Please choose an item from the list.");
+            }
+        } catch (NumberFormatException e) {
+            lblError.setText("You must search for a number");
+        }
     }
+
 
     @FXML
     private void addStudent(ActionEvent actionEvent) {
