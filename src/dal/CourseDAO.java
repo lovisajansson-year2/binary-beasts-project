@@ -10,31 +10,19 @@ import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
 
 public class CourseDAO {
-	 public static int generateID() throws SQLException, ClassNotFoundException {
-	        int id = 0;
-	        String stmt = "select max(courseCode) from course";
-
-	        try {
-	            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
-	            if(rs.next()) {
-	                id = rs.getInt(1);
-	                id++;
-	            }
-
-	        } catch(SQLException e) {
-	            System.out.println("Error generating id");
-	            throw e;
-	        }
-	        return id;
-
-	    }
 
 	public static int addCourse(int credits) throws SQLException, ClassNotFoundException {
-	 	int id = generateID();
-		String stmt = "insert into Course values("+id+","+credits+")";
-	
+		String stmt =
+				"insert into course values('"+credits+"');";
+		int id = 0;
+		String stmt2 = "select max(courseCode) from course";
+
 		try {
 			DatabaseConnection.dbExecuteUpdate(0, stmt);
+			ResultSet rs = DatabaseConnection.dbExecuteQuery(0,stmt2);
+			while (rs.next()) {
+				id = rs.getInt("courseCode");
+			}
 		} catch (SQLException e) {
 			System.out.println("Error while inserting Course");
 			throw e;

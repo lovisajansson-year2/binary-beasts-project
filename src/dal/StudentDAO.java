@@ -105,12 +105,18 @@ public class StudentDAO {
 
 
     public static int addStudent(String fName, String lName) throws SQLException, ClassNotFoundException{
-        int id = generateID();
         String stmt =
-                "insert into Student VALUES('"+id+"', '"+fName+"', '"+lName+"');";
+                "insert into Student VALUES('"+fName+"', '"+lName+"');";
+        int id = 0;
+        String stmt2 = "select max(studentID) from student";
 
         try {
             DatabaseConnection.dbExecuteUpdate(0, stmt);
+            ResultSet rs = DatabaseConnection.dbExecuteQuery(0,stmt2);
+            while (rs.next()) {
+               id = rs.getInt("studentID");
+            }
+
         } catch (SQLException e) {
             System.out.println("Error while inserting student");
             throw e;

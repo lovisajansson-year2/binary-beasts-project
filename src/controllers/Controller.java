@@ -89,6 +89,7 @@ public class Controller {
     
     @FXML
     private void initialize() throws SQLException, ClassNotFoundException {
+        try {
         // Stu & Cou
         cbStudent.setItems(StudentDAO.getListStudents());
         cbStudent.getSelectionModel().selectFirst();
@@ -134,6 +135,8 @@ public class Controller {
         listenerCourse();
         listenerOverview();
         listenerRegistration();
+        } catch (SQLException e) {
+        }
     }
 
    
