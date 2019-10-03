@@ -65,16 +65,20 @@ public class HasStudiedDAO {
 		}
 	}
 	
-	public static String getAllCompletedCourseStmt() {
+	public static ResultSet getAllCompletedCourseStmt() throws SQLException, ClassNotFoundException {
 		String stmt = "select * from HasStudied where courseCode=";
-		return stmt;
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 	
-	public static String getCompletedStmt(int cID) {
+	public static ResultSet getCompletedStmt(int cID) throws SQLException, ClassNotFoundException {
 		String stmt = "select * from HasStudied where courseCode="+cID;
-		return stmt;
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
-	public static String getAllHasStudied() {
-		return "select * from hasStudied";
+	public static ResultSet getAllHasStudied() throws SQLException, ClassNotFoundException {
+		String stmt = "select * from hasStudied";
+		ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
+		return rs;
 	}
 }
