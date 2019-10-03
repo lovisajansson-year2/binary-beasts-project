@@ -3,7 +3,6 @@ package controllers;
 import dal.*;
 
 import database.DatabaseConnection;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,11 +14,9 @@ import models.Course;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 
-import javax.sql.rowset.CachedRowSet;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
 
@@ -90,7 +87,7 @@ public class Controller {
     }
     
     @FXML
-    private void initialize() throws SQLException, ClassNotFoundException {
+    private void initialize() {
         try {
         // Stu & Cou
         cbStudent.setItems(StudentDAO.getListStudents());
@@ -148,57 +145,60 @@ public class Controller {
             alert.setContentText("Check that your database is correctly up and running.\n" +
             "Press ok to load the application without proper connection.");
             alert.showAndWait();
+        } catch (ClassNotFoundException e) {
+
         }
     }
 
    
 
-    private void buildData(int connection, TableView tableView, String stmt) throws SQLException, ClassNotFoundException {
+    private void buildData(int connection, TableView tableView, String stmt) {
         ObservableList data = FXCollections.observableArrayList();
 
         try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
-            
-            tableView.getColumns().clear();
-            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                //We are using non property style for making dynamic table
-                final int j = i;
-                TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
-                col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-                    public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
-                        return new SimpleStringProperty(param.getValue().get(j).toString());
-                    }
-                });
+             ResultSet rs = DatabaseConnection.dbExecuteQuery(connection, stmt);
 
-                tableView.getColumns().addAll(col);
-            }
+                tableView.getColumns().clear();
+                for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                    //We are using non property style for making dynamic table
+                    final int j = i;
+                    TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+                    col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                        public ObservableValue<String> call(TableColumn.CellDataFeatures<ObservableList, String> param) {
+                            return new SimpleStringProperty(param.getValue().get(j).toString());
+                        }
+                    });
 
-            while (rs.next()) {
-                //Iterate Row
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    //Iterate Column
-                    row.add(rs.getString(i));
+                    tableView.getColumns().addAll(col);
                 }
-                data.add(row);
 
-            }
-            tableView.setItems(data);
+                while (rs.next()) {
+                    //Iterate Row
+                    ObservableList<String> row = FXCollections.observableArrayList();
+                    for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                        //Iterate Column
+                        row.add(rs.getString(i));
+                    }
+                    data.add(row);
+
+                }
+                tableView.setItems(data);
+            
         } catch(SQLException e) {
-            System.out.println("Connection failed: " + e);
-            lblMessage.setText("Message: Connection failed.");
             lblError.setText("Message: Connection failed.");
+        } catch (ClassNotFoundException e) {
+
         }
 
     }
 
     @FXML
-    public void onEnter(ActionEvent actionEvent) throws SQLException, ClassNotFoundException{
+    public void onEnter(ActionEvent actionEvent) {
         getResult();
     }
 
     @FXML
-    public void listenerStudent() throws SQLException, ClassNotFoundException {
+    public void listenerStudent() {
         cbStudent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
@@ -227,7 +227,7 @@ public class Controller {
     }
 
     @FXML
-    public void listenerCourse() throws SQLException, ClassNotFoundException {
+    public void listenerCourse() {
         cbCourses.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
@@ -254,7 +254,7 @@ public class Controller {
     }
 
     @FXML
-    public void listenerRegistration() throws SQLException, ClassNotFoundException {
+    public void listenerRegistration() {
          cbRegCourses.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
@@ -314,7 +314,7 @@ public class Controller {
     }
 
    @FXML 
-   public void listenerOverview() throws SQLException, ClassNotFoundException {
+   public void listenerOverview() {
         cbSearch.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -341,12 +341,6 @@ public class Controller {
                   
                 } catch (NullPointerException e) {
 
-                } catch (SQLException e) {
-                    System.out.println("Connection failed: " + e);
-                    lblMessage.setText("Message: Connection failed.");
-                    lblError.setText("Message: Connection failed.");
-                } catch (ClassNotFoundException e) {
-
                 }
             }
         });
@@ -356,19 +350,14 @@ public class Controller {
                try {
                    getResult();
                } catch (NullPointerException e) {
-
-               } catch (SQLException e) {
-                   System.out.println("Connection failed: " + e);
-                   lblMessage.setText("Message: Database connection failed");
-               } catch (ClassNotFoundException e) {
-
                }
+
            }
        });
     }
 
     @FXML
-    private void getAnswer(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+    private void getAnswer(ActionEvent actionEvent) {
         int index = cbQ.getSelectionModel().getSelectedIndex();
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -376,7 +365,7 @@ public class Controller {
     }
 
     @FXML
-    private void getResult() throws SQLException, ClassNotFoundException {
+    private void getResult() {
         String stmt = "";
         int as = 0;
 	    try {

@@ -13,26 +13,6 @@ import javax.sql.rowset.CachedRowSet;
 
 public class StudentDAO {
 
-    public static int generateID() throws SQLException, ClassNotFoundException {
-        int id = 0;
-
-        String stmt = "select max(studentID) from student";
-
-        try {
-            ResultSet rs = DatabaseConnection.dbExecuteQuery(0, stmt);
-            if(rs.next()) {
-                id = rs.getInt(1);
-                id++;
-            }
-
-        } catch(SQLException e) {
-            System.out.println("Error generating id");
-            throw e;
-        }
-        return id;
-
-    }
-
     public static Student findStudent(int studentID) throws SQLException, ClassNotFoundException {
 
         String stmt = "select * from student where studentID = '" +studentID+"'";
