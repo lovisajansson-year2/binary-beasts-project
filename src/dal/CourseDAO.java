@@ -21,7 +21,7 @@ public class CourseDAO {
 			DatabaseConnection.dbExecuteUpdate(0, stmt);
 			ResultSet rs = DatabaseConnection.dbExecuteQuery(0,stmt2);
 			while (rs.next()) {
-				id = rs.getInt("courseCode");
+				id = rs.getInt(1);
 			}
 		} catch (SQLException e) {
 			System.out.println("Error while inserting Course");

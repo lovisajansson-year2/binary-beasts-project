@@ -114,7 +114,7 @@ public class StudentDAO {
             DatabaseConnection.dbExecuteUpdate(0, stmt);
             ResultSet rs = DatabaseConnection.dbExecuteQuery(0,stmt2);
             while (rs.next()) {
-               id = rs.getInt("studentID");
+               id = rs.getInt(1);
             }
 
         } catch (SQLException e) {
