@@ -149,7 +149,7 @@ public class Controller {
         } catch (SQLException e) {
             System.out.println("Connection failed: " + e);
             lblMessage.setText("Message: Connection to database failed contact admin.");
-            lblError.setText("Message: Connection failed.");
+            lblError.setText("Message: Connection to database failed contact admin.");
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

@@ -19,7 +19,6 @@ public class StudiesDAO {
 	        try {
 	            DatabaseConnection.dbExecuteUpdate(0, stmt);
 	        } catch (SQLException e) {
-	            System.out.println("Error while inserting studies");
 	            throw e;
 	        }
 	}
@@ -28,7 +27,6 @@ public class StudiesDAO {
         try {
             DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
-            System.out.println("Error while deleting studies.");
             throw e;
         }
 	}
