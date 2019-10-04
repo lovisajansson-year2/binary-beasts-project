@@ -33,18 +33,17 @@ public class Assignment2DAO {
 			 break;
 			 case 7: stmt = "select name, type from sys.key_constraints;";
 			 break;
-			 case 8: stmt = "select constraint_name, constraint_type\n" +
-			 "from information_schema.table_constraints";
+			 case 8: stmt = "select CONSTRAINT_NAME, CONSTRAINT_TYPE from INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
 			 break;
-			 case 9: stmt = "select table name\n" +
-					 "from information_schema.tables\n";
+			 case 9: stmt = "select TABLE_NAME\n" +
+					 "from INFORMATION_SCHEMA.TABLES\n";
 			 break;
-			 case 10: stmt = "select column_name\n" +
-					 "from information_schema.columns\n" +
+			 case 10: stmt = "select COLUMN_NAME\n" +
+					 "from INFORMATION_SCHEMA.COLUMNS\n" +
 					 "where table_name ='CRONUS Sverige AB$Employee'\n";
 			 break;
-			 case 11: stmt = "select table_name, column_name\n" +
-					 "from information_schema.columns\n" +
+			 case 11: stmt = "select TABLE_NAME, COLUMN_NAME\n" +
+					 "from INFORMATION_SCHEMA.COLUMNS\n" +
 					 "where table_name like '%Employee%'";
 			 break;
 			 case 12: stmt = "select top 1\n" +
