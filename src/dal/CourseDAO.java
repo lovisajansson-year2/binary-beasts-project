@@ -35,7 +35,7 @@ public class CourseDAO {
 		try {
 			DatabaseConnection.dbExecuteUpdate(0, stmt);
 		} catch (SQLException e) {
-			System.out.println("Error while updating Course");
+			System.out.println("Error while inserting Course");
 			throw e;
 		}
 	}
@@ -52,6 +52,7 @@ public class CourseDAO {
 			return course;
 
 		} catch (SQLException e) {
+			System.out.println("Error while running findCourse in dao");
 			throw e;
 		}
 	}
@@ -75,6 +76,7 @@ public class CourseDAO {
 			ObservableList<Course> cList = getCourseList(crs);
 			return cList;
 		} catch (SQLException e) {
+			System.out.println("error while finding student");
 			throw e;
 		}
 	}
@@ -133,9 +135,9 @@ public class CourseDAO {
 	
 	public static ResultSet getSpecificCourseDetailed(int cID) throws SQLException, ClassNotFoundException {
 		String stmt = "select c.courseCode, c.credits," +
-				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / \n"+
-			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',\n"+
-				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /\n" +
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade = 'A') * 100 / "+
+			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as '% of A''s',"+
+				"(select count(*) from hasStudied hs where hs.courseCode = c.courseCode and grade != 'F') * 100 /" +
 			    "(select count(*) from hasStudied hs1 where hs1.courseCode = c.courseCode) as 'Troughput'\n"+
 			    "from course c\n"+
 			    "join hasStudied hs3 on c.courseCode = hs3.courseCode\n"+

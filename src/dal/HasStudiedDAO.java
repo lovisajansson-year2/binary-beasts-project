@@ -20,7 +20,6 @@ public class HasStudiedDAO {
         try {
             DatabaseConnection.dbExecuteUpdate(0, stmt);
         } catch (SQLException e) {
-            System.out.println("Error while inserting studies");
             throw e;
         }
 	}

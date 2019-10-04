@@ -15,8 +15,8 @@ public class DatabaseConnection {
 	private static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	private static Connection conn = null;
 		 
-	private static final String connStr = "jdbc:sqlserver://127.0.0.1:1433;loginTimeout=5;database=Assignment1;";
-	private static final String connStr1 = "jdbc:sqlserver://127.0.0.1:1433;loginTimeout=5;database=CRONUS;";
+	private static final String connStr = "jdbc:sqlserver://localhost:1433;loginTimeout=5;database=Assignment1;";
+	private static final String connStr1 = "jdbc:sqlserver://localhost:1433;loginTimeout=5;database=CRONUS;";
 
 	private static final String userName = "user";
 	private static final String password = "pass";
